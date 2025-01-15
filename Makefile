@@ -6,7 +6,7 @@
 #    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/01/15 02:40:57 by epinaud          ###   ########.fr        #
+#    Updated: 2025/01/15 15:34:04 by epinaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CFLAGS = -Wall -Wextra -Werror -g3
 
 INCLUDES = -I. -Ilibft/includes
 
-LDLIBS = -Llibft -lft
+LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 
 OBJ_DIR = .obj
 
@@ -32,7 +32,7 @@ all: ftbranch libft $(OBJ_DIR) $(EXE)
 $(EXE) :
 	$(CC) $(CFLAGS) $^ -o $@ $(LDLIBS)
 
-minishell: $(SRCS:.c=.o)
+minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 libft:
 	@make -C libft

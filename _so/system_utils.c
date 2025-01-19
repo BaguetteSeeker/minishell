@@ -1,0 +1,47 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   system_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
+/*   Updated: 2025/01/19 01:33:41 by souaret          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell_so.h"
+
+/********************************************************************
+ * 
+ *  Check if a condition [error] 
+ *		if false then all is ok
+ *		if true then :  display [reason] 
+ *                      free what ever is needed to be freed
+ *                      and exit the program
+ * 
+*********************************************************************/
+void	do_check_error_exit(bool error, int reason)
+{
+	if (error == false)
+		return ;
+	if (reason != 0)
+	{
+		tokens_free();
+		// TODO:
+		// show_error_exit(reason);
+		// TODO: 
+		// free all the memory variables [tokens, etc]
+	}
+}
+
+/********************************************************************
+ * 
+ * Free a mallocaed memory (char * or any kind of memory/pointer)
+ * 
+********************************************************************/
+void	free_str(char *str)
+{
+	if (str != NULL)
+		free(str);
+}

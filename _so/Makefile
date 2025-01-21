@@ -6,15 +6,15 @@
 #    By: souaret <souaret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 22:08:36 by souaret           #+#    #+#              #
-#    Updated: 2025/01/18 23:57:32 by souaret          ###   ########.fr        #
+#    Updated: 2025/01/21 19:10:30 by souaret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell_so
 
-LIBFT_D =./libft
+LIBFT_D =../libft
 LIBFT   = $(LIBFT_D)/libft.a
-INCLIBFT= $(LIBFT_D)
+INCLIBFT= $(LIBFT_D)/includes
 
 INCH	=	-I.	\
 			-I$(INCLIBFT)	\

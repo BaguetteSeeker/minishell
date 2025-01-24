@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/01/23 19:07:57 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/01/24 21:00:26 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,7 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+#include "struct_cmds.h"
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/17 23:52:41 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/24 20:59:51 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@
  ***************************************************************************/
 typedef struct s_token
 {
-    int type;
-    char *str;
-    char **args;
-    struct s_token *next;
-} t_token;
+	int				type;
+	char			*str;
+	char			**args;
+	struct s_token	*next;
+}					t_token;
 
 #endif

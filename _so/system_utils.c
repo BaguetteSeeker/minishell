@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/19 01:33:41 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/24 21:41:02 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ void	do_check_error_exit(bool error, int reason)
  * Free a mallocaed memory (char * or any kind of memory/pointer)
  * 
 ********************************************************************/
-void	free_str(char *str)
+void	free_str(char **str)
 {
-	if (str != NULL)
-		free(str);
+	if (*str != NULL)
+		free(*str);
+	*str = NULL;
 }

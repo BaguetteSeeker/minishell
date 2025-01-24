@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:34:51 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/19 01:41:51 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/24 21:42:02 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void	free_list_1_echo(t_token *tokens)
 	{
 		tmp = t;
 		t = t->next;
-		free_str(tmp->str);
-		free_str((char *)tmp->args);
+		free_str(&tmp->str);
+		free_str(&tmp->args);
 		free(tmp);
 	}
 }

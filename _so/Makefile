@@ -6,7 +6,7 @@
 #    By: souaret <souaret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 22:08:36 by souaret           #+#    #+#              #
-#    Updated: 2025/01/21 19:10:30 by souaret          ###   ########.fr        #
+#    Updated: 2025/01/25 17:35:56 by souaret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,19 +16,23 @@ LIBFT_D =../libft
 LIBFT   = $(LIBFT_D)/libft.a
 INCLIBFT= $(LIBFT_D)/includes
 
-INCH	=	-I.	\
-			-I$(INCLIBFT)	\
+INCH	=	-I .	\
+			-I../	\
+			-I$(INCLIBFT)
 
 SRCH	=	minishell_so.h
 
-SRCS	=	system_utils.c  tokens_utils.c  \
-			tree_sample_echo.c  tree_samples.c	\
+SRCtoken	=	system_utils.c 	\
+			tokens_utils.c 		tree_sample_echo.c  \
 			main_so.c
+
+SRCS	=	system_utils.c 	../cmd_utils.c ../cmd_exec.c 	\
+			tst_main_1.c
 
 OBJS:= $(SRCS:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g3
+CFLAGS = -Wall -Werror -Wextra -g3 -I ../
 LFLAGS = -L $(LIBFT_D) -lft 
 
 %.o : %.c 
@@ -37,6 +41,7 @@ LFLAGS = -L $(LIBFT_D) -lft
 all : $(NAME) $(LIBFT)  
 	
 $(NAME) : $(SRCS) $(SRCH) $(OBJS) $(LIBFT)
+	echo $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LFLAGS)  -o $@ 
 
 $(LIBFT) : 

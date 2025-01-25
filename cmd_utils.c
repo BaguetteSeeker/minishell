@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 21:10:10 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/24 22:07:26 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/25 16:17:37 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,47 @@
  * 		- T_RIGHT
  -----------------------------------------------------------------------*/
 /*************************************************************************
+ * getter for cmd
+*************************************************************************/
+t_cmd	*cmd_get(t_cmd *cmd)
+{
+	static t_cmd	*cmd_tree = NULL;
+
+	if (cmd_tree == NULL && cmd == NULL)
+		do_error_exit(ERR_CMD_0);
+	if (cmd_tree == NULL && cmd != NULL)
+		cmd_tree = cmd;
+	else
+		if (cmd != NULL)
+		{
+		// cmd_tree != NULL and cmd == NULL => impossible to set !!!
+		do_error_exit(ERR_CMD_1);
+		}
+	do_check_error_exit((cmd_tree == NULL), ERR_CMD_2);
+	return (cmd_tree);
+}
+
+/************************************************************************
+ * getter for cmd
+*************************************************************************/
+void	cmd_set(t_cmd *cmd)
+{
+	cmd_get(cmd);
+}
+
+/*************************************************************************
  * 
  * Create node for a cmd - unfinished work
 *************************************************************************/
-t_cmd	*cmd_create(int cmd_id, const char *str)
+t_cmd	*cmd_create(int cmd_id, char *str)
 {
 	t_cmd	*new_cmd;
 
 	new_cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	do_check_error_exit((new_cmd == NULL), ERR_CMD_1);
-	new_cmd->id = id;
-	new_cmd->str = ft_strdup(str);
-	do_check_error_exit((new_cmd->str == NULL), ERR_CMD_2);
+	new_cmd->cmd_id = cmd_id;
+	new_cmd->cmd_str = ft_strdup(str);
+	do_check_error_exit((new_cmd->cmd_str == NULL), ERR_CMD_2);
 	new_cmd->cmd_args = NULL;
 	new_cmd->left = NULL;
 	new_cmd->right = NULL;
@@ -56,18 +85,19 @@ t_cmd	*cmd_create(int cmd_id, const char *str)
 *************************************************************************/
 void	cmd_add_child(t_cmd *node, t_cmd *child, int child_node)
 {
-	t_cmd	**temp;
+	t_cmd	*temp;
 
+	temp = NULL;
 	if (child == NULL)
 		do_error_exit(ERR_CMD_3);
 	if (child_node == T_LEFT)
-		temp = &node->left;
+		temp = node->left;
 	else if (child_node == T_RIGHT)
-		temp = &node->right;
+		temp = node->right;
 	else
 		do_error_exit(ERR_CMD_4);
-	if (*temp == NULL)
-		*temp = child;
+	if (temp)
+		temp = child;
 	else
 		do_error_exit(ERR_CMD_5);
 }
@@ -77,18 +107,15 @@ void	cmd_add_child(t_cmd *node, t_cmd *child, int child_node)
 *************************************************************************/
 void	cmd_delete(t_cmd *cmd)
 {
-	t_cmd	*temp;
-	t_cmd	*prev;
-
 	if (!cmd)
 		return ;
-	cmd_detele(cmd->left);
+	cmd_delete(cmd->left);
 	cmd->left = NULL;
-	cmd_detele(cmd->right);
+	cmd_delete(cmd->right);
 	cmd->right = NULL;
 	free_str(&cmd->cmd_str);
 	cmd->cmd_str = NULL;
-	free_str(&cmd->cmd_args);
+	free_str(cmd->cmd_args);
 	cmd->cmd_args = NULL;
 	free(cmd);
 }
@@ -104,29 +131,4 @@ void	cmd_free_all(void)
 	do_check_error_exit((cmd == NULL), ERR_CMD_6);
 	cmd_delete(cmd);
 	cmd_set(NULL);
-}
-
-/*************************************************************************
- * getter for cmd
-*************************************************************************/
-t_cmd	cmd_get(t_cmd *cmd)
-{
-	static t_cmd	*cmd_tree = NULL;
-
-	if (cmd == NULL && cmd_tree == NULL)
-		do_error_exit(ERR_CMD_0);
-	if (cmd_tree == NULL)
-		cmd_tree = cmd;
-	else
-		do_error_exit(ERR_CMD_1);
-	do_check_error_exit((cmd_tree == NULL), ERR_CMD_2);
-	return (cmd_tree);
-}
-
-/************************************************************************
- * getter for cmd
-*************************************************************************/
-void	cmd_set(t_cmd *cmd)
-{
-	cmd_get(cmd);
 }

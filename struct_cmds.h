@@ -6,12 +6,18 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:49:23 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/24 20:57:34 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/25 16:36:48 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_CMDS_H
 # define STRUCT_CMDS_H
+
+typedef enum e_node_type
+{
+	T_CMD,
+	T_OPE
+}	t_node_type;
 
 /**************************************************************************
  * 
@@ -27,7 +33,7 @@
 **************************************************************************/
 typedef struct s_cmd
 {
-	int				node_type;
+	t_node_type		node_type;
 	int				cmd_id;
 	char			*cmd_str;
 	char			**cmd_args;

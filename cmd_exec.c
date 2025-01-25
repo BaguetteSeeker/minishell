@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/24 21:13:17 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/25 17:32:57 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 /*------------------------------------------------------------------------
  * This is the execution part of the minishell
- *		- it will execute the commands in the tree, and manage the:
+ *		- it will execute the commands as organized in the binary tree. 
+ *        It will manage the following:
  *		- pipes
  *		- redirections
  *		- environment variables
@@ -36,21 +37,62 @@
 ------------------------------------------------------------------------*/
 /************************************************************************
  * 
+ * 
+ * 
+************************************************************************/
+void	cmd_exec_cmd(t_cmd *cmd, int cmd_id)
+{
+	(void)cmd;
+	(void) cmd_id;
+	return ;
+}
+
+/************************************************************************
+ * 
+ * 
+ * 
+************************************************************************/
+void	cmd_exec_ope(t_cmd *cmd, int node_type)
+{
+	(void)cmd;
+	(void) node_type;
+	// TODO: implemented later 
+	return ;
+}
+
+/************************************************************************
+ * 
+ * 
+ * 
+************************************************************************/
+void	cmd_exec_node(t_cmd *cmd)
+{
+	if (!cmd)
+		return ;
+	if (cmd->node_type == T_OPE)
+	{
+		cmd_exec_ope(cmd, cmd->node_type);
+	}
+	else if (cmd->node_type == T_CMD)
+	{
+		cmd_exec_cmd(cmd, cmd->cmd_id);
+	}
+	if (cmd->left)
+		cmd_exec_node(cmd->left);
+}
+
+/************************************************************************
+ * 
  * Main entry point for executing a command in the minishell
  * TODO: WIP    -  Work in progress
 *************************************************************************/
-void	exec_cmd(void)
+void	cmd_exec(void)
 {
 	t_cmd	*cmd_tree;
 
+	//TODO: Prepare for execution
 	cmd_tree = cmd_get(NULL);
 	do_check_error_exit((cmd_tree == NULL), ERR_2);
-	while (cmd_tree)
-	{
-		if (cmd_tree->left)
-		{
-			cmd_exec(cmd_tree->left);
-		}
-		temp = temp->child_right;
-	}
+	cmd_exec_node(cmd_tree);
+	//TODO: Cleanup after execution
 }

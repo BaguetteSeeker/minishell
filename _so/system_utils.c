@@ -6,11 +6,30 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/24 21:41:02 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/25 15:01:44 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_so.h"
+
+/********************************************************************
+ * 
+ *  Write a error message : [reason] 
+ *		free what ever is needed to be freed
+ *      and exit the program
+ * 
+*********************************************************************/
+void	do_error_exit(int reason)
+{
+	ft_printf("Error: %d\n", reason);
+	//TODO: free tokens
+	//tokens_free();
+	//TODO: clean cmds
+	// cmd_free_all()
+	// TODO:
+	// free all the memory variables [tokens, etc]
+	exit(reason);
+}
 
 /********************************************************************
  * 
@@ -26,13 +45,7 @@ void	do_check_error_exit(bool error, int reason)
 	if (error == false)
 		return ;
 	if (reason != 0)
-	{
-		tokens_free();
-		// TODO:
-		// show_error_exit(reason);
-		// TODO: 
-		// free all the memory variables [tokens, etc]
-	}
+	do_error_exit(reason);
 }
 
 /********************************************************************

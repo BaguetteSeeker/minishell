@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_so.c                                          :+:      :+:    :+:   */
+/*   cmd_exec.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/18 23:37:25 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/19 01:58:34 by souaret          ###   ########.fr       */
+/*   Created: 2025/01/25 16:28:16 by souaret           #+#    #+#             */
+/*   Updated: 2025/01/25 16:29:13 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#ifndef CMD_EXEC_H
+# define CMD_EXEC_H
 
-int	main_1(void);
+void	exec_cmd(void);
 
-int	main(void)
-{
-	main_1();
-	return (0);
-}
+#endif

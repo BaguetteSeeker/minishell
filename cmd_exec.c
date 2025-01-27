@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/25 17:32:57 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/26 21:13:08 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	cmd_exec_cmd(t_cmd *cmd, int cmd_id)
 {
 	(void)cmd;
 	(void) cmd_id;
+	printf("Executing command: %s\n", cmd_print(cmd_id));
 	return ;
 }
 
@@ -62,8 +63,11 @@ void	cmd_exec_ope(t_cmd *cmd, int node_type)
 
 /************************************************************************
  * 
- * 
- * 
+ * Execute a node in the binary tree
+ * 		if operator at node level, then we call the operator execution
+*		if cmd at node level, then we execute left command first,
+*			then right command	
+ * TODO: Stopped here : what strategy to store AST
 ************************************************************************/
 void	cmd_exec_node(t_cmd *cmd)
 {

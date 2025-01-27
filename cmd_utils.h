@@ -6,18 +6,18 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 14:48:47 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/25 16:19:23 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/26 20:45:11 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CMD_UTILS_H
 # define CMD_UTILS_H
 
-typedef enum 
+typedef enum e_node_dir
 {
 	T_LEFT,
 	T_RIGHT
-} node_dir;
+}	t_node_dir;
 
 # define CMD_ECHO	1
 # define CMD_PWD	2
@@ -33,5 +33,6 @@ t_cmd	*cmd_create(int cmd_id, char *str);
 void	cmd_add_child(t_cmd *node, t_cmd *child, int child_node);
 void	cmd_delete(t_cmd *cmd);
 void	cmd_free_all(void);
+char	*cmd_print(int cmd_id);
 
 #endif

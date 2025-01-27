@@ -6,11 +6,14 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 23:37:25 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/25 17:34:48 by souaret          ###   ########.fr       */
+/*   Updated: 2025/01/27 19:39:46 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	cmd_exec();
+char	*cmd_print(int cmd_id);
 
 // #include <stdio.h>
 // #include <stdlib.h>
@@ -26,14 +29,11 @@ t_cmd	*create_cmd_1_echo(void)
 {
 	t_cmd	*cmd;
 
+	cmd = NULL;
 	cmd = cmd_create(CMD_ECHO, "Hello World!");
-	// t_token	*tokens;
-	// t_token	*t;
+	do_check_error_exit((cmd == NULL), ERR_101);
+	cmd_set(cmd);
 
-	// cmd = NULL;
-    // cmd_set(NULL);
-    // cmd_
-	// do_check_error_exit((tokens == NULL), ERR_1);
 	// t = token_new(CMD_ECHO, "Hello World!");
 	// token_add(&tokens, t);
 	// t = token_new(CMD_ECHO, "Hello 2nd");
@@ -41,7 +41,6 @@ t_cmd	*create_cmd_1_echo(void)
 	// // another way to do it :
 	// // add_token(tokens, new_token(CMD_ECHO, "Hello World!", );
 	return (cmd);
-
 }
 
 /***************************************************************************
@@ -51,27 +50,35 @@ t_cmd	*create_cmd_1_echo(void)
 ***************************************************************************/
 void	print_cmd_1_echo(t_cmd	*cmd)
 {
+	int		i;
+
 	if (cmd != NULL)
 	{
-		printf("cmd type: %d, value: <%s> args = ", \
-		 	cmd->node_type, cmd->cmd_str);
+		printf("cmd type: %s, id = <%s>, param= <%s>, args = [", \
+			(cmd->node_type == T_CMD ? "CMD" : "OPERATOR"), \
+			cmd_print(cmd->cmd_id), cmd->cmd_str);
+		if (cmd->cmd_args)
+		{
+			i = -1;
+			while (cmd->cmd_args[++i])
+				printf("<%s> ", cmd->cmd_args[i]);
+		}
+		printf(" ]\n");
 		if (cmd->left)
 		{
 			printf("left: ");
 			print_cmd_1_echo(cmd->left);
 			printf("\n");
 		}
-		if (cmd->right )
+		if (cmd->right)
 		{
 			printf("right: ");
 			print_cmd_1_echo(cmd->right);
 			printf("\n");
 		}
-		printf("\n");
+		//printf("\n");
 	}
 }
-
-void cmd_exec(void);
 
 /************************************************************************
  * 

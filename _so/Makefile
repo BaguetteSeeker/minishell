@@ -6,7 +6,7 @@
 #    By: souaret <souaret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/30 22:08:36 by souaret           #+#    #+#              #
-#    Updated: 2025/01/25 17:35:56 by souaret          ###   ########.fr        #
+#    Updated: 2025/01/27 20:59:07 by souaret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,23 +26,43 @@ SRCtoken	=	system_utils.c 	\
 			tokens_utils.c 		tree_sample_echo.c  \
 			main_so.c
 
-SRCS	=	system_utils.c 	../cmd_utils.c ../cmd_exec.c 	\
+SRCS	=	../system_utils.c 	../cmd_utils.c ../cmd_utils2.c 	../cmd_exec.c 	\
 			tst_main_1.c
 
-OBJS:= $(SRCS:.c=.o)
+#OBJS:= $(SRCS:.c=.o)
+OBJ_DIR = .obj
+
+$(OBJ_DIR)/%.o : %.c
+	$(CC) -c $(CFLAGS) $(INCH) $< -o $@
+	@mv *.o $(OBJ_DIR)
+
+.obj:
+	@mkdir -p .obj
+
+#OBJS:= $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+OBJS:= $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.c=.o)))
+	
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g3 -I ../
 LFLAGS = -L $(LIBFT_D) -lft 
 
-%.o : %.c 
-	$(CC) $(CFLAGS) $(INCH) -c $<
+#%.o : %.c 
+#	$(CC) -c $(CFLAGS) $(INCH) $< -o $@
 
-all : $(NAME) $(LIBFT)  
+#	$(CC) $(CFLAGS) $(INCH) -c $<
+
+all : $(NAME) $(LIBFT)  $(OBJ_DIR)  $(NAME)
 	
-$(NAME) : $(SRCS) $(SRCH) $(OBJS) $(LIBFT)
-	echo $(OBJS)
+$(NAME) : $(SRCS) $(SRCH) $(OBJ_DIR) $(LIBFT)
+	echo "OBJ=" $(OBJ_DIR)
+	echo "SRCS=" $(SRCS)
 	$(CC) $(CFLAGS) $(OBJS) $(LFLAGS)  -o $@ 
+# $(NAME) : $(SRCS) $(SRCH) $(OBJS) $(LIBFT)
+# 	echo $(OBJS)
+# 	$(CC) $(CFLAGS) $(OBJS) $(LFLAGS)  -o $@ 
+
+minishell_so: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 $(LIBFT) : 
 	make -C $(LIBFT_D)

@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/01/29 19:10:19 by epinaud          ###   ########.fr       */
+/*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
+/*   Updated: 2025/01/29 19:17:57 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# define _DEFAULT_SOURCE
-# include "token.h"
-# include <libft.h>
-# include <signal.h>
-# include <readline/readline.h>
-# include <readline/history.h>
 
-#endif
+//Rooting function that passes a pos index of the input to subfunctions that will fill a t_token struct
+
+t_token	*lexer(char *prompt)
+{
+	t_token	*token;
+	(void)prompt;
+
+	token = NULL;
+	return (token);
+}

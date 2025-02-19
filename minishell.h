@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/02/19 19:40:50 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/21 18:18:54 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # define _DEFAULT_SOURCE
+# include <stddef.h>
 # include "token.h"
 # include <libft.h>
 # include <signal.h>
@@ -21,4 +22,6 @@
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+t_token	**lexer(char *prompt);
 #endif

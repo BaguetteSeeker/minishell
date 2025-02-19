@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/29 19:09:56 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:46:43 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,27 @@
  ***************************************************************************/
 # define LL_TYP t_token
 
+enum	e_token_types
+{
+	DQUOTE,
+	SQUOTE,
+	OP_AR,
+	CP_AR,
+	LITTERAL,
+	BUILTIN,
+	OPERATOR,
+	DOLLAR,
+	PIPE,
+	REDIR_OUT,
+	REDIR_IN,
+	APPEND,
+	HERE_DOC
+};
+
 typedef struct s_token
 {
-	int				type;
-	char			*str;
-	char			**args;
+	size_t			type;
+	char			*value;
 	struct s_token	*next;
 }	t_token;
 

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/02/05 12:24:00 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/19 20:07:42 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_token	*lexer(char *prompt)
 {
 	t_token	*token;
 	(void)prompt;
-	int	i;
+	//int	i;
 	
 	char	**items;
 

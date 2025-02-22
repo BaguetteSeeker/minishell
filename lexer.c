@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/02/21 18:31:50 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/22 22:51:30 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,34 +40,37 @@ size_t	create_token(char *prompt, t_token *token)
 	else
 		type = 'X';
 	value = ft_substr(prompt, 0, offset);
+	if (!value)
+		exit(1);
 	token->type = type;
 	token->value = value;
-	ft_printf("Token type is %u and content is %s\nReturning offset %u\n", token->type, token->value, offset);
+	ft_printf("Token type is %u and content is %s next with %p ptr\nReturning offset %u\n", token->type, token->value, token->next, offset);
 	return (offset);
 }
 
 //ft_printf("Occ of frnl within <Hello friends>is at %s\n", ft_strocc("Hello friends", "frl"));
-t_token	**lexer(char *prompt)
+t_token	*lexer(char *prompt)
 {
-	t_token	**token_lst;
+	t_token	*token_head;
 	t_token	*token;
 
-	token_lst = NULL;
 	token = NULL;
+	token_head = token;
 	while (*prompt)
 	{
 		while (ft_strchr(" \t\v\n", *prompt))
 			prompt++;
 		if (*prompt)
 		{
-			token = ft_lstnew(&(t_token){0});
+			token = ft_lstnew(&(t_token){0, NULL, NULL});
 			prompt += create_token(prompt, token);
-			ft_printf("Returned token type is %u and content is %s\n\n", token->type, token->value);
-
+			ft_printf("Returned token type is %u and content is %s next with %p ptr\\n\n", 
+				token->type, token->value, token->next);
+			ft_lstadd_back(&token_head, token);
 		}
-		ft_lstadd_back(token_lst, token);
 	}
+	ft_printf("Getting ready to showlist with first token as %p\n", token_head);
 	if (token)
-		ft_lstiter(*token_lst, &lst_put);
-	return (token_lst);
+		ft_lstiter(token_head, &lst_put);
+	return (token_head);
 }

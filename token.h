@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/02/21 16:46:43 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/22 22:08:02 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
  *  TODO: prev not managed so far.
  * 
  ***************************************************************************/
-# define LL_TYP t_token
 
 enum	e_token_types
 {
@@ -49,5 +48,6 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }	t_token;
+
 
 #endif

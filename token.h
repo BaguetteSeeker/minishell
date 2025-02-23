@@ -6,12 +6,47 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/02/22 22:08:02 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/23 22:32:33 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_H
 # define TOKEN_H
+
+/**
+ * enum Token_Types - Types of tokens in a command line
+ * @WORD: A word in the command line
+ * @DQUODE: " 
+ * @SQUOTE: ' 
+ * @PIPE: |
+ * @AMPERSAND: &
+ * @OR_IF: ||
+ * @AND_IF: &&
+ * @LESS: <
+ * @GREAT: >
+ * @DLESS: <<
+ * @DGREAT: >>
+ * @IO_NUMBER: 
+ * @OPAR:
+ * @CPAR:
+ * @DOLLAR: $
+ * @WILDCARD: *
+ */
+enum	e_Token_Types
+{
+	WORD,
+	PIPE,
+	AMPERSAND,
+	OR_IF,
+	AND_IF,
+	LESS,
+	GREAT,
+	DLESS,
+	DGREAT,
+	IO_NUMBER,
+	O_PAR,
+	C_PAR
+};
 
 /***************************************************************************
  * 
@@ -22,25 +57,10 @@
  * next : pointer to the next token in the list
  * prev : pointer to the previous token in the list
  *  TODO: prev not managed so far.
+ * 	NOTE: args is better managed during the AST buildup,
+ * 			once tokenization has been made
  * 
  ***************************************************************************/
-
-enum	e_token_types
-{
-	DQUOTE,
-	SQUOTE,
-	OP_AR,
-	CP_AR,
-	LITTERAL,
-	BUILTIN,
-	OPERATOR,
-	DOLLAR,
-	PIPE,
-	REDIR_OUT,
-	REDIR_IN,
-	APPEND,
-	HERE_DOC
-};
 
 typedef struct s_token
 {

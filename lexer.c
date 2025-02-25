@@ -6,11 +6,10 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/02/22 22:51:30 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/25 16:11:45 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "stddef.h"
 #include "minishell.h"
 
 void	lst_put(t_token *lst)
@@ -22,27 +21,52 @@ void	lst_put(t_token *lst)
 	free(lst->value);
 }
 
-size_t	create_token(char *prompt, t_token *token)
+size_t	offset_token(char *prompt)
 {
-	size_t	type;
-	char	*value;
 	size_t	offset;
 
-	offset = ft_strocc(prompt, " \t\v\n\0") - prompt;
-	if (ft_strchr("><|&\'\"", *prompt))
+
+	return (offset);
+}
+
+size_t	create_token(char *prompt, t_token *token)
+{
+	char	*value;
+	size_t	offset;
+	int		dquote;
+	int		squote;
+
+	offset = ft_strocc(prompt, " \t\r\n\v\f\0") - prompt;
+	//operator
+	if (ft_strchr("><|&", prompt[offset]) && !dquote && !squote)
 	{
-		type = *prompt;
-		if (ft_strchr("><|&\'\"", prompt[1]))
+		type = prompt[offset];
+		//double operator
+		if (ft_strchr("><|&", prompt[1]))
 			type = type * 100 + type;
 	}
-	else if (ft_strchr("$-", *prompt))
+	else if (ft_strchr("\"\'", prompt[offset]))
+	{
+		if (prompt[offset] == '\"' && dquote)
+			dquote = 0;
+		else if (prompt[offset] == '\'' && dquote)
+			squote = 0;
+		offset++;
+	}
+	else if (prompt[offset] == ' ' && !dquote && !squote)
+	{
+		token->type = WORD;
+		token->value = ft_substr(prompt, 0, offset);
+		//offset value
+	}
+	//if !value
+	/* part of WORD
+		else if (ft_strchr("$-\'\"", *prompt))`
 		type = *prompt;
-	else
-		type = 'X';
+	*/	
 	value = ft_substr(prompt, 0, offset);
 	if (!value)
 		exit(1);
-	token->type = type;
 	token->value = value;
 	ft_printf("Token type is %u and content is %s next with %p ptr\nReturning offset %u\n", token->type, token->value, token->next, offset);
 	return (offset);

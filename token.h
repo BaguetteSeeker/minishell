@@ -6,13 +6,13 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/02/23 22:32:33 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/24 17:30:57 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_H
 # define TOKEN_H
-
+# include <stdarg.h>
 /**
  * enum Token_Types - Types of tokens in a command line
  * @WORD: A word in the command line
@@ -43,9 +43,7 @@ enum	e_Token_Types
 	GREAT,
 	DLESS,
 	DGREAT,
-	IO_NUMBER,
-	O_PAR,
-	C_PAR
+	IO_NUMBER
 };
 
 /***************************************************************************

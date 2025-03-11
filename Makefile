@@ -6,7 +6,7 @@
 #    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/01/15 15:34:04 by epinaud          ###   ########.fr        #
+#    Updated: 2025/02/22 22:42:10 by epinaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 
 OBJ_DIR = .obj
 
-SRCS = main_readline.c
+SRCS = main_readline.c lexer.c
 
 $(OBJ_DIR)/%.o : %.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

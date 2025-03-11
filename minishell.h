@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/02/11 16:38:48 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/02/22 21:56:32 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 # define MINISHELL_H
 
 # define _DEFAULT_SOURCE
-//# define LL_TYP /* Remplacer ce commentaire par le nom de la structure chainée voulue au sein du projet*/
-//Définir impérativement la struct chainée avant l'include libft qui en fera usage
+# include <stddef.h>
+# include "token.h"
 # include <libft.h>
 # include <signal.h>
 # include <stdbool.h>
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+t_token	*lexer(char *prompt);
 #endif

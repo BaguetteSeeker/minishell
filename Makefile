@@ -6,7 +6,7 @@
 #    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/02/22 22:42:10 by epinaud          ###   ########.fr        #
+#    Updated: 2025/03/12 00:45:51 by epinaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -g3
 
-INCLUDES = -I. -Ilibft/includes
+INCLUDES = -I. -Iincludes/ -Ilibft/includes
 
 LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 
@@ -24,7 +24,7 @@ OBJ_DIR = .obj
 
 SRCS = main_readline.c lexer.c
 
-$(OBJ_DIR)/%.o : %.c
+$(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 all: ftbranch libft $(OBJ_DIR) $(EXE)

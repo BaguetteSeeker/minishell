@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/03/11 15:11:57 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/19 23:31:30 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	main(void) 
 {
 	char	*input_line;
+	t_token	*tokens;
 
 	while (1) 
 	{
@@ -25,7 +26,8 @@ int	main(void)
 			break ;
 		}
 		add_history(input_line);
-		lexer(input_line);
+		tokens = lexer(input_line);
+		parser(tokens);
 		free(input_line);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/02/22 21:56:32 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/19 19:26:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,5 @@
 # include <readline/history.h>
 
 t_token	*lexer(char *prompt);
+int		parser(t_token *tokens);
 #endif

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/10 19:54:48 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/20 22:15:00 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ void	lst_put(t_token *lst)
 	if (!lst)
 		return (ft_putendl_fd("token node str is empty", 1));
 	ft_putstr_fd("Stack member has token : ", 1);
-	ft_putendl_fd(lst->value, 1);
+	ft_putstr_fd(lst->value, 1);
+	ft_printf(" of type %d\n", lst->type);
 }
 
 static t_token	get_grammar_token(char *input)
@@ -49,11 +50,11 @@ static t_token	get_grammar_token(char *input)
 	{.type = OR_IF, .value = "||"},
 	{.type = PIPE, .value = "|"},
 	{.type = AND_IF, .value = "&&"},
+	{.type = AMPERSAND, .value = "&"},
 	{.type = DLESS, .value = "<<"},
 	{.type = LESS, .value = "<"},
 	{.type = DGREAT, .value = ">>"},
-	{.type = GREAT, .value = ">"},
-	{.type = 0, .value = NULL}};
+	{.type = GREAT, .value = ">"}};
 	size_t			i;
 
 	i = 0;
@@ -75,7 +76,8 @@ size_t	create_token(char *prompt, t_token *token)
 	if (ft_strchr("><|&", prompt[offset]))
 	{
 		*token = get_grammar_token(prompt);
-		offset += ft_strlen(token->value);
+		if (token->type)
+			offset += ft_strlen(token->value);
 	}
 	else
 	{
@@ -92,6 +94,31 @@ size_t	create_token(char *prompt, t_token *token)
 	if (!token->value)
 		exit(1);
 	return (offset);
+}
+
+#define INVALID_SYNTAX 0
+#define VALID_SYNTAX 1
+#define ERR_MSG_SYNTAX "syntax error near unexpected token `"
+
+//Finalize err response
+int	check_syntax(t_token *tokens)
+{
+	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
+	static int	cmdsep[] = {PIPE, OR_IF, AND_IF};
+
+	while (tokens->next)
+	{
+		if ((in_array(tokens->type, cmdsep, sizeof(cmdsep) / sizeof(int)) > -1
+				&& in_array(tokens->next->type, cmdsep,
+					sizeof(cmdsep) / sizeof(int)) > -1)
+			|| (in_array(tokens->type, redirs,
+					sizeof(redirs) / sizeof(int)) > -1
+				&& tokens->next->type != WORD))
+			return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
+					PROMPT_NAME, ERR_MSG_SYNTAX, tokens->next->value));
+		tokens = tokens->next;
+	}
+	return (VALID_SYNTAX);
 }
 
 t_token	*lexer(char *prompt)
@@ -114,5 +141,6 @@ t_token	*lexer(char *prompt)
 	}
 	if (token)
 		ft_lstiter(token_head, &lst_put);
+	check_syntax(token_head);
 	return (token_head);
 }

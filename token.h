@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/03/08 20:18:41 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/21 16:34:03 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,12 @@ enum	e_Token_Types
 	GREAT,
 	DLESS,
 	DGREAT,
+	OPAR,
+	CPAR,
 	IO_NUMBER
 };
 
-# define OP_CHARSET "><|&"
+# define OP_CHARSET "><|&()"
 # define OP_RECORD 7
 # define SEP_CHARSET " \t\r\n\v\f"
 

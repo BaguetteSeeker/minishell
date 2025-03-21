@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/20 22:15:00 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/21 16:34:45 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ static void	free_token_value(t_token *token)
 		LESS,
 		GREAT,
 		DLESS,
-		DGREAT
+		DGREAT,
+		OPAR,
+		CPAR
 	};
 
 	if (in_array(token->type, to_clean, sizeof(to_clean) / sizeof(int)))
@@ -54,7 +56,9 @@ static t_token	get_grammar_token(char *input)
 	{.type = DLESS, .value = "<<"},
 	{.type = LESS, .value = "<"},
 	{.type = DGREAT, .value = ">>"},
-	{.type = GREAT, .value = ">"}};
+	{.type = GREAT, .value = ">"},
+	{.type = OPAR, .value = "("},
+	{.type = CPAR, .value = ")"}};
 	size_t			i;
 
 	i = 0;
@@ -73,7 +77,7 @@ size_t	create_token(char *prompt, t_token *token)
 	size_t	offset;
 
 	offset = 0;
-	if (ft_strchr("><|&", prompt[offset]))
+	if (ft_strchr(OP_CHARSET, prompt[offset]))
 	{
 		*token = get_grammar_token(prompt);
 		if (token->type)

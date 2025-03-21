@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/20 18:07:52 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/21 14:34:09 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,5 @@
 #define PROMPT_NAME "$minishell:"
 
 t_token	*lexer(char *prompt);
-int		parser(void);
+int		parser(t_token *tokens);
 #endif

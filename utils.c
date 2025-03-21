@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/21 15:17:05 by epinaud          ###   ########.fr       */
+/*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
+/*   Updated: 2025/03/20 21:49:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*find_parenthesis(char *str, size_t side)
-{
-	return (str);
-}
+// void	clean_minishell(t_token **token_lst)
+// {
+// 	//get main object thgough getsetter
+// 	ft_lstclear(token_lst, &free_token_value);
+// }
 
-int	parser(t_token *tokens)
+void	put_err(char *msg, int fd)
 {
-	while (tokens)
-	{
-		//if logic
-			//Allocate logic node
-			//
-		//Allocate cmd_node
-		//Add cmd_name
-		//Add cmd_args
-		tokens = tokens->next;
-	}
+	if (*msg)
+		ft_putendl_fd(msg, fd);
+	//get allocated objects & clean em
+	exit(EXIT_FAILURE);
 }

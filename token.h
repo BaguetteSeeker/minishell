@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/03/21 16:34:03 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/23 20:42:09 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,5 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }	t_token;
-
 
 #endif

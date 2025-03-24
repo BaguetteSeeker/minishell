@@ -6,16 +6,16 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/21 15:17:05 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/24 11:08:00 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*find_parenthesis(char *str, size_t side)
-{
-	return (str);
-}
+// char	*find_parenthesis(char *str, size_t side)
+// {
+// 	return (str);
+// }
 
 int	parser(t_token *tokens)
 {
@@ -29,4 +29,5 @@ int	parser(t_token *tokens)
 		//Add cmd_args
 		tokens = tokens->next;
 	}
+	return (0);
 }

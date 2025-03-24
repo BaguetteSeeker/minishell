@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/21 17:08:05 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/23 21:12:07 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ size_t	create_token(char *prompt, t_token *token)
 	}
 	else
 	{
-		while (!ft_strchr("><|& ", prompt[offset]))
+		while (!ft_strchr("><|&) ", prompt[offset]))
 		{
 			if (ft_strchr("\"\'", prompt[offset])
 				&& ft_strchr(&prompt[offset + 1], prompt[offset]))

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/03/23 21:23:55 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/24 11:41:14 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # define VALID_PROMPT 1
 # define INVLID_PROMPT 0
 
-char	getset_env(void *g)
+t_minishell	*getset_env(void *g)
 {
 	static t_minishell *stored_g = {NULL};
 
@@ -25,7 +25,7 @@ char	getset_env(void *g)
 }
 
 //Add skip quotes function
-int	skip_quotes
+// int	skip_quotes;
 
 size_t	check_prompt(char *input)
 {
@@ -51,7 +51,14 @@ void	open_prompt(void)
 
 int	main(int argc, char *argv[], char *env[]) 
 {
-	getset_env(&(t_minishell){0});
+	(void)argc;
+	(void)argv;
+	(void)env;
+
+	getset_env(&(t_minishell){.var_env = env});
+	recurse_put(getset_env(NULL)->var_env);
+	ft_printf("Imported env has %u variables\n",
+		ft_ptrlen((const void **)getset_env(NULL)->var_env));
 	while (1) 
 	{
 		open_prompt();

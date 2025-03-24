@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/23 21:23:25 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/24 12:21:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,24 @@
  next  : Pointer to the next environment variable
  *
 *********************************************/
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
+// typedef struct s_env
+// {
+// 	char			*key;
+// 	char			*value;
+// 	struct s_env	*next;
+// }	t_env;
 
 typedef struct s_minishell
 {
 	t_token	*tok_lst;
-	char	var_env*[];
-	char	*var_shell[];
+	char 	**var_env;
+	char	*var_shell[255];
 	void	*cmd_table;
 	char	*prompt;
 }	t_minishell;
 
-t_token	*lexer(char *prompt);
-int		parser(t_token *tokens);
+t_minishell	*getset_env(void *g);
+t_token		*lexer(char *prompt);
+int			parser(t_token *tokens);
+void		open_prompt(void);
 #endif

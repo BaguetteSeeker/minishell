@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/23 21:12:07 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/27 12:44:42 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,16 @@ size_t	create_token(char *prompt, t_token *token)
 //Finalize err response
 int	check_syntax(t_token *tokens)
 {
+	static int	op_tok[] = {LESS, DLESS, GREAT, DGREAT, PIPE, OR_IF, AND_IF};
 	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
 	static int	cmdsep[] = {PIPE, OR_IF, AND_IF};
 
+	(void)cmdsep;
 	while (tokens->next)
 	{
-		if ((in_array(tokens->type, cmdsep, sizeof(cmdsep) / sizeof(int)) > -1
-				&& in_array(tokens->next->type, cmdsep,
-					sizeof(cmdsep) / sizeof(int)) > -1)
+		if ((in_array(tokens->type, op_tok, sizeof(op_tok) / sizeof(int)) > -1
+				&& in_array(tokens->next->type, op_tok,
+					sizeof(op_tok) / sizeof(int)) > -1)
 			|| (in_array(tokens->type, redirs,
 					sizeof(redirs) / sizeof(int)) > -1
 				&& tokens->next->type != WORD))
@@ -124,6 +126,7 @@ int	check_syntax(t_token *tokens)
 	}
 	return (VALID_SYNTAX);
 }
+
 
 t_token	*lexer(char *prompt)
 {

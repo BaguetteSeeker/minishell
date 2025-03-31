@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/24 12:21:06 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/31 22:18:54 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MINISHELL_H
 
 # define _DEFAULT_SOURCE
-# include <stddef.h>
 # include "token.h"
+# include "cmd_table.h"
 # include <libft.h>
 # include <signal.h>
 # include <stdbool.h>
@@ -24,6 +24,9 @@
 # include <readline/history.h>
 
 # define PROMPT_NAME "$minishell:"
+# define PS2 "> "
+# define ERR_MSG_SYNTAX "syntax error near unexpected token `"
+# define QUOTES_SET "\"\'" 
 
 /*********************************************
  *
@@ -43,13 +46,15 @@ typedef struct s_minishell
 {
 	t_token	*tok_lst;
 	char 	**var_env;
-	char	*var_shell[255];
+	char	**var_shell;
 	void	*cmd_table;
 	char	*prompt;
 }	t_minishell;
 
 t_minishell	*getset_env(void *g);
-t_token		*lexer(char *prompt);
+t_token		*tokenize(char *prompt);
 int			parser(t_token *tokens);
-void		open_prompt(void);
+char		*open_prompt(char *prompt);
+void		put_err(char *msg);
+char		*handle_heredocs(char *input, t_token *token);
 #endif

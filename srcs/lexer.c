@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/23 21:12:07 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/31 22:21:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ size_t	create_token(char *prompt, t_token *token)
 	}
 	else
 	{
-		while (!ft_strchr("><|&) ", prompt[offset]))
+		while (prompt[offset] && !ft_strchr("><|&) ", prompt[offset]))
 		{
 			if (ft_strchr("\"\'", prompt[offset])
 				&& ft_strchr(&prompt[offset + 1], prompt[offset]))
@@ -102,7 +102,6 @@ size_t	create_token(char *prompt, t_token *token)
 
 #define INVALID_SYNTAX 0
 #define VALID_SYNTAX 1
-#define ERR_MSG_SYNTAX "syntax error near unexpected token `"
 
 //Finalize err response
 int	check_syntax(t_token *tokens)
@@ -117,7 +116,8 @@ int	check_syntax(t_token *tokens)
 					sizeof(cmdsep) / sizeof(int)) > -1)
 			|| (in_array(tokens->type, redirs,
 					sizeof(redirs) / sizeof(int)) > -1
-				&& tokens->next->type != WORD))
+				&& tokens->next->type != WORD)
+			|| (tokens->type == DLESS && tokens->next->type != WORD))
 			return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
 					PROMPT_NAME, ERR_MSG_SYNTAX, tokens->next->value));
 		tokens = tokens->next;
@@ -125,7 +125,7 @@ int	check_syntax(t_token *tokens)
 	return (VALID_SYNTAX);
 }
 
-t_token	*lexer(char *prompt)
+t_token	*tokenize(char *prompt)
 {
 	t_token	*token_head;
 	t_token	*token;
@@ -134,17 +134,22 @@ t_token	*lexer(char *prompt)
 	token_head = token;
 	while (*prompt)
 	{
-		while (ft_strchr(" \t\v\n", *prompt))
+		while (*prompt && ft_strchr(SEP_CHARSET, *prompt))
 			prompt++;
+		if (!*prompt)
+			break ;
 		token = ft_lstnew(&(t_token){0});
-		// if !token
+		if (!token)
+			put_err("Failled to allocate memory for tokens");
 		prompt += create_token(prompt, token);
-		// ft_printf("Returned token type is %u and content is %s next with %p ptr\\n\n", 
-		// 	token->type, token->value, token->next);
 		ft_lstadd_back(&token_head, token);
 	}
+	token = ft_lstnew(&(t_token){.type = NEWLINE, .value = "NEWLINE", .next = NULL});
+	ft_lstadd_back(&token_head, token);
 	if (token)
+	{
 		ft_lstiter(token_head, &lst_put);
-	check_syntax(token_head);
+		check_syntax(token_head);
+	}
 	return (token_head);
 }

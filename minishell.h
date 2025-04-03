@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/31 22:18:54 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/03 17:41:03 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_minishell	*getset_env(void *g);
 t_token		*tokenize(char *prompt);
 int			parser(t_token *tokens);
 char		*open_prompt(char *prompt);
+void		handle_heredocs(t_token *token);
+void		lst_put(t_token *lst);
 void		put_err(char *msg);
-char		*handle_heredocs(char *input, t_token *token);
 #endif

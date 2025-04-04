@@ -6,14 +6,11 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/04 01:01:54 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/04 19:21:53 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-#define VALID_PROMPT 1
-#define INVLID_PROMPT 0
 
 t_minishell	*getset_env(void *g)
 {
@@ -24,32 +21,6 @@ t_minishell	*getset_env(void *g)
 	return (stored_g);
 }
 
-int	check_line(char *input)
-{
-	int	missing_par;
-
-	missing_par = 0;
-	while (*input)
-	{
-		if (*input == '(')
-			missing_par++;
-		else if (*input == ')')
-			missing_par--;
-		else if (ft_strchr(QUOTES_SET, *input) && ft_strchr(input + 1, *input))
-		{
-			input += (long)ft_strchr(input + 1, *input) - (long)input;
-			continue ;
-		}
-		// if (missing_par < 0) //Apparently managed during token syntax check
-		// 	return (INVLID_PROMPT);
-		input++;
-	}
-	if (!missing_par)
-		return (VALID_PROMPT);
-	else
-		return (INVLID_PROMPT);
-}
-
 char	*open_prompt(char *prompt)
 {
 	char	*input_line;
@@ -58,17 +29,6 @@ char	*open_prompt(char *prompt)
 	if (input_line == NULL) 
 		return (free(input_line), put_err("Readline faillure\n"), NULL);
 	return (input_line);
-}
-
-char	*open_heredoc(char *input)
-{
-	char	*tmp;
-
-	tmp = input;
-	input = ft_strjoin(input, open_prompt(PS2));
-	add_history(input);
-	free(tmp);
-	return (input);
 }
 
 int	main(int argc, char *argv[], char *env[])
@@ -89,7 +49,6 @@ int	main(int argc, char *argv[], char *env[])
 			add_history(input_line);
 		tokens = tokenize(input_line);
 		handle_heredocs(tokens);
-		// ft_printf("Your heredoc line is %s\n", handle_heredocs(tokens));
 		if (tokens)
 			ft_lstiter(tokens, &lst_put);
 		// while (!check_line(input_line))

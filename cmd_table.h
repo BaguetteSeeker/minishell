@@ -6,13 +6,13 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/21 14:48:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/03/30 19:38:41 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef	CMD_TABLE_H
 # define CMD_TABLE_H
-# include <stddef.h>
+# include "minishell.h"
 
 enum    e_node_types
 {

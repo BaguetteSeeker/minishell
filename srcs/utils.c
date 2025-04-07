@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/04 01:04:23 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/07 23:23:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	free_token_value(t_token *token)
 {
-	static int	to_clean[] = {
+	static int	no_clean[] = {
 		PIPE,
 		AMPERSAND,
 		OR_IF,
@@ -27,7 +27,7 @@ void	free_token_value(t_token *token)
 		CPAR
 	};
 
-	if (in_array(token->type, to_clean, sizeof(to_clean) / sizeof(int)))
+	if (in_array(token->type, no_clean, sizeof(no_clean) / sizeof(int)) == -1)
 		free(token->value);
 }
 

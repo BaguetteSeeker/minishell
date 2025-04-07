@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/06 15:18:47 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/07 23:57:16 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,31 +34,38 @@ char	*strip_quotes(char *str)
 	return (str);
 }
 
-int	check_line(char *input)
-{
-	int	missing_par;
+// int	read_shword(char *input, t_token *tok_lst)
+// {
+// 	int	missing_par;
+// 	int	i;
 
-	missing_par = 0;
-	while (*input)
-	{
-		if (*input == '(')
-			missing_par++;
-		else if (*input == ')')
-			missing_par--;
-		else if (ft_strchr(QUOTES_SET, *input) && ft_strchr(input + 1, *input))
-		{
-			input += (long)ft_strchr(input + 1, *input) - (long)input;
-			continue ;
-		}
-		// if (missing_par < 0) //Apparently managed during token syntax check
-		// 	return (INVLID_PROMPT);
-		input++;
-	}
-	if (!missing_par)
-		return (VALID_PROMPT);
-	else
-		return (INVLID_PROMPT);
-}
+// 	missing_par = 1;
+// 	while (*input)
+// 	{
+// 		if (*input == '(')
+// 			missing_par++;
+// 		else if (*input == ')')
+// 			missing_par--;
+// 		else if (ft_strchr(QUOTES_SET, *input) && ft_strchr(input + 1, *input))
+// 		{
+// 			input += (long)ft_strchr(input + 1, *input) - (long)input;
+// 			continue ;
+// 		}
+// 		input++;
+// 		if (missing_par == 0)
+// 			break ;
+// 		else if (missing_par > 0)
+// 		{
+// 			//tokenize first then check tokens ?
+// 			//open prompt
+// 			//run prompt through tokenization ??
+// 			//do token check on whole list
+// 			while ()
+// 			new_heredoc();
+// 		}
+// 	}
+// 	return (input);
+// }
 
 char	*open_heredoc(char *input)
 {
@@ -98,22 +105,6 @@ char	*new_heredoc(char *delimiter, bool apd_newline)
 			return (doc);
 	}
 }
-
-// char	*new_hereline(char *input)
-// {
-// 	char	*tmp;
-
-// 	if (input)
-// 	{
-// 		tmp = input;
-// 		input = ft_strjoin(input, open_prompt(PS2));
-// 		add_history(input);
-// 		free(tmp);
-// 	}
-// 	else
-// 		input = open_prompt(PS2);
-// 	return (input);
-// }
 
 void	handle_heredocs(t_token *token)
 {

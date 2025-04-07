@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/04 19:21:53 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/07 23:51:53 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argc;
 	(void)argv;
 
+	tokens = NULL;
 	getset_env(&(t_minishell){.var_env = env});
 	// recurse_put(getset_env(NULL)->var_env);
 	// ft_printf("Imported env has %u variables\n",
@@ -47,12 +48,11 @@ int	main(int argc, char *argv[], char *env[])
 		input_line = open_prompt(PROMPT_NAME);
 		if (input_line && *input_line)
 			add_history(input_line);
-		tokens = tokenize(input_line);
+		tokens = tokenize(input_line, tokens);
 		handle_heredocs(tokens);
 		if (tokens)
 			ft_lstiter(tokens, &lst_put);
-		// while (!check_line(input_line))
-		// 	input_line = open_heredoc(input_line);
+		ft_lstclear(&tokens, free_token_value);
 		// // parser(tokens);
 		free(input_line);
 	}

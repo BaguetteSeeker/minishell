@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/08 11:57:28 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/08 21:37:03 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ size_t	create_token(char *input, t_token *token)
 		*token = get_grammar_token(input);
 		if (token->type)									
 			i += ft_strlen(token->value);
+		return (i);
 	}
 	else
 	{
@@ -76,8 +77,6 @@ int	check_syntax(t_token *tokens, t_token *head)
 	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
 	// static int	cmdsep[] = {PIPE, OR_IF, AND_IF};
 	static int	par_depth = 0;
-	(void)head;
-	// (void)cmdsep;
 	
 	if (tokens && tokens->next)
 	{
@@ -92,22 +91,18 @@ int	check_syntax(t_token *tokens, t_token *head)
 					sizeof(redirs) / sizeof(int)) > -1
 				&& tokens->next->type != WORD)
 			|| (tokens->type == DLESS && tokens->next->type != WORD)
-			|| (par_depth < 0))
+			|| (par_depth < 0) || (tokens->type == WORD && tokens->next->type == OPAR))
 			return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
-					PROMPT_NAME, ERR_MSG_SYNTAX, tokens->next->value));
-		tokens = tokens->next;
+					PROMPT_NAME, ERR_MSG_SYNTAX, tokens->next->value), exit(1), 1);
+		if (tokens->next->type == T_NEWLINE && par_depth > 0)
+		{
+			tokens->next = NULL;
+			ft_lstdelone(tokens->next, free_token_value);
+			tokenize(open_prompt(PS2), head);
+			par_depth = 0;
+		}
 	}
-	/* if (tokens->type == NEWLINE && par_depth > 0)
-	{
-		ft_lstdelone(token->next);
-		new_heredoc();
-	}
-	*/
-	//Trigger error for bash-5.0$ (heyy; (((ohh)) && (jj
-	//Trigger error for WORD preceeding OPAR
-	// if (par_depth > 0)
-	// 	ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
-	// 		PROMPT_NAME, ERR_MSG_SYNTAX, tokens->next->value);
+	//Trigger error for WORD WORD
 	return (VALID_SYNTAX);
 }
 
@@ -131,12 +126,12 @@ t_token	*tokenize(char *prompt, t_token *token_head)
 		ft_lstadd_back(&token_head, token);
 		check_syntax(prev_token, token_head);
 	}
-	token = ft_lstnew(&(t_token){NEWLINE, "newline", NULL});
+	token = ft_lstnew(&(t_token){T_NEWLINE, "newline", NULL});
+	prev_token = ft_lstlast(token_head);
 	ft_lstadd_back(&token_head, token);
+	check_syntax(prev_token, token_head);
+	//free(prompt);
 	// if (token)
-	// {
 	// 	// ft_lstiter(token_head, &lst_put);
-		
-	// }
 	return (token_head);
 }

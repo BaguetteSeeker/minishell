@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/07 23:55:43 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/08 19:38:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # define _DEFAULT_SOURCE
+# include <stddef.h>
 # include "token.h"
 # include "cmd_table.h"
 # include <libft.h>

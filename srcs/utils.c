@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/07 23:23:25 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/08 21:01:47 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	free_token_value(t_token *token)
 		DLESS,
 		DGREAT,
 		OPAR,
-		CPAR
+		CPAR,
+		T_NEWLINE
 	};
 
 	if (in_array(token->type, no_clean, sizeof(no_clean) / sizeof(int)) == -1)

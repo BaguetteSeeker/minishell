@@ -6,13 +6,13 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/03/31 13:36:15 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/08 19:53:37 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_H
 # define TOKEN_H
-# include <stddef.h>
+
 /**
  * enum Token_Types - Types of tokens in a command line
  * @WORD: A word in the command line
@@ -46,7 +46,7 @@ enum	e_Token_Types
 	DGREAT,
 	OPAR,
 	CPAR,
-	NEWLINE,
+	T_NEWLINE,
 	IO_NUMBER
 };
 

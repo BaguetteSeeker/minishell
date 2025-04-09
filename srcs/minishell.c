@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/08 21:37:12 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/09 18:55:24 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,24 @@ char	*open_prompt(char *prompt)
 	char	*input_line;
 
 	input_line = readline(prompt);
-	if (input_line == NULL) 
+	if (input_line == NULL)
 		return (free(input_line), put_err("Readline faillure\n"), NULL);
 	return (input_line);
 }
 
+// recurse_put(getset_env(NULL)->var_env);
+// ft_printf("Imported env has %u variables\n",
+	// ft_ptrlen((const void **)getset_env(NULL)->var_env));
+			// // parser(tokens);
 int	main(int argc, char *argv[], char *env[])
 {
 	char	*input_line;
 	t_token	*tokens;
+
 	(void)argc;
 	(void)argv;
-
 	tokens = NULL;
-	getset_env(&(t_minishell){.var_env = env});
-	// recurse_put(getset_env(NULL)->var_env);
-	// ft_printf("Imported env has %u variables\n",
-		// ft_ptrlen((const void **)getset_env(NULL)->var_env));
+	getset_env(&(t_minishell){.var_env = env})->tok_lst = tokens;
 	while (1)
 	{
 		input_line = open_prompt(PROMPT_NAME);
@@ -53,8 +54,6 @@ int	main(int argc, char *argv[], char *env[])
 		if (tokens)
 			ft_lstiter(tokens, &lst_put);
 		ft_lstclear(&tokens, free_token_value);
-		// // parser(tokens);
-		free(input_line);
 	}
 	return (0);
 }

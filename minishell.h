@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/08 19:38:25 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/09 16:46:50 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,6 @@ void		handle_heredocs(t_token *token);
 char		*new_heredoc(char *delimiter, bool apd_newline);
 void		lst_put(t_token *lst);
 void		put_err(char *msg);
+void		clean_shell(void);
 void		free_token_value(t_token *token);
 #endif

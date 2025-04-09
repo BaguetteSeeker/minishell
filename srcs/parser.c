@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/08 15:31:53 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/09 22:48:38 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ t_ast_node *parse_tokens(t_token **tokens)
 
     if (!*tokens)
         return NULL;
+    node = malloc(sizeof(t_ast_node));
     if ((*tokens)->type == OPAR) // Handle subshell
     {
-        *tokens = (*tokens)->next; // Skip '('
-        node = malloc(sizeof(t_ast_node));
+        *tokens = (*tokens)->next; // Skip '(
         node->type = NODE_SUBSHELL;
         node->subtree = parse_tokens(tokens); // Parse the content of the subshell
         if ((*tokens)->type != CPAR)
@@ -64,9 +64,11 @@ t_ast_node *parse_tokens(t_token **tokens)
     }
     else if ((*tokens)->type == WORD) // Handle command
 	{
+        //Detokenize the command
+        //allocate char **for params
+        node->type = NODE_COMMAND;
 		while ((*tokens)->type == WORD)
 		{
-			node = malloc(sizeof(t_ast_node));
 			node->type = NODE_COMMAND;
 			node->value = ft_strdup((*tokens)->value);
 			*tokens = (*tokens)->next; // Move to the next token
@@ -74,12 +76,11 @@ t_ast_node *parse_tokens(t_token **tokens)
     }
     else if ((*tokens)->type == AND_IF || (*tokens)->type == OR_IF) // Handle operator
     {
-        node = malloc(sizeof(t_ast_node));
         node->type = NODE_OPERATOR;
         node->value = ft_strdup((*tokens)->value);
         *tokens = (*tokens)->next; // Move to the next token
         node->left = parse_tokens(tokens); // Parse the left operand
         node->right = parse_tokens(tokens); // Parse the right operand
     }
-    return node;
+    return (node);
 }

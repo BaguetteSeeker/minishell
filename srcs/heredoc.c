@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/07 23:57:16 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/11 00:30:17 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,39 +33,6 @@ char	*strip_quotes(char *str)
 	str[j] = '\0';
 	return (str);
 }
-
-// int	read_shword(char *input, t_token *tok_lst)
-// {
-// 	int	missing_par;
-// 	int	i;
-
-// 	missing_par = 1;
-// 	while (*input)
-// 	{
-// 		if (*input == '(')
-// 			missing_par++;
-// 		else if (*input == ')')
-// 			missing_par--;
-// 		else if (ft_strchr(QUOTES_SET, *input) && ft_strchr(input + 1, *input))
-// 		{
-// 			input += (long)ft_strchr(input + 1, *input) - (long)input;
-// 			continue ;
-// 		}
-// 		input++;
-// 		if (missing_par == 0)
-// 			break ;
-// 		else if (missing_par > 0)
-// 		{
-// 			//tokenize first then check tokens ?
-// 			//open prompt
-// 			//run prompt through tokenization ??
-// 			//do token check on whole list
-// 			while ()
-// 			new_heredoc();
-// 		}
-// 	}
-// 	return (input);
-// }
 
 char	*open_heredoc(char *input)
 {

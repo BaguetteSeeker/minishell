@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/09 18:27:23 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/12 13:33:08 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,16 +89,15 @@ void	check_completion(t_token *token, t_token *head)
 
 int	check_syntax(t_token *tok, t_token *head)
 {
-	static int	op_tok[] = {LESS, DLESS, GREAT, DGREAT, PIPE, OR_IF, AND_IF};
+	static int	optok[] = {LESS, DLESS, GREAT, DGREAT, PIPE, OR_IF, AND_IF};
 	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
 
 	if (tok && tok->next)
 	{
-		if ((in_array(tok->type, op_tok, sizeof(op_tok) / sizeof(int)) > -1
-				&& in_array(tok->next->type, op_tok,
-					sizeof(op_tok) / sizeof(int)) > -1)
-			|| (in_array(tok->type, redirs,
-					sizeof(redirs) / sizeof(int)) > -1
+		if ((in_array(tok->type, optok, nb_elems(optok, sizeof(optok)))
+				&& in_array(tok->next->type, optok,
+					nb_elems(optok, sizeof(optok))))
+			|| (in_array(tok->type, redirs, nb_elems(redirs, sizeof(redirs)))
 				&& tok->next->type != WORD)
 			|| (tok->type == DLESS && tok->next->type != WORD)
 			|| (tok->type == CPAR && tok->next->type == OPAR))

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/09 16:46:50 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/12 18:46:53 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 # define PROMPT_NAME "$minishell:"
 # define PS2 "> "
-# define ERR_MSG_SYNTAX "syntax error near unexpected token `"
+# define ERRMSG_SYNTAX "syntax error near unexpected token `"
 # define QUOTES_SET "\"\'" 
 
 /*********************************************
@@ -62,4 +62,5 @@ void		lst_put(t_token *lst);
 void		put_err(char *msg);
 void		clean_shell(void);
 void		free_token_value(t_token *token);
+t_ast_node	*parse_tokens(t_token **tokens);
 #endif

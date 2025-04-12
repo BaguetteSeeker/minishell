@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/12 13:33:08 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/12 17:11:47 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,7 @@ size_t	create_token(char *input, t_token *token)
 	return (i);
 }
 
-#define INVALID_SYNTAX 0
-#define VALID_SYNTAX 1
-
-void	check_completion(t_token *token, t_token *head)
+t_token	*check_completion(t_token *token, t_token *head)
 {
 	static int	par_dft = 0;
 
@@ -80,14 +77,19 @@ void	check_completion(t_token *token, t_token *head)
 		par_dft--;
 	if (par_dft < 0)
 		return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n", PROMPT_NAME,
-				ERR_MSG_SYNTAX, token->value), exit(1));
+				ERRMSG_SYNTAX, token->value), exit(1), token->next);
 	if (token->next->type == T_NEWLINE && (par_dft > 0
 			|| token->type == OR_IF || token->type == AND_IF
 			|| token->type == PIPE))
+	{
+		ft_lstdelone(token->next, free_token_value);
+		token->next = NULL;
 		tokenize(open_prompt(PS2), head);
+	}
+	return ((ft_lstlast(head)));
 }
 
-int	check_syntax(t_token *tok, t_token *head)
+t_token	*check_syntax(t_token *tok, t_token *head)
 {
 	static int	optok[] = {LESS, DLESS, GREAT, DGREAT, PIPE, OR_IF, AND_IF};
 	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
@@ -102,17 +104,17 @@ int	check_syntax(t_token *tok, t_token *head)
 			|| (tok->type == DLESS && tok->next->type != WORD)
 			|| (tok->type == CPAR && tok->next->type == OPAR))
 			return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n", PROMPT_NAME,
-					ERR_MSG_SYNTAX, tok->next->value), exit(1), INVALID_SYNTAX);
-		check_completion(tok, head);
+					ERRMSG_SYNTAX, tok->next->value), exit(1), tok->next);
+		return (check_completion(tok, head));
 	}
-	return (VALID_SYNTAX);
+	return (head);
 }
 
 t_token	*tokenize(char *prompt, t_token *token_head)
 {
-	t_token	*token;
-	t_token	*prev_token;
-	char	*tmp;
+	static t_token	*prev_token = NULL;
+	t_token			*token;
+	char			*tmp;
 
 	tmp = prompt;
 	token = NULL;
@@ -129,7 +131,7 @@ t_token	*tokenize(char *prompt, t_token *token_head)
 			prompt += create_token(prompt, token);
 		prev_token = ft_lstlast(token_head);
 		ft_lstadd_back(&token_head, token);
-		check_syntax(prev_token, token_head);
+		token = check_syntax(prev_token, token_head);
 		if (token->type == T_NEWLINE)
 			break ;
 	}

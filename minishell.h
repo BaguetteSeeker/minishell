@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/12 18:46:53 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/12 18:54:21 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@
 
 typedef struct s_minishell
 {
-	t_token	*tok_lst;
-	char 	**var_env;
-	char	**var_shell;
-	void	*cmd_table;
-	char	*prompt;
+	char 		**var_env;
+	char		**var_shell;
+	char		*prompt;
+	t_token		*tok_lst;
+	t_ast_node	*cmd_table;
 }	t_minishell;
 
 t_minishell	*getset_env(void *g);
@@ -63,4 +63,5 @@ void		put_err(char *msg);
 void		clean_shell(void);
 void		free_token_value(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens);
+void    	print_ast(t_ast_node *node);
 #endif

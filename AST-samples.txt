@@ -1,0 +1,13 @@
+ls my_file.txt && echo "File exists"
+ ├── cmd_id = C_OPE
+ ├── cmd_str = "&&"
+
+
+ ├── cmd_id = C_EXT
+ ├── cmd_str = "ls"
+ ├── cmd_args = "file.txt" / NULL
+ ├── cmd_left = NULL
+ ├── cmd_right = NULL
+ ├── cmd_parent = NULL
+ └── 
+

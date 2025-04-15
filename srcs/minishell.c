@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/12 19:16:52 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/14 23:41:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,26 @@ int	main(int argc, char *argv[], char *env[])
 {
 	char	*input_line;
 	t_token	*tokens;
+	t_token	*tokens_tmp;
 
 	(void)argc;
 	(void)argv;
-	tokens = NULL;
 	getset_env(&(t_minishell){.var_env = env})->tok_lst = tokens;
 	while (1)
 	{
+		tokens = NULL;
 		input_line = open_prompt(PROMPT_NAME);
 		if (input_line && *input_line)
 			add_history(input_line);
 		tokens = tokenize(input_line, tokens);
 		handle_heredocs(tokens);
 		getset_env(NULL)->cmd_table = parse_tokens(&tokens);
+		tokens_tmp = tokens;
 		print_ast(getset_env(NULL)->cmd_table);
 		// if (tokens)
 		// 	ft_lstiter(tokens, &lst_put);
 		//refresh the ast
-		// ft_lstclear(&tokens, free_token_value);
+		ft_lstclear(&tokens_tmp, free_token_value);
 	}
 	return (0);
 }

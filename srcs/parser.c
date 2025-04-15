@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/15 15:27:47 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:53:39 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static t_ast_node	*parse_command(t_token **tokens)
 	{
 		*tokens = (*tokens)->next; // Skip '(
 		node->type = NODE_SUBSHELL;
-		node->left = parse_tokens(tokens, NULL);
+		node->left = parse_tokens(tokens, parse_command(tokens));
 		*tokens = (*tokens)->next; // Skip ')'
 	}
 	else 
@@ -108,29 +108,30 @@ static t_ast_node	*parse_command(t_token **tokens)
 	return (node);
 }
 
+//!token retun passed node
+//!passed_node parse the leftmost cmd
+//call parse_token with said node as param
+//if passed node ! null attach it to right of node_operator
+//then pass node_operator to parse_tokens
+//return parse_token result
 t_ast_node *parse_tokens(t_token **tokens, t_ast_node *passed_node)
 {
 	t_ast_node *node;
 
 	node = malloc(sizeof(t_ast_node));
 	*node = (t_ast_node){0};  
-	//!token retun passed node
-	//!passed_node parse the leftmost cmd
-	//call parse_token with said node as param
-	//if passed node ! null attach it to right of node_operator
-	//then pass node_operator to parse_tokens
-	//return parse_token result
 	if (!(*tokens) || (*tokens)->type == T_NEWLINE)
 		return (passed_node);
 	else if (!passed_node)
 		return (parse_tokens(tokens, parse_command(tokens)));
-	if (*tokens && ((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
+	if (((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
 	{
 		node->type = NODE_OPERATOR;
         node->value = (*tokens)->value; // Store the operator (e.g., "&&" or "||")
         *tokens = (*tokens)->next; // Move to the next token
-		// node = logic_node; // Update the current node to the operator node
 	}
+	else if ((*tokens)->type == CPAR)
+		return (passed_node);
 	else
 		put_err("Uncatched Syntax Error : Expecting Operator token but none was provided");
 	node->left = passed_node;

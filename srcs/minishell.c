@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/14 23:41:06 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/15 10:38:53 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	main(int argc, char *argv[], char *env[])
 			add_history(input_line);
 		tokens = tokenize(input_line, tokens);
 		handle_heredocs(tokens);
-		getset_env(NULL)->cmd_table = parse_tokens(&tokens);
+		getset_env(NULL)->cmd_table = parse_tokens(&tokens, NULL);
 		tokens_tmp = tokens;
 		print_ast(getset_env(NULL)->cmd_table);
 		// if (tokens)

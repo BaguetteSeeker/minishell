@@ -6,26 +6,11 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/15 10:28:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/15 15:27:47 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	parser(t_token *tokens)
-{
-	while (tokens)
-	{
-		//if logic
-			//Allocate logic node
-			//
-		//Allocate cmd_node
-		//Add cmd_name
-		//Add cmd_args
-		tokens = tokens->next;
-	}
-	return (0);
-}
 
 // void    wipe_ast(t_ast_node *node)
 // {
@@ -59,7 +44,9 @@ void    print_ast(t_ast_node *node)
     else if (node->type == NODE_OPERATOR)
     {
         ft_printf("Operator: %s\n", node->value);
+		ft_printf("Left Node: \n");
         print_ast(node->left);
+		ft_printf("Right Node: \n");
         print_ast(node->right);
     }
     node->left = NULL;
@@ -83,24 +70,24 @@ void    assert_precedence(t_ast_node **top_node, t_ast_node **sub_node)
 	}
 }
 
-t_ast_node *parse_tokens(t_token **tokens)
+static t_ast_node	*parse_command(t_token **tokens)
 {
 	t_ast_node *node;
-	t_ast_node *logic_node;
-
-	if (!*tokens)
-		return NULL;
+	
+	// if (!*tokens)
+	// 	return NULL;
 	node = malloc(sizeof(t_ast_node));
 	*node = (t_ast_node){0};
+
 	if ((*tokens)->type == OPAR) // Handle subshell
 	{
 		*tokens = (*tokens)->next; // Skip '(
 		node->type = NODE_SUBSHELL;
-		node->left = parse_tokens(tokens);
+		node->left = parse_tokens(tokens, NULL);
 		*tokens = (*tokens)->next; // Skip ')'
 	}
-	else if ((*tokens)->type == WORD) // Handle command
-	{
+	else 
+	{	
 		node->type = NODE_COMMAND;
 		node->value = (*tokens)->value;
 		*tokens = (*tokens)->next;
@@ -117,21 +104,36 @@ t_ast_node *parse_tokens(t_token **tokens)
 		args[arg_count] = NULL; // Null-terminate the arguments array
 		node->args = args; // Assign arguments to the node
 	}
-   
+
+	return (node);
+}
+
+t_ast_node *parse_tokens(t_token **tokens, t_ast_node *passed_node)
+{
+	t_ast_node *node;
+
+	node = malloc(sizeof(t_ast_node));
+	*node = (t_ast_node){0};  
+	//!token retun passed node
+	//!passed_node parse the leftmost cmd
+	//call parse_token with said node as param
+	//if passed node ! null attach it to right of node_operator
+	//then pass node_operator to parse_tokens
+	//return parse_token result
+	if (!(*tokens) || (*tokens)->type == T_NEWLINE)
+		return (passed_node);
+	else if (!passed_node)
+		return (parse_tokens(tokens, parse_command(tokens)));
 	if (*tokens && ((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
 	{
-		logic_node = malloc(sizeof(t_ast_node));
-		*logic_node = (t_ast_node){0};
-		logic_node->type = NODE_OPERATOR;
-		logic_node->value = (*tokens)->value; // Store the operator (e.g., "&&" or "||")
-		*tokens = (*tokens)->next; // Move to the next token
-
-		logic_node->left = node; // Attach the current node as the left child
-		logic_node->right = parse_tokens(tokens); // Parse the right operand
-		ft_printf("Before assert : Top node is %p and sub node is %p \n", logic_node, logic_node->right);
-		assert_precedence(&logic_node, &logic_node->right);
-		ft_printf("After assert : Top node is %p and sub node is %p \n--\n", logic_node, logic_node->right);
-		node = logic_node; // Update the current node to the operator node
+		node->type = NODE_OPERATOR;
+        node->value = (*tokens)->value; // Store the operator (e.g., "&&" or "||")
+        *tokens = (*tokens)->next; // Move to the next token
+		// node = logic_node; // Update the current node to the operator node
 	}
-	return (node);
+	else
+		put_err("Uncatched Syntax Error : Expecting Operator token but none was provided");
+	node->left = passed_node;
+	node->right = parse_command(tokens);
+	return (parse_tokens(tokens, node));
 }

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/15 21:45:31 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/16 14:56:37 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct  s_redirs
 }  t_redirs;
 
 typedef struct s_ast_node {
-    t_node_type 		type;    // Type of the node (command, operator, subshell)
+    size_t       		type;    // Type of the node (command, operator, subshell)
     char              	*value;  // Value of the node (e.g., command name, operator)
 	char              	**args;   // Value of the node (e.g., command name, operator)
 	t_redirs  			io_streams;

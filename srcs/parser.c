@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/16 12:35:56 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/16 21:19:32 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void    print_ast(t_ast_node *node)
     else if (node->type == NODE_COMMAND)
     {
         ft_printf("Command: %s\n", node->value);
-        recurse_put(node->args);
+        //recurse_put(node->args);
         //ft_clean_memtree(node->args);
         // print_ast(node->left);
         // print_ast(node->right);
@@ -74,8 +74,6 @@ static t_ast_node	*parse_command(t_token **tokens)
 {
 	t_ast_node *node;
 	
-	// if (!*tokens)
-	// 	return NULL;
 	node = malloc(sizeof(t_ast_node));
 	*node = (t_ast_node){0};
 
@@ -116,32 +114,43 @@ static t_ast_node	*parse_command(t_token **tokens)
 //return parse_token result
 t_ast_node *parse_tokens(t_token **tokens, t_ast_node *passed_node)
 {
-	t_ast_node	*node;
+	t_ast_node *node;
+	t_ast_node *next_cmd;
 
 	node = malloc(sizeof(t_ast_node));
 	*node = (t_ast_node){0};  
 	if (!(*tokens) || (*tokens)->type == T_NEWLINE || (*tokens)->type == CPAR)
 		return (passed_node);
 	if (!passed_node)
-		node = parse_command(tokens);
-	else if (((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
-	{
-		node->type = NODE_OPERATOR;
-        node->value = (*tokens)->value; // Store the operator (e.g., "&&" or "||")
-        *tokens = (*tokens)->next; // Move to the next token
-		node->left = passed_node;
-		node->right = parse_tokens(tokens, parse_command(tokens));
-	}
-	else if ((*tokens)->type == PIPE)
+		passed_node = parse_command(tokens);
+	node->type = (*tokens)->type;
+	node->value = (*tokens)->value; // Store the operator (e.g., "&&" or "||")
+	node->left = passed_node;
+	*tokens = (*tokens)->next; // Move to the next token
+	next_cmd = parse_command(tokens);
+	if (node->type == PIPE)
 	{
 		node->type = NODE_PIPE;
-        node->value = (*tokens)->value; // Store the operator (e.g., "&&" or "||")
-		*tokens = (*tokens)->next; // Move to the next token
-		passed_node->right = node;
+		if ((*tokens)->type == PIPE)
+		{
+			node->right = parse_tokens(tokens, next_cmd);
+		}
+		else
+		{
+			node->right = next_cmd;
+			// if ((*tokens)->type != T_NEWLINE)
+			return (node);
+		}
 	}
-	else if ((*tokens)->type == WORD)
-		return (parse_command(tokens));
+	else if ((node->type == AND_IF || node->type == OR_IF))
+	{
+		node->type = NODE_OPERATOR;
+		if ((*tokens)->type == PIPE)
+			node->right = parse_tokens(tokens, next_cmd);
+		else
+			node->right = next_cmd;
+	}
 	else
 		put_err("Uncatched Syntax Error : Expecting Operator token but none was provided");
-	return (node);
+	return (parse_tokens(tokens, node));
 }

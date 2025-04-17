@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/15 16:45:10 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/17 17:37:56 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,15 +109,15 @@ void ft_prepare_pipe(t_cmd *cmd)
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-	if (cmd->left->out_file != STDOUT_FILENO)
+	if (cmd->left->file_out != STDOUT_FILENO)
 	{
-		close(cmd->left->out_file);
-		cmd->left->out_file = cmd->pipe_fd[1];
+		close(cmd->left->file_out);
+		cmd->left->file_out = cmd->pipe_fd[1];
 	}
-	if (cmd->right->in_file != STDIN_FILENO)
+	if (cmd->right->file_int != STDfile_inNO)
 	{
-		close(cmd->right->in_file);
-		cmd->right->in_file = cmd->pipe_fd[0];
+		close(cmd->right->file_in);
+		cmd->right->file_in = cmd->pipe_fd[0];
 	}
 }
 
@@ -177,15 +177,15 @@ int	ft_fork_node_pipe(t_cmd node, int pos, int fd)
 ************************************************************************/
 void ft_close_pipe_flows(t_cmd *cmd, int fd[2])
 {
-	if (cmd->left->out_file != STDOUT_FILENO)
+	if (cmd->left->file_out != STDOUT_FILENO)
 	{
-		ft_close(cmd->left->out_file);
+		ft_close(cmd->left->file_out);
 		cmd->left->out_file = STDOUT_FILENO;
 	}
-	if (cmd->right->in_file != STDIN_FILENO)
+	if (cmd->right->file_in != STDIN_FILENO)
 	{
-		ft_close(cmd->right->in_file);
-		cmd->right->in_file = STDIN_FILENO;
+		ft_close(cmd->right->file_in);
+		cmd->right->file_in = STDIN_FILENO;
 	}
 	ft_close(fd[0]);
 	ft_close(fd[1]);
@@ -204,7 +204,7 @@ void	cmd_exec_pipe(t_cmd *cmd)
 	ft_printf("Executing | : \n");
 	if (!cmd->left || !cmd->right)
 	{
-		ft_printf("*** Error: | operator needs two operands\n");
+		ft_printf("*** Error: operator | needs two operands\n");
 		return (-1);	// error
 	}
 	ft_prepare_pipe(cmd);

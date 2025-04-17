@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:49:23 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/14 16:08:52 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/17 17:24:32 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,16 @@ typedef struct s_cmd
 	struct s_cmd	*right;
 	struct s_cmd	*parent;
 	bool			is_child;
-	int				in_file;
-	int				out_file;
-	bool			out_append;
+	int				file_in;
+	int				file_out;
+	bool			file_append;
 	int				pipe_fd[2];
 	int				status;
+	int				pid;
+//	int				*pipe;
+//	int				type;
+//	int				weight;
+	bool			is_child;
 }					t_cmd;
 
 #endif

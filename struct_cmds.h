@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:49:23 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/17 17:24:32 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/17 19:39:48 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,11 @@
 typedef enum e_node_type
 {
 	N_CMD,
-	N_CMDint,
-	N_CMDext,
 	N_OPE_AND2,
 	N_OPE_OR2,
 	N_OPE_PIPE,
-	N_SUBsh
+	N_SUBSH,
+	N_CMD_BUILTIN
 }	t_node_type;
 
 /**************************************************************************
@@ -48,7 +47,6 @@ typedef enum e_node_type
 **************************************************************************/
 typedef enum e_cmd_bi
 {
-	CMD_EXT,
 	CMD_ECHO,
 	CMD_CD,
 	CMD_PWD,
@@ -86,10 +84,6 @@ typedef struct s_cmd
 	int				pipe_fd[2];
 	int				status;
 	int				pid;
-//	int				*pipe;
-//	int				type;
-//	int				weight;
-	bool			is_child;
 }					t_cmd;
 
 #endif

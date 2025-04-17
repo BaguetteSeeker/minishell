@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 21:10:10 by souaret           #+#    #+#             */
-/*   Updated: 2025/01/26 20:27:32 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/17 19:38:23 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	cmd_free_all(void)
 	cmd_set(NULL);
 }
 
-char	*cmd_print(int cmd_id)
+const char	*cmd_print(int cmd_id)
 {
 	if (cmd_id == CMD_ECHO)
 		return ("echo");

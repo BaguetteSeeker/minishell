@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/17 17:37:56 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/17 19:39:50 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 /*------------------------------------------------------------------------
  * This is the execution part of the minishell
  *		- it will execute the commands as organized in the binary tree. 
- *        It will manage the following:
+ *
+ *   It will/should manage the following:
  *		- pipes
  *		- redirections
  *		- environment variables
@@ -34,24 +35,75 @@
  * 
  * Execution cycle:
  *		- Executes the cmd tree in a left-node-right order, recursively
+ *
+ * TODO: if an error occurs on any node, what to do ?
+ * 			exit with the error code ?
+ * 		 	free-all ?
+ * 			close all ? 
+ * 			clean-up ?
+ * 			exit ?
+*
 ------------------------------------------------------------------------*/
+/***********************************************************************
+ * 
+ * Execute a node in the binary tree
+ * 		if operator at node level, then we call the operator execution
+ *		if cmd at node level, then we execute left command first,
+ *			then right command
+ *		TODO: test each function
+ ***********************************************************************/
+int	cmd_exec_node(t_cmd *cmd)
+{
+	int	status;
+
+	status = -1;
+	if (!cmd)
+		return (status);
+	if (cmd->cmd_id == N_OPE_AND2)
+		status = cmd_exe_and(cmd);
+	else if (cmd->cmd_id == N_OPE_OR2)
+		status = cmd_exe_or(cmd);
+	else if (cmd->cmd_id == N_OPE_PIPE)
+		status = cmd_exe_pipe(cmd);
+	else if (cmd->cmd_id == N_CMD)
+		status = cmd_exe_cmd(cmd);
+	else if (cmd->cmd_id == N_CMD_BUILTIN)
+		status = cmd_exe_builtin(cmd);
+	else if (cmd->cmd_id == N_SUBSH)
+		status = cmd_exe_subshell(cmd);
+	else
+		ft_printf("*** Unknown command type: %d : %s\n", \
+			cmd->cmd_id, cmd->cmd_str);
+	return (status);
+}	
+
 /************************************************************************
  * 
- * 
+ * Execute a standallone cmd
  * 
 ************************************************************************/
-void	cmd_exec_cmd(t_cmd *cmd, int cmd_id)
+int	cmd_exec_cmd(t_cmd *cmd, int cmd_id)
 {
-	(void)cmd;
+	(void) cmd;
 	(void) cmd_id;
-	printf("Executing command: %s\n", cmd_print(cmd_id));
-	//TODO: 
-	return ;
+	status = -1;
+	ft_printf("Executing command: %s\n", cmd_print(cmd_id));
+	if (cmd->left || cmd->right)
+	{
+		ft_printf("*** Error: command is not a leaf node\n");
+		return (-1);
+	}
+	{
+		ft_printf("*** Error: command is NULL\n");
+		return (-1);
+	}
+	status = cmd_exec_node(cmd->left);
+	return (status);
 }
 
 /************************************************************************
  * 
- * Execute a && command 
+ * Execute && command 
  * a command that executes well, returns OK.
  * 	if status of LEFT cmd is not OK ( = 0), 
  * 		then no need to execute the RIGHT cmd
@@ -75,11 +127,9 @@ int	cmd_exec_and(t_cmd *cmd)
 
 /************************************************************************
  * 
- * Execute || command (with 2 commands : LEFT and RIGHT
+ * Execute || command (with 2 commands : LEFT || RIGHT )
  * 
- * TODO: if an error occured, exit with the error code, 
- * 		 freeall, clean-up and exit.
-************************************************************************/
+ ***********************************************************************/
 int	cmd_exec_or(t_cmd *cmd)
 {
 	int	status;
@@ -87,7 +137,7 @@ int	cmd_exec_or(t_cmd *cmd)
 	ft_printf("--- Executing || : \n");
 	if (!cmd->left || !cmd->right)
 	{
-		ft_printf("*** Error: || operator needs two operands\n");
+		ft_printf("*** Error: operator || needs two operands\n");
 		return (-1);	// error
 	}
 	status = cmd_exec_node(cmd->left);
@@ -97,124 +147,6 @@ int	cmd_exec_or(t_cmd *cmd)
 	return (status);
 }
 
-/************************************************************************
- * 
- * 
- * TODO: review this copiplot formula of the pipe preparation
-************************************************************************/
-void ft_prepare_pipe(t_cmd *cmd)
-{
-	if (pipe(cmd->pipe_fd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	if (cmd->left->file_out != STDOUT_FILENO)
-	{
-		close(cmd->left->file_out);
-		cmd->left->file_out = cmd->pipe_fd[1];
-	}
-	if (cmd->right->file_int != STDfile_inNO)
-	{
-		close(cmd->right->file_in);
-		cmd->right->file_in = cmd->pipe_fd[0];
-	}
-}
-
-/************************************************************************
- * 
- * 
- * 
-************************************************************************/
-void	ft_close(int *fd)
-{
-	if (*fd == -1 || *fd == STDIN_FILENO || *fd == STDERR_FILENO
-		|| *fd == STDOUT_FILENO)
-		return ;
-	if (close(*fd) == -1)
-	{
-		perror("close");
-		free_and_exit(1);
-	}
-	*fd = -1;
-}
-
-/************************************************************************
- * 
- * 
- * TODO: Review this code & test behavior
-************************************************************************/
-int	ft_fork_node_pipe(t_cmd node, int pos, int fd)
-{
-	int	pid;
-	int	status;
-
-	pid = ft_fork(node);
-	do_check_error_exit((pid == -1), EXIT_FAILURE);
-	if (pid == 0)
-	{
-		if (pos == NODE_LEFT)
-		{
-			ft_close(&fd[0]);
-			ft_dup2(&fd[1], STDOUT_FILENO);
-		}
-		else
-		{
-			ft_close(&fd[1]);
-			ft_dup2(&fd[0], STDIN_FILENO);
-		}
-		status = exec_command(node);
-		free_and_exit(status);
-	}
-	return (pid);
-}
-}
-
-/************************************************************************
- * 
- * 
- * TODO: Review this code & test behavior
-************************************************************************/
-void ft_close_pipe_flows(t_cmd *cmd, int fd[2])
-{
-	if (cmd->left->file_out != STDOUT_FILENO)
-	{
-		ft_close(cmd->left->file_out);
-		cmd->left->out_file = STDOUT_FILENO;
-	}
-	if (cmd->right->file_in != STDIN_FILENO)
-	{
-		ft_close(cmd->right->file_in);
-		cmd->right->file_in = STDIN_FILENO;
-	}
-	ft_close(fd[0]);
-	ft_close(fd[1]);
-}
-
-/************************************************************************
- * 
- * 
- * TODO: Review this code & test behavior
-************************************************************************/
-void	cmd_exec_pipe(t_cmd *cmd)
-{
-	int fd[2]
-	int	status;
-
-	ft_printf("Executing | : \n");
-	if (!cmd->left || !cmd->right)
-	{
-		ft_printf("*** Error: operator | needs two operands\n");
-		return (-1);	// error
-	}
-	ft_prepare_pipe(cmd);
-	pid0 = ft_fork_node_pipe(cmd->left, NODE_LEFT, fd);
-	pid1 = ft_fork_node_pipe(cmd->right, NODE_RIGHT, fd);
-	ft_close_pipe_flows(cmd, fd);
-	// TODO: TO BE COMPLETED
-	return ;
-}
-
 /***********************************************************************
  * 
  * Execute a node in the binary tree
@@ -222,24 +154,37 @@ void	cmd_exec_pipe(t_cmd *cmd)
  *		if cmd at node level, then we execute left command first,
  *			then right command	
  ***********************************************************************/
-void	cmd_exec_node(t_cmd *cmd)
+int	cmd_exe_subshell(t_cmd *cmd)
+{
+	int	status;
+
+	ft_printf("--- Executing subshell : \n");
+	if (!cmd->left)
+	{
+		ft_printf("*** Error: subshell tree is NULL\n");
+		return (-1);
+	}
+	//TODO: prepare to call subshell with a string-cmd
+	//TODO: execute the subshell
+	return (status);
+}
+
+/************************************************************************
+ * 
+ * TODO: Find a methode to execute the whole tree.
+ *
+*************************************************************************/
+void	cmd_exec_tree(t_cmd *cmd)
 {
 	if (!cmd)
 		return ;
-	if (cmd->cmd_id == N_OPE_AND2)
-		cmd_exe_and(cmd);
-	else if (cmd->cmd_id == N_OPE_OR2)
-		cmd_exe_or(cmd);
-	else if (cmd->cmd_id == N_OPE_PIPE)
-		cmd_exe_pipe(cmd);
-	else if (cmd->cmd_id == N_SUBsh)
-		cmd_exe_subshell(cmd);
-	else if (cmd->cmd_id == N_CMD)
-		cmd_exe_cmd(cmd);
-	else
-		ft_printf("*** Unknown command type: %d\n", cmd->cmd_id);
+	cmd_exec_node(cmd);
+	if (cmd->left)
+		cmd_exec_tree(cmd->left);
+	if (cmd->right)
+		cmd_exec_tree(cmd->right);
 	return ;
-}	
+}
 
 /************************************************************************
  * 
@@ -254,6 +199,6 @@ void	cmd_exec(void)
 	//TODO: Prepare for execution
 	cmd_tree = cmd_get(NULL);
 	do_check_error_exit((cmd_tree == NULL), ERR_2);
-	cmd_exec_node(cmd_tree);
+	cmd_exec_tree(cmd_tree);
 	//TODO: Cleanup after execution
 }

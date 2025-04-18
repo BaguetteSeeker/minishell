@@ -6,11 +6,11 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/15 10:38:53 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/18 18:18:35 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 t_minishell	*getset_env(void *g)
 {
@@ -35,6 +35,7 @@ char	*open_prompt(char *prompt)
 // ft_printf("Imported env has %u variables\n",
 	// ft_ptrlen((const void **)getset_env(NULL)->var_env));
 			// // parser(tokens);
+//Handles Minishell' routine
 int	main(int argc, char *argv[], char *env[])
 {
 	char	*input_line;
@@ -43,7 +44,7 @@ int	main(int argc, char *argv[], char *env[])
 
 	(void)argc;
 	(void)argv;
-	getset_env(&(t_minishell){.var_env = env})->tok_lst = tokens;
+	getset_env(&(t_minishell){.var_env = env});
 	while (1)
 	{
 		tokens = NULL;

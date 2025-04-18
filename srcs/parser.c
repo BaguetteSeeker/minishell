@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/18 00:06:12 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/19 13:59:53 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,59 +51,77 @@ void	print_ast(t_ast_node *node)
 	free(node);
 }
 
+static char	**parse_args(t_token **tokens)
+{
+	char	**args;
+	int		arg_count;
+
+	args = malloc(sizeof(char *) * 10);
+	if (!args)
+		put_err("Parsing : Failled to alloc memory for NODE_COMMAND");
+	arg_count = 0;
+	while (*tokens && (*tokens)->type == WORD)
+	{
+		args[arg_count++] = (*tokens)->value;
+		*tokens = (*tokens)->next;
+	}
+	args[arg_count] = NULL;
+	return (args);
+}
+
 //Parses OPAR (untill CPAR found) and/or subsequent WORD tokens
 // and returns accodringly a SUBSHELL or COMMANDE node
 static t_ast_node	*parse_command(t_token **tokens)
 {
 	t_ast_node	*node;
-	char		**args;
-	int			arg_count;
+    static int	cmd_parts[] = {WORD, LESS, GREAT, DLESS, DGREAT};
 
-	node = malloc(sizeof(t_ast_node));
-	*node = (t_ast_node){0};
+	node = init_node(tokens);
 	if ((*tokens)->type == OPAR)
 	{
-		node->type = NODE_SUBSHELL;
-		*tokens = (*tokens)->next;
 		node->left = parse_tokens(tokens, parse_command(tokens));
 		*tokens = (*tokens)->next;
 	}
 	else
 	{
-		node->type = NODE_COMMAND;
-		node->value = (*tokens)->value;
-		*tokens = (*tokens)->next;
-		args = malloc(sizeof(char *) * 10);
-		if (!args)
-			put_err("Parsing : Failled to alloc memory for NODE_COMMAND");
-		arg_count = 0;
-		while (*tokens && (*tokens)->type == WORD)
+		while (in_array((*tokens)->type, cmd_parts, nb_elems(cmd_parts, sizeof(cmd_parts))))
 		{
-			args[arg_count++] = (*tokens)->value;
-			*tokens = (*tokens)->next;
+			if (!node->value && (*tokens)->type == WORD)
+			{
+				node->value = (*tokens)->value;
+				*tokens = (*tokens)->next;
+				node->args = parse_args(tokens);
+			}
+			else if ((*tokens)->type == LESS)
+			{
+				node->io_streams. = (*tokens)->type; // Set redirection type (LESS, GREAT, etc.)
+				*tokens = (*tokens)->next;
+			}
 		}
-		args[arg_count] = NULL;
-		node->args = args;
 	}
 	return (node);
 }
 
 //Parses the current token into a node
-t_ast_node	*parse_operator(t_token **tokens)
+static t_ast_node	*init_node(t_token **tokens)
 {
-	t_ast_node	*operator;
+	t_ast_node	*node;
 
-	operator = malloc(sizeof(t_ast_node));
-	if (!operator)
-		put_err("Parsing : Failled to alloc memory for NODE_OPERATOR");
-	*operator = (t_ast_node){0};
+	node = malloc(sizeof(t_ast_node));
+	if (!node)
+		put_err("Parsing : Failled to alloc memory for new NODE");
+	*node = (t_ast_node){0};
 	if (((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
-		operator->type = NODE_OPERATOR;
+		node->type = NODE_OPERATOR;
 	else if ((*tokens)->type == PIPE)
-		operator->type = NODE_PIPE;
-	operator->value = (*tokens)->value;
+		node->type = NODE_PIPE;
+    else if ((*tokens)->type == OPAR)
+		node->type = NODE_SUBSHELL;
+	else if ((*tokens)->type == WORD)
+		return (node);
+	node->value = (*tokens)->value;
 	*tokens = (*tokens)->next;
-	return (operator);
+	return (node);
 }
 
 //Parses one or more subsequent PIPEs into a pipe chain
@@ -115,7 +133,7 @@ t_ast_node	*parse_pipe(t_token **tokens)
 	cmd = parse_command(tokens);
 	if ((*tokens)->type != PIPE)
 		return (cmd);
-	operator = parse_operator(tokens);
+	operator = init_node(tokens);
 	operator->left = cmd;
 	operator->right = parse_pipe(tokens);
 	return (operator);
@@ -132,7 +150,7 @@ t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node)
 		prev_cmd = passed_node;
 	if (!(*tokens) || (*tokens)->type == T_NEWLINE || (*tokens)->type == CPAR)
 		return (passed_node);
-	node = parse_operator(tokens);
+	node = init_node(tokens);
 	node->left = prev_cmd;
 	if (node->type == NODE_PIPE)
 		node->right = parse_pipe(tokens);

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/16 21:19:32 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/18 00:06:12 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,134 +23,127 @@
 //     free(node);
 // }
 
-void    print_ast(t_ast_node *node)
+void	print_ast(t_ast_node *node)
 {
-    if (node == NULL)
-        return ;
-
-    if (node->type == NODE_SUBSHELL)
-    {
-        ft_printf("Subshell:\n");
-        print_ast(node->left);
-    }
-    else if (node->type == NODE_COMMAND)
-    {
-        ft_printf("Command: %s\n", node->value);
-        //recurse_put(node->args);
-        //ft_clean_memtree(node->args);
-        // print_ast(node->left);
-        // print_ast(node->right);
-    }
-    else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
-    {
-        ft_printf("Operator: %s\n", node->value);
-		ft_printf("Left Node: \n");
-        print_ast(node->left);
-		ft_printf("Right Node: \n");
-        print_ast(node->right);
-    }
-    node->left = NULL;
-    node->right = NULL;
-    free(node);
-}
-
-
-//Won't work as pointer shift must be done before the subtree are parsed
-void    assert_precedence(t_ast_node **top_node, t_ast_node **sub_node)
-{
-	t_ast_node	*tmp;
-
-    if (ft_strcmp((*top_node)->value, "||")
-		&& (ft_strcmp((*sub_node)->value, "&&") || ft_strcmp((*sub_node)->value, "|")))
+	if (node == NULL)
+		return ;
+	if (node->type == NODE_SUBSHELL)
 	{
-		tmp = *top_node;
-		ft_printf("Swapping ptr %p || for %p &&\n", *top_node, *sub_node);
-		ft_swap((long *)top_node, (long *)sub_node);
-		ft_swap((long *)&((*top_node)->right), (long *)&tmp);
+		ft_printf("Subshell:\n");
+		print_ast(node->left);
 	}
+	else if (node->type == NODE_COMMAND)
+	{
+		ft_printf("Command: %s\n", node->value);
+		//recurse_put(node->args);
+		//ft_clean_memtree(node->args);
+	}
+	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
+	{
+		ft_printf("Operator: %s\n", node->value);
+		ft_printf("Left Node: \n");
+		print_ast(node->left);
+		ft_printf("Right Node: \n");
+		print_ast(node->right);
+	}
+	node->left = NULL;
+	node->right = NULL;
+	free(node);
 }
 
+//Parses OPAR (untill CPAR found) and/or subsequent WORD tokens
+// and returns accodringly a SUBSHELL or COMMANDE node
 static t_ast_node	*parse_command(t_token **tokens)
 {
-	t_ast_node *node;
-	
+	t_ast_node	*node;
+	char		**args;
+	int			arg_count;
+
 	node = malloc(sizeof(t_ast_node));
 	*node = (t_ast_node){0};
-
-	if ((*tokens)->type == OPAR) // Handle subshell
+	if ((*tokens)->type == OPAR)
 	{
-		*tokens = (*tokens)->next; // Skip '(
 		node->type = NODE_SUBSHELL;
+		*tokens = (*tokens)->next;
 		node->left = parse_tokens(tokens, parse_command(tokens));
-		*tokens = (*tokens)->next; // Skip ')'
+		*tokens = (*tokens)->next;
 	}
-	else 
-	{	
+	else
+	{
 		node->type = NODE_COMMAND;
 		node->value = (*tokens)->value;
 		*tokens = (*tokens)->next;
-
-		char **args = malloc(sizeof(char *) * 10); // Example: max 10 arguments
-		int arg_count = 0;
-
-		// Collect arguments (subsequent WORD tokens)
+		args = malloc(sizeof(char *) * 10);
+		if (!args)
+			put_err("Parsing : Failled to alloc memory for NODE_COMMAND");
+		arg_count = 0;
 		while (*tokens && (*tokens)->type == WORD)
 		{
-			args[arg_count++] = (*tokens)->value; // Store argument
-			*tokens = (*tokens)->next; // Move to the next token
+			args[arg_count++] = (*tokens)->value;
+			*tokens = (*tokens)->next;
 		}
-		args[arg_count] = NULL; // Null-terminate the arguments array
-		node->args = args; // Assign arguments to the node
+		args[arg_count] = NULL;
+		node->args = args;
 	}
-
 	return (node);
 }
 
-//!token retun passed node
-//!passed_node parse the leftmost cmd
-//call parse_token with said node as param
-//if passed node ! null attach it to right of node_operator
-//then pass node_operator to parse_tokens
-//return parse_token result
-t_ast_node *parse_tokens(t_token **tokens, t_ast_node *passed_node)
+//Parses the current token into a node
+t_ast_node	*parse_operator(t_token **tokens)
 {
-	t_ast_node *node;
-	t_ast_node *next_cmd;
+	t_ast_node	*operator;
 
-	node = malloc(sizeof(t_ast_node));
-	*node = (t_ast_node){0};  
+	operator = malloc(sizeof(t_ast_node));
+	if (!operator)
+		put_err("Parsing : Failled to alloc memory for NODE_OPERATOR");
+	*operator = (t_ast_node){0};
+	if (((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
+		operator->type = NODE_OPERATOR;
+	else if ((*tokens)->type == PIPE)
+		operator->type = NODE_PIPE;
+	operator->value = (*tokens)->value;
+	*tokens = (*tokens)->next;
+	return (operator);
+}
+
+//Parses one or more subsequent PIPEs into a pipe chain
+t_ast_node	*parse_pipe(t_token **tokens)
+{
+	t_ast_node	*cmd;
+	t_ast_node	*operator;
+
+	cmd = parse_command(tokens);
+	if ((*tokens)->type != PIPE)
+		return (cmd);
+	operator = parse_operator(tokens);
+	operator->left = cmd;
+	operator->right = parse_pipe(tokens);
+	return (operator);
+}
+
+t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node)
+{
+	t_ast_node	*node;
+	t_ast_node	*prev_cmd;
+
+	if (!passed_node)
+		return (parse_tokens(tokens, parse_command(tokens)));
+	else
+		prev_cmd = passed_node;
 	if (!(*tokens) || (*tokens)->type == T_NEWLINE || (*tokens)->type == CPAR)
 		return (passed_node);
-	if (!passed_node)
-		passed_node = parse_command(tokens);
-	node->type = (*tokens)->type;
-	node->value = (*tokens)->value; // Store the operator (e.g., "&&" or "||")
-	node->left = passed_node;
-	*tokens = (*tokens)->next; // Move to the next token
-	next_cmd = parse_command(tokens);
-	if (node->type == PIPE)
+	node = parse_operator(tokens);
+	node->left = prev_cmd;
+	if (node->type == NODE_PIPE)
+		node->right = parse_pipe(tokens);
+	else if (node->type == NODE_OPERATOR)
 	{
-		node->type = NODE_PIPE;
+		node->right = parse_command(tokens);
 		if ((*tokens)->type == PIPE)
-		{
-			node->right = parse_tokens(tokens, next_cmd);
-		}
-		else
-		{
-			node->right = next_cmd;
-			// if ((*tokens)->type != T_NEWLINE)
-			return (node);
-		}
-	}
-	else if ((node->type == AND_IF || node->type == OR_IF))
-	{
-		node->type = NODE_OPERATOR;
-		if ((*tokens)->type == PIPE)
-			node->right = parse_tokens(tokens, next_cmd);
-		else
-			node->right = next_cmd;
+			node->right = parse_tokens(tokens, node->right);
 	}
 	else
-		put_err("Uncatched Syntax Error : Expecting Operator token but none was provided");
+		put_err("Uncatched Syntax Error : \
+			Expecting Operator token but none was provided");
 	return (parse_tokens(tokens, node));
 }

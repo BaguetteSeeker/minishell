@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 17:56:17 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/18 17:36:55 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/19 17:37:53 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void ft_prepare_pipe(t_cmd *cmd)
 		close(cmd->left->file_out);
 		cmd->left->file_out = cmd->pipe_fd[1];
 	}
-	if (cmd->right->file_int != STDfile_inNO)
+	if (cmd->right->file_in != STDIN_FILENO)
 	{
 		close(cmd->right->file_in);
 		cmd->right->file_in = cmd->pipe_fd[0];
@@ -42,7 +42,7 @@ void ft_prepare_pipe(t_cmd *cmd)
  * 
  * TODO: Review this code & test behavior
 ************************************************************************/
-int	ft_fork_node_pipe(t_cmd node, int pos, int fd)
+int	ft_fork_node_pipe(t_cmd *node, int pos, int fd[2])
 {
 	int	pid;
 	int	status;
@@ -53,7 +53,7 @@ int	ft_fork_node_pipe(t_cmd node, int pos, int fd)
 	{
 		if (pos == NODE_LEFT)
 		{
-			ft_close(&fd[0]);
+			ft_close_fd(&fd[0]);
 			ft_dup2(&fd[1], STDOUT_FILENO);
 		}
 		else
@@ -61,32 +61,31 @@ int	ft_fork_node_pipe(t_cmd node, int pos, int fd)
 			ft_close_fd(&fd[1]);
 			ft_dup2(&fd[0], STDIN_FILENO);
 		}
-		status = exec_command(node);
+		status = cmd_exe_node(node);
 		free_and_exit(status);
 	}
 	return (pid);
 }
-}
 
 /************************************************************************
  * 
  * 
  * TODO: Review this code & test behavior
 ************************************************************************/
-void ft_close_pipe_flows(t_cmd *cmd, int fd[2])
+void	ft_close_pipe_flows(t_cmd *cmd, int fd[2])
 {
-	if (cmd->left->file_out != STDOUT_FILENO)
+	if (cmd->left && cmd->left->file_out != STDOUT_FILENO)
 	{
-		ft_close_fd(cmd->left->file_out);
-		cmd->left->out_file = STDOUT_FILENO;
+		ft_close_fd(&cmd->left->file_out);
+		cmd->left->file_out = STDOUT_FILENO;
 	}
-	if (cmd->right->file_in != STDIN_FILENO)
+	if (cmd->right && cmd->right->file_in != STDIN_FILENO)
 	{
-		ft_close_fd(cmd->right->file_in);
+		ft_close_fd(&cmd->right->file_in);
 		cmd->right->file_in = STDIN_FILENO;
 	}
-	ft_close_fd(fd[0]);
-	ft_close_fd(fd[1]);
+	ft_close_fd(&fd[0]);
+	ft_close_fd(&fd[1]);
 }
 
 /************************************************************************
@@ -94,11 +93,13 @@ void ft_close_pipe_flows(t_cmd *cmd, int fd[2])
  * 
  * TODO: Review this code & test behavior
 ************************************************************************/
-void	cmd_exec_pipe(t_cmd *cmd)
+int	cmd_exe_pipe(t_cmd *cmd)
 {
-	int fd[2]
 	int	status;
+	int	fd[2];
+	int	pid[2];
 
+	status = -1;
 	ft_printf("Executing | : \n");
 	if (!cmd->left || !cmd->right)
 	{
@@ -106,9 +107,9 @@ void	cmd_exec_pipe(t_cmd *cmd)
 		return (-1);	// error
 	}
 	ft_prepare_pipe(cmd);
-	pid0 = ft_fork_node_pipe(cmd->left, NODE_LEFT, fd);
-	pid1 = ft_fork_node_pipe(cmd->right, NODE_RIGHT, fd);
+	pid[0] = ft_fork_node_pipe(cmd->left, NODE_LEFT, fd);
+	pid[1] = ft_fork_node_pipe(cmd->right, NODE_RIGHT, fd);
 	ft_close_pipe_flows(cmd, fd);
 	// TODO: TO BE COMPLETED
-	return ;
+	return (status);
 }

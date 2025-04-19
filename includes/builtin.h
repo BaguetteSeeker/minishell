@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   system_utils.h                                     :+:      :+:    :+:   */
+/*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/17 23:16:22 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/18 17:43:10 by souaret          ###   ########.fr       */
+/*   Created: 2025/04/19 14:33:10 by souaret           #+#    #+#             */
+/*   Updated: 2025/04/19 16:40:26 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SYSTEM_UTILS_H
-# define SYSTEM_UTILS_H
+#ifndef BUILTIN_H
+# define BUILTIN_H
+# include "minishell.h"
 
-/* --- system_utils.c --- */
-void	do_check_error_exit(bool error, int reason);
-void	do_error_exit(int reason);
-void	free_str(char **str);
+int		cmd_echo(char **args);
+int		cmd_cd(char **args);
+int		cmd_pwd(char **args);
+int		cmd_export(char **args);
+int		cmd_unset(char **args);
+int		cmd_env(char **args);
+int		cmd_exit(char **args);
+bool	is_builtin(char *cmd_str);
+int		cmd_exe_builtin(t_cmd *cmd);
+//int		exec_builtin(t_cmd *cmd);
 
 #endif

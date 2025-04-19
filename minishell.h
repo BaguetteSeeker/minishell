@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/24 12:21:06 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/19 17:24:30 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "struct_cmds.h"
+# include "builtin.h"
+# include "cmd_exec.h"
+# include "cmd_pipe.h"
+# include "cmd_utils.h"
+# include "cmd_utils2.h"
+# include "file_utils.h"
+# include "system_utils.h"
 
 # define PROMPT_NAME "$minishell:"
 

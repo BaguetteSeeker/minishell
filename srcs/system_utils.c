@@ -6,11 +6,21 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/18 17:41:50 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/19 17:55:48 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_and_exit(int reason)
+{
+	//TODO: clean cmds
+	// cmd_free_all()
+	// TODO: clean files & fds
+	// TODO: clean_signals
+	exit(reason);
+
+}
 
 /********************************************************************
  * 
@@ -21,7 +31,7 @@
 *********************************************************************/
 void	do_error_exit(int reason)
 {
-	ft_printf_fd("Error: %d\n", reason, STDERR_FILENO);
+	ft_dprintf(STDERR_FILENO, "Error: %d\n", reason);
 	//TODO: free tokens
 	//tokens_free();
 	//TODO: clean cmds

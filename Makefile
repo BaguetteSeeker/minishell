@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
+#    By: souaret <souaret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/03/19 19:18:15 by epinaud          ###   ########.fr        #
+#    Updated: 2025/04/19 14:20:03 by souaret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,10 @@ LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 
 OBJ_DIR = .obj
 
-SRCS = main_readline.c lexer.c parser.c
+SRCS = main_readline.c lexer.c parser.c \
+		builtin.c 	cmd_exec.c 	cmd_pipe.c 	cmd_utils.c  cmd_utils2.c \
+		file_utils.c  system_utils.c  
+		
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

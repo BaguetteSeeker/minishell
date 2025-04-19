@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 21:10:10 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/18 17:36:51 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/19 17:43:43 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,9 @@
 
 /*------------------------------------------------------------------------
  *
-  Utilities functions to manage cmd trees
-    these are CRUD operations (basic operations that we would need)
-
-    TODO: This is work in progress 
-	- create define ERR_CMD_0	// no nodes created !
-	- create define ERR_CMD_1	// cmd_tree & cmd cannot be the identical
-								// canot be NULL or ! NULL alltogether
-	- create define ERR_CMD_2	
-	- create define ERR_CMD_3	// cannot add null child 
-	- create define ERR_CMD_4	// cannot add child (no left or right)
-	- create define ERR_CMD_5	// about to overright a child
-	- create define ERR_CMD_6	// cannot find root node (null)
-
- * TODO: 
- * 		create enum : t_child
- * 		- T_LEFT
- * 		- T_RIGHT
+ * Utilities funct. to manage cmd trees
+ *   these are CRUD operations (basic operations that we would need)
+ *
  -----------------------------------------------------------------------*/
 /*************************************************************************
  * getter for cmd
@@ -72,7 +58,7 @@ t_cmd	*cmd_create(int cmd_id, char *str)
 	new_cmd->cmd_args = NULL;
 	new_cmd->left = NULL;
 	new_cmd->right = NULL;
-	new_cmd->parent = NULL;
+	//new_cmd->parent = NULL;
 	return (new_cmd);
 }
 

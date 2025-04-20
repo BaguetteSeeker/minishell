@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/15 10:39:14 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/20 18:26:33 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,7 @@
 # define PROMPT_NAME "$minishell:"
 # define PS2 "> "
 # define ERRMSG_SYNTAX "syntax error near unexpected token `"
-# define QUOTES_SET "\"\'" 
-
-/*********************************************
- *
- key   : The name of the environment variable (e.g., "PATH")
- value : The value of the environment variable (e.g., "/usr/bin")
- next  : Pointer to the next environment variable
- *
-*********************************************/
-// typedef struct s_env
-// {
-// 	char			*key;
-// 	char			*value;
-// 	struct s_env	*next;
-// }	t_env;
+# define QUOTES_SET "\"\'"
 
 typedef struct s_minishell
 {
@@ -52,17 +38,19 @@ typedef struct s_minishell
 	t_ast_node	*cmd_table;
 }	t_minishell;
 
+//Core
 t_minishell	*getset_env(void *g);
 t_token		*tokenize(char *prompt, t_token *token_head);
 int			parser(t_token *tokens);
 char		*open_prompt(char *prompt);
 void		handle_heredocs(t_token *token);
 char		*new_heredoc(char *delimiter, bool apd_newline);
-void		lst_put(t_token *lst);
-void		put_err(char *msg);
-void		clean_shell(void);
 void		free_token_value(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
-// t_ast_node  *parse_tokens(t_token **tokens, int min_precedence);
-void    	print_ast(t_ast_node *node);
+
+//Helper Functions
+void		lst_put(t_token *lst);
+void		clean_shell(void);
+void		put_err(char *msg);
+void		print_ast(t_ast_node *node);
 #endif

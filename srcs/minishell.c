@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/18 18:18:35 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/20 19:15:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int	main(int argc, char *argv[], char *env[])
 		input_line = open_prompt(PROMPT_NAME);
 		if (input_line && *input_line)
 			add_history(input_line);
+		else
+			continue ;
 		tokens = tokenize(input_line, tokens);
 		handle_heredocs(tokens);
 		getset_env(NULL)->cmd_table = parse_tokens(&tokens, NULL);

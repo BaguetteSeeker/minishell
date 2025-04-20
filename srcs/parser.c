@@ -6,49 +6,34 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/19 13:59:53 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/21 00:15:30 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void    wipe_ast(t_ast_node *node)
-// {
-//     if (node == NULL)
-//         return ;
-
-//     free_ast(node->left);
-//     free_ast(node->right);
-//     // free(node->value); // Free the value if it was dynamically allocated
-//     free(node);
-// }
-
-void	print_ast(t_ast_node *node)
+//Parses the current token into a node
+static t_ast_node	*init_node(t_token **tokens)
 {
-	if (node == NULL)
-		return ;
-	if (node->type == NODE_SUBSHELL)
-	{
-		ft_printf("Subshell:\n");
-		print_ast(node->left);
-	}
-	else if (node->type == NODE_COMMAND)
-	{
-		ft_printf("Command: %s\n", node->value);
-		//recurse_put(node->args);
-		//ft_clean_memtree(node->args);
-	}
-	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
-	{
-		ft_printf("Operator: %s\n", node->value);
-		ft_printf("Left Node: \n");
-		print_ast(node->left);
-		ft_printf("Right Node: \n");
-		print_ast(node->right);
-	}
-	node->left = NULL;
-	node->right = NULL;
-	free(node);
+	t_ast_node	*node;
+
+	node = malloc(sizeof(t_ast_node));
+	if (!node)
+		put_err("Parsing : Failled to alloc memory for new NODE");
+	*node = (t_ast_node){0};
+	if (((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
+		node->type = NODE_OPERATOR;
+	else if ((*tokens)->type == PIPE)
+		node->type = NODE_PIPE;
+	else if ((*tokens)->type == OPAR)
+		node->type = NODE_SUBSHELL;
+	else if ((*tokens)->type == WORD)
+		node->type = NODE_COMMAND;
+	else
+		return (node);
+	node->value = (*tokens)->value;
+	*tokens = (*tokens)->next;
+	return (node);
 }
 
 static char	**parse_args(t_token **tokens)
@@ -69,59 +54,52 @@ static char	**parse_args(t_token **tokens)
 	return (args);
 }
 
-//Parses OPAR (untill CPAR found) and/or subsequent WORD tokens
+static t_redir	*parse_redir(t_token **tokens)
+{
+	t_redir	*redir;
+
+	// redir = (t_redir *)ft_lstnew((t_token *)(&(t_redir){0}));
+	redir = malloc(sizeof(t_redir));
+	if (!redir)
+		put_err("Failled allocation for redirection");
+	*redir = (t_redir){(*tokens)->type, (*tokens)->next->value, NULL};
+	*tokens = (*tokens)->next->next;
+	// ft_lstadd_back((t_token **)redirs, (t_token *)redir);
+	ft_printf("Pointer for redir %p and content %s\n", redir, redir->file);
+	return (redir);
+}
+
+#define REDIRS_TYPCOUNT 4
+
+//Parses OPAR (untill CPAR found)
+//Then parses and/or subsequent WORD tokens
 // and returns accodringly a SUBSHELL or COMMANDE node
 static t_ast_node	*parse_command(t_token **tokens)
 {
 	t_ast_node	*node;
-    static int	cmd_parts[] = {WORD, LESS, GREAT, DLESS, DGREAT};
+	static int	cmd_parts[] = {LESS, GREAT, DLESS, DGREAT};
 
 	node = init_node(tokens);
-	if ((*tokens)->type == OPAR)
+	if (node->type == NODE_SUBSHELL)
 	{
 		node->left = parse_tokens(tokens, parse_command(tokens));
 		*tokens = (*tokens)->next;
 	}
-	else
+	while (1)
 	{
-		while (in_array((*tokens)->type, cmd_parts, nb_elems(cmd_parts, sizeof(cmd_parts))))
+		if (!node->value && (*tokens)->type == WORD)
 		{
-			if (!node->value && (*tokens)->type == WORD)
-			{
-				node->value = (*tokens)->value;
-				*tokens = (*tokens)->next;
-				node->args = parse_args(tokens);
-			}
-			else if ((*tokens)->type == LESS)
-			{
-				node->io_streams. = (*tokens)->type; // Set redirection type (LESS, GREAT, etc.)
-				*tokens = (*tokens)->next;
-			}
+			node->value = (*tokens)->value;
+			*tokens = (*tokens)->next;
 		}
+		if (in_array((*tokens)->type, cmd_parts, REDIRS_TYPCOUNT)
+			&& (*tokens)->next->type == WORD)
+			lstadd_back_redirs(node->io_streams, parse_redir(tokens));
+		else if ((*tokens)->type == WORD)
+			node->args = parse_args(tokens);
+		else
+			return (node);
 	}
-	return (node);
-}
-
-//Parses the current token into a node
-static t_ast_node	*init_node(t_token **tokens)
-{
-	t_ast_node	*node;
-
-	node = malloc(sizeof(t_ast_node));
-	if (!node)
-		put_err("Parsing : Failled to alloc memory for new NODE");
-	*node = (t_ast_node){0};
-	if (((*tokens)->type == AND_IF || (*tokens)->type == OR_IF))
-		node->type = NODE_OPERATOR;
-	else if ((*tokens)->type == PIPE)
-		node->type = NODE_PIPE;
-    else if ((*tokens)->type == OPAR)
-		node->type = NODE_SUBSHELL;
-	else if ((*tokens)->type == WORD)
-		return (node);
-	node->value = (*tokens)->value;
-	*tokens = (*tokens)->next;
-	return (node);
 }
 
 //Parses one or more subsequent PIPEs into a pipe chain

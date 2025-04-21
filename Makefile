@@ -6,7 +6,7 @@
 #    By: souaret <souaret@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/04/19 14:20:03 by souaret          ###   ########.fr        #
+#    Updated: 2025/04/21 16:39:48 by souaret          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,10 +22,12 @@ LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 
 OBJ_DIR = .obj
 
-SRCS = main_readline.c lexer.c parser.c \
-		builtin.c 	cmd_exec.c 	cmd_pipe.c 	cmd_utils.c  cmd_utils2.c \
-		file_utils.c  system_utils.c  
-		
+SRCS = lexer.c parser.c \
+		builtin.c 	builtin2.c 	cmd_exec.c 	cmd_pipe.c 	cmd_tree.c 	\
+		cmd_utils.c  cmd_utils2.c \
+		file_utils.c  system_utils.c  \
+		main_exec.c
+#		main_readline.c 
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

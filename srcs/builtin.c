@@ -6,20 +6,17 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 18:41:33 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 18:07:26 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 18:32:09 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// #include <stdbool.h>
-// #include <stddef.h> // For NULL
-
 /***********************************************************************
  * Fonction bouchon 
  * TODO: a remplacer par la vraie fonction
  ***********************************************************************/
-int		cmd_exit(char **args)
+int	cmd_exit(char **args)
 {
 	int	status;
 
@@ -33,7 +30,7 @@ int		cmd_exit(char **args)
  * Fonction bouchon 
  * TODO: a remplacer par la vraie fonction
  ***********************************************************************/
-int		cmd_env(char **args)
+int	cmd_env(char **args)
 {
 	int	status;
 
@@ -47,7 +44,7 @@ int		cmd_env(char **args)
  * Fonction bouchon 
  * TODO: a remplacer par la vraie fonction
  ***********************************************************************/
-int		cmd_unset(char **args)
+int	cmd_unset(char **args)
 {
 	int	status;
 
@@ -61,7 +58,7 @@ int		cmd_unset(char **args)
  * Fonction bouchon 
  * TODO: a remplacer par la vraie fonction
  ***********************************************************************/
-int		cmd_export(char **args)
+int	cmd_export(char **args)
 {
 	int	status;
 
@@ -75,7 +72,7 @@ int		cmd_export(char **args)
  * Fonction bouchon 
  * TODO: a remplacer par la vraie fonction
  ***********************************************************************/
-int		cmd_pwd(char **args)
+int	cmd_pwd(char **args)
 {
 	int	status;
 
@@ -89,7 +86,7 @@ int		cmd_pwd(char **args)
  * Fonction bouchon 
  * TODO: a remplacer par la vraie fonction
  ***********************************************************************/
-int		cmd_cd(char **args)
+int	cmd_cd(char **args)
 {
 	int	status;
 
@@ -103,7 +100,7 @@ int		cmd_cd(char **args)
  * Fonction bouchon 
  * TODO: a remplacer par la vraie fonction
  ***********************************************************************/
-int		cmd_echo(char **args)
+int	cmd_echo(char **args)
 {
 	int	status;
 
@@ -118,6 +115,7 @@ int		cmd_echo(char **args)
  * 
  * 
  ***********************************************************************/
+/*
 bool	is_builtin(char *cmd_str)
 {
 	int         i;
@@ -135,12 +133,13 @@ bool	is_builtin(char *cmd_str)
 	}
 	return (false);
 }
-
+*/
 /***********************************************************************
  * 
  * 
  * 
  ***********************************************************************/
+/*
 int	cmd_exe_builtin(t_cmd *cmd)
 {
 	char	**args;
@@ -180,3 +179,4 @@ int	cmd_exe_builtin(t_cmd *cmd)
 	}
 	return (status);
 }
+*/

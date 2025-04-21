@@ -1,20 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_utils2.h                                       :+:      :+:    :+:   */
+/*   main_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/25 14:48:47 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 17:43:34 by souaret          ###   ########.fr       */
+/*   Created: 2025/04/21 15:11:46 by souaret           #+#    #+#             */
+/*   Updated: 2025/04/21 18:42:52 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CMD_UTILS2_H
-# define CMD_UTILS2_H
+#include "minishell.h"
 
-void		cmd_free_all(void);
-int			ft_fork(t_cmd *cmd);
-const char	*cmd_print(int cmd_id);
+int	main(int argc, char *argv[], char *env[])
+{
+	t_cmd	*cmd;
+	t_cmd	*root;
 
-#endif
+	if (argc > 1)
+	{
+		(void)env;
+		builtin_init();
+		cmd = node_new(argv[1]);
+		cmd->cmd_args = argv + 1; //ft_split("pwd Hello World", ' ');
+		root = node_add_top(NULL, cmd);
+		cmd_set(root);
+		cmd_exec();
+	}
+	else
+		ft_printf("\n --- Usage: %s <cmd param1 param2...\n\n", argv[0]);
+	return (0);
+}

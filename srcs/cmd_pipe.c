@@ -6,10 +6,9 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 17:56:17 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 17:37:53 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 18:33:45 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -18,7 +17,7 @@
  * 
  * TODO: review this  formula of the pipe preparation
 ************************************************************************/
-void ft_prepare_pipe(t_cmd *cmd)
+void	ft_prepare_pipe(t_cmd *cmd)
 {
 	if (pipe(cmd->pipe_fd) == -1)
 	{
@@ -104,7 +103,7 @@ int	cmd_exe_pipe(t_cmd *cmd)
 	if (!cmd->left || !cmd->right)
 	{
 		ft_printf("*** Error: operator | needs two operands\n");
-		return (-1);	// error
+		return (-1); // error
 	}
 	ft_prepare_pipe(cmd);
 	pid[0] = ft_fork_node_pipe(cmd->left, NODE_LEFT, fd);

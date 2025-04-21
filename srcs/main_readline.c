@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main_readline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/03/24 11:41:14 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/21 17:53:19 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 # define VALID_PROMPT 1
 # define INVLID_PROMPT 0

@@ -6,13 +6,13 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 16:08:12 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 16:13:41 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 17:42:49 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CMD_PIPE_H
 # define CMD_PIPE_H
 
-int cmd_exe_pipe(t_cmd *cmd);
+int	cmd_exe_pipe(t_cmd *cmd);
 
 #endif

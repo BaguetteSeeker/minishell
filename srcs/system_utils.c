@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 17:55:48 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 17:51:14 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	free_and_exit(int reason)
 	// TODO: clean files & fds
 	// TODO: clean_signals
 	exit(reason);
-
 }
 
 /********************************************************************
@@ -55,7 +54,8 @@ void	do_check_error_exit(bool error, int reason)
 	if (error == false)
 		return ;
 	if (reason != 0)
-	do_error_exit(reason);
+		do_error_exit(reason);
+	perror("reason");
 }
 
 /********************************************************************

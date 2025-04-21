@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/19 17:24:30 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:37:10 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include "builtin.h"
 # include "cmd_exec.h"
 # include "cmd_pipe.h"
+# include "cmd_tree.h"
 # include "cmd_utils.h"
 # include "cmd_utils2.h"
 # include "file_utils.h"

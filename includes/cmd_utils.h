@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 14:48:47 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 17:43:25 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 17:31:44 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef enum e_node_dir
 	T_RIGHT
 }	t_node_dir;
 
+/*
 # define CMD_ECHO	1
 # define CMD_PWD	2
 # define CMD_CD		3
@@ -26,6 +27,7 @@ typedef enum e_node_dir
 # define CMD_UNSET	5
 # define CMD_ENV	6
 # define CMD_EXIT	7
+*/
 
 /*************************************************************************
  * 

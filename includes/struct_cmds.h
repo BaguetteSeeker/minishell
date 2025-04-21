@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:49:23 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 17:15:15 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 17:40:05 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@
 typedef enum e_node_type
 {
 	N_CMD,
+	N_CMD_BUILTIN,
+	N_SUBSH,
 	N_OPE_AND2,
 	N_OPE_OR2,
-	N_OPE_PIPE,
-	N_SUBSH,
-	N_CMD_BUILTIN
+	N_OPE_PIPE
 }	t_node_type;
 
 /**************************************************************************
- * Build-ins commands :
+ * Built-ins commands :
  * Command ID: to identify the command
  *		CMD_EXT		: external command
  *		CMD_ECHO	: echo
@@ -45,6 +45,7 @@ typedef enum e_node_type
  *		CMD_ENV		: env
  *		CMD_EXIT	: exit
 **************************************************************************/
+/*
 typedef enum e_cmd_bi
 {
 	CMD_ECHO,
@@ -55,7 +56,7 @@ typedef enum e_cmd_bi
 	CMD_ENV,
 	CMD_EXIT
 }	t_cmd_bi;
-
+*/
 # define NODE_LEFT	1
 # define NODE_RIGHT	2
 
@@ -74,12 +75,11 @@ typedef enum e_cmd_bi
 typedef struct s_cmd
 {
 	t_node_type		node_type;
-	t_cmd_bi		cmd_id;
+	int				cmd_id;
 	char			*cmd_str;
 	char			**cmd_args;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
-	//struct s_cmd	*parent;
 	bool			is_child;
 	int				file_in;
 	int				file_out;

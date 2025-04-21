@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:16:22 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 17:08:08 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 16:26:13 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ typedef enum e_error
 	ERR_0,
 	ERR_NONE,
 	ERR_MALLOC,
+	ERR_BUILTIN,
 	ERR_CMD_NOT_FOUND,
 	ERR_CMD_NOT_EXEC,
 	ERR_FILE_NOT_FOUND,

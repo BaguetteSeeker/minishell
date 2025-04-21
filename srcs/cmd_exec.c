@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 16:44:45 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 18:38:56 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	cmd_exe_and(t_cmd *cmd)
 	if (!cmd->left || !cmd->right)
 	{
 		ft_dprintf(STDERR_FILENO, "*** Error: &&  needs two operands\n");
-		return (-1);	// error
+		return (-1);
 	}
 	status = cmd_exe_node(cmd->left);
 	if (status != 0)
@@ -108,7 +108,7 @@ int	cmd_exe_or(t_cmd *cmd)
 	if (!cmd->left || !cmd->right)
 	{
 		ft_dprintf(STDERR_FILENO, "*** Error: || needs two operands\n");
-		return (-1);	// error
+		return (-1);
 	}
 	status = cmd_exe_node(cmd->left);
 	if (status == 0)
@@ -155,39 +155,22 @@ int	cmd_exe_node(t_cmd *cmd)
 	status = -1;
 	if (!cmd)
 		return (status);
-	if (cmd->cmd_id == N_OPE_AND2)
-		status = cmd_exe_and(cmd);
-	else if (cmd->cmd_id == N_OPE_OR2)
-		status = cmd_exe_or(cmd);
-	else if (cmd->cmd_id == N_OPE_PIPE)
-		status = cmd_exe_pipe(cmd);
-	else if (cmd->cmd_id == N_SUBSH)
-		status = cmd_exe_subshell(cmd);
-	else if (cmd->cmd_id == N_CMD_BUILTIN)
-		status = cmd_exe_builtin(cmd);
-	else if (cmd->cmd_id == N_CMD)
+	if (cmd->node_type == N_CMD)
 		status = cmd_exe_cmd(cmd);
+	else if (cmd->node_type == N_CMD_BUILTIN)
+		status = cmd_exe_builtin(cmd);
+	else if (cmd->node_type == N_SUBSH)
+		status = cmd_exe_subshell(cmd);
+	else if (cmd->node_type == N_OPE_AND2)
+		status = cmd_exe_and(cmd);
+	else if (cmd->node_type == N_OPE_OR2)
+		status = cmd_exe_or(cmd);
+	else if (cmd->node_type == N_OPE_PIPE)
+		status = cmd_exe_pipe(cmd);
 	else
 		ft_dprintf(STDERR_FILENO, "*** Unknown command type: %d : %s\n", \
-			cmd->cmd_id, cmd->cmd_str);
+			cmd->node_type, cmd->cmd_str);
 	return (status);
-}
-
-/************************************************************************
- * 
- * TODO: Find a methode to execute the whole tree.
- *
-*************************************************************************/
-void	cmd_exe_tree(t_cmd *cmd)
-{
-	if (!cmd)
-		return ;
-	cmd_exe_node(cmd);
-	if (cmd->left)
-		cmd_exe_tree(cmd->left);
-	if (cmd->right)
-		cmd_exe_tree(cmd->right);
-	return ;
 }
 
 /************************************************************************
@@ -198,11 +181,17 @@ void	cmd_exe_tree(t_cmd *cmd)
 *************************************************************************/
 void	cmd_exec(void)
 {
-	t_cmd	*cmd_tree;
+	t_cmd	*cmd;
 
 	//TODO: Prepare for execution
-	cmd_tree = cmd_get(NULL);
-	do_check_error_exit((cmd_tree == NULL), ERR_0);
-	cmd_exe_tree(cmd_tree);
+	cmd = cmd_get(NULL);
+	do_check_error_exit((cmd == NULL), ERR_0);
+	// cmd_exe_tree(cmd_tree);
+	cmd_exe_node(cmd);
+	if (cmd->left)
+		cmd_exe_node(cmd->left);
+	if (cmd->right)
+		cmd_exe_node(cmd->right);
 	//TODO: Cleanup after execution
+	return ;
 }

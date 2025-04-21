@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 21:10:10 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 17:43:43 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 17:54:12 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_cmd	*cmd_get(t_cmd *cmd)
 		return (cmd_tree);
 	else if (cmd_tree == NULL && cmd != NULL)
 		cmd_tree = cmd;
-	else 
+	else
 		do_error_exit(ERR_CMD_1);
 	return (NULL);
 }

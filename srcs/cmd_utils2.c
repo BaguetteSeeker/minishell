@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 21:10:10 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/19 17:51:02 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/21 17:54:51 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_fork(t_cmd *cmd)
 	int	pid;
 
 	pid = fork();
-	do_check_error_exit((pid == -1), EXIT_FAILURE);		
+	do_check_error_exit((pid == -1), EXIT_FAILURE);
 	if (pid == 0)
 	{
 		cmd->is_child = true;

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/20 18:26:33 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:15:37 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,20 @@ typedef struct s_minishell
 	t_ast_node	*cmd_table;
 }	t_minishell;
 
+//Functions' Flags
+#define	PARSE_SUBSQ_WORDS 1
+#define	PARSE_SUBSQ_VARS 2
+
 //Core
 t_minishell	*getset_env(void *g);
 t_token		*tokenize(char *prompt, t_token *token_head);
-int			parser(t_token *tokens);
 char		*open_prompt(char *prompt);
 void		handle_heredocs(t_token *token);
 char		*new_heredoc(char *delimiter, bool apd_newline);
 void		free_token_value(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
+t_ast_node	*parse_command(t_token **tokens);
+t_ast_node	*init_node(t_token **tokens);
 
 //Helper Functions
 void		lst_put(t_token *lst);

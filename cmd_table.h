@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/21 00:15:27 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:31:01 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,28 @@ typedef enum e_node_type {
     NODE_PIPE,
     NODE_SUBSHELL,    // Represents a subshell (e.g., "(...)")
 	NODE_REDIRECTION
-} t_node_type;
+}	t_node_type;
 
 typedef enum e_redir_type {
 	REDIR_IN = LESS,
 	REDIR_OUT = GREAT,
 	HEREDOC = DLESS,
 	APPEND = DGREAT
-} t_redir_type;
+}	t_redir_type;
 
-typedef struct  t_redir
+typedef struct  s_redir
 {
 	t_redir_type	type;
 	char			*file;
 	struct s_redir	*next;
    
-}  t_redir;
+}	t_redir;
 
 typedef struct s_ast_node {
     t_node_type         type;    // Type of the node (command, operator, subshell)
     char              	*value;  // Value of the node (e.g., command name, operator)
 	char              	**args; 
+	char				**vars;
 	t_redir				*io_streams;
     struct s_ast_node 	*left;   // Left child (e.g., left operand of an operator)
     struct s_ast_node 	*right;  // Right child (e.g., right operand of an operator)

@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 18:38:56 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/22 14:46:14 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,33 +44,6 @@
  * 			exit ?
 *
 ------------------------------------------------------------------------*/
-/************************************************************************
- * 
- * Execute a standallone cmd
- * 
-************************************************************************/
-int	cmd_exe_cmd(t_cmd *cmd)
-{
-	int		status;
-	char	*cmd_str;
-
-	status = -1;
-	if (!cmd)
-	{
-		ft_dprintf(STDERR_FILENO, "*** Error: command is NULL\n");
-		return (status);
-	}
-	cmd_str = cmd->cmd_str;
-	ft_dprintf(STDERR_FILENO, "Executing command: %s\n", cmd_str);
-	if (cmd->left || cmd->right)
-	{
-		ft_dprintf(STDERR_FILENO, "*** Error: command is not a leaf node\n");
-		return (-1);
-	}
-	status = cmd_exe_node(cmd->left);
-	return (status);
-}
-
 /************************************************************************
  * 
  * Execute && command 

@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:41:38 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 18:29:14 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:33:56 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ t_builtin	*builtin_init(void)
 	};
 
 	ft_printf("builtin_init\n");
-	ft_printf("<%s>\n", g_builtin[0].keyword);
-	ft_printf("<%s>\n", g_builtin[1].keyword);
-	ft_printf("<%s>\n", g_builtin[2].keyword);
+	// ft_printf("<%s>\n", g_builtin[0].keyword);
+	// ft_printf("<%s>\n", g_builtin[1].keyword);
+	// ft_printf("<%s>\n", g_builtin[2].keyword);
 	return (g_builtin);
 }
 

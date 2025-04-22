@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:15:25 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 18:22:53 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:24:27 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ t_cmd	*node_new(char *cmd_str)
 	}
 	new_node->left = NULL;
 	new_node->right = NULL;
-	new_node->cmd_str = NULL;
 	new_node->cmd_args = NULL;
 	new_node->file_in = -1;
 	new_node->file_out = -1;

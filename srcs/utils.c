@@ -6,22 +6,50 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/20 21:49:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/20 19:06:28 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	clean_minishell(t_token **token_lst)
-// {
-// 	//get main object thgough getsetter
-// 	ft_lstclear(token_lst, &free_token_value);
-// }
+void	free_token_value(t_token *token)
+{
+	static int	no_clean[] = {
+		PIPE,
+		AMPERSAND,
+		OR_IF,
+		AND_IF,
+		LESS,
+		GREAT,
+		DLESS,
+		DGREAT,
+		OPAR,
+		CPAR,
+		T_NEWLINE
+	};
 
-void	put_err(char *msg, int fd)
+	if (in_array(token->type, no_clean, sizeof(no_clean) / sizeof(int)) == -1)
+		free(token->value);
+}
+
+void	clean_shell(void)
+{
+	ft_lstclear(&getset_env(NULL)->tok_lst, free_token_value);
+}
+
+void	lst_put(t_token *lst)
+{
+	if (!lst)
+		return (ft_putendl_fd("token node str is empty", 1));
+	ft_putstr_fd("Stack member has token : ", 1);
+	ft_putstr_fd(lst->value, 1);
+	ft_printf(" of type %d\n", lst->type);
+}
+
+void	put_err(char *msg)
 {
 	if (*msg)
-		ft_putendl_fd(msg, fd);
-	//get allocated objects & clean em
+		ft_putendl_fd(msg, STDERR_FILENO);
+	//call for shell cleaning
 	exit(EXIT_FAILURE);
 }

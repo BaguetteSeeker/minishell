@@ -6,45 +6,11 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/27 12:44:42 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/12 17:11:47 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	free_token_value(t_token *token)
-{
-	static int	to_clean[] = {
-		PIPE,
-		AMPERSAND,
-		OR_IF,
-		AND_IF,
-		LESS,
-		GREAT,
-		DLESS,
-		DGREAT,
-		OPAR,
-		CPAR
-	};
-
-	if (in_array(token->type, to_clean, sizeof(to_clean) / sizeof(int)))
-		free(token->value);
-}
-
-void	clean_minishell(t_token **token_lst)
-{
-	//get main object thgough getsetter
-	ft_lstclear(token_lst, &free_token_value);
-}
-
-void	lst_put(t_token *lst)
-{
-	if (!lst)
-		return (ft_putendl_fd("token node str is empty", 1));
-	ft_putstr_fd("Stack member has token : ", 1);
-	ft_putstr_fd(lst->value, 1);
-	ft_printf(" of type %d\n", lst->type);
-}
 
 static t_token	get_grammar_token(char *input)
 {
@@ -65,89 +31,110 @@ static t_token	get_grammar_token(char *input)
 	while (i < sizeof(grammar_tokens) / sizeof(*grammar_tokens))
 	{
 		if (ft_strncmp(grammar_tokens[i].value, input,
-			ft_strlen(grammar_tokens[i].value)) == 0)
+				ft_strlen(grammar_tokens[i].value)) == 0)
 			return (grammar_tokens[i]);
 		i++;
 	}
 	return ((t_token){0});
 }
 
-size_t	create_token(char *prompt, t_token *token)
+size_t	create_token(char *input, t_token *token)
 {
-	size_t	offset;
+	size_t	i;
 
-	offset = 0;
-	if (ft_strchr(OP_CHARSET, prompt[offset]))
+	i = 0;
+	if (ft_strchr(OP_CHARSET, input[i]))
 	{
-		*token = get_grammar_token(prompt);
+		*token = get_grammar_token(input);
 		if (token->type)
-			offset += ft_strlen(token->value);
+			i += ft_strlen(token->value);
+		return (i);
 	}
 	else
 	{
-		while (!ft_strchr("><|&) ", prompt[offset]))
+		while (input[i] && !ft_strchr("><|&() ", input[i]))
 		{
-			if (ft_strchr("\"\'", prompt[offset])
-				&& ft_strchr(&prompt[offset + 1], prompt[offset]))
-				offset += ft_strchr(&prompt[offset + 1], prompt[offset]) - &prompt[offset];
-			offset++;
+			if (ft_strchr(QUOTES_SET, input[i])
+				&& ft_strchr(&input[i + 1], input[i]))
+				i += ft_strchr(&input[i + 1], input[i]) - &input[i];
+			i++;
 		}
 		token->type = WORD;
 	}
-	token->value = ft_substr(prompt, 0, offset);
+	token->value = ft_substr(input, 0, i);
 	if (!token->value)
 		exit(1);
-	return (offset);
+	return (i);
 }
 
-#define INVALID_SYNTAX 0
-#define VALID_SYNTAX 1
-#define ERR_MSG_SYNTAX "syntax error near unexpected token `"
-
-//Finalize err response
-int	check_syntax(t_token *tokens)
+t_token	*check_completion(t_token *token, t_token *head)
 {
-	static int	op_tok[] = {LESS, DLESS, GREAT, DGREAT, PIPE, OR_IF, AND_IF};
-	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
-	static int	cmdsep[] = {PIPE, OR_IF, AND_IF};
+	static int	par_dft = 0;
 
-	(void)cmdsep;
-	while (tokens->next)
+	if (token->type == OPAR)
+		par_dft++;
+	else if (token->type == CPAR)
+		par_dft--;
+	if (par_dft < 0)
+		return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n", PROMPT_NAME,
+				ERRMSG_SYNTAX, token->value), exit(1), token->next);
+	if (token->next->type == T_NEWLINE && (par_dft > 0
+			|| token->type == OR_IF || token->type == AND_IF
+			|| token->type == PIPE))
 	{
-		if ((in_array(tokens->type, op_tok, sizeof(op_tok) / sizeof(int)) > -1
-				&& in_array(tokens->next->type, op_tok,
-					sizeof(op_tok) / sizeof(int)) > -1)
-			|| (in_array(tokens->type, redirs,
-					sizeof(redirs) / sizeof(int)) > -1
-				&& tokens->next->type != WORD))
-			return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
-					PROMPT_NAME, ERR_MSG_SYNTAX, tokens->next->value));
-		tokens = tokens->next;
+		ft_lstdelone(token->next, free_token_value);
+		token->next = NULL;
+		tokenize(open_prompt(PS2), head);
 	}
-	return (VALID_SYNTAX);
+	return ((ft_lstlast(head)));
 }
 
-
-t_token	*lexer(char *prompt)
+t_token	*check_syntax(t_token *tok, t_token *head)
 {
-	t_token	*token_head;
-	t_token	*token;
+	static int	optok[] = {LESS, DLESS, GREAT, DGREAT, PIPE, OR_IF, AND_IF};
+	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
 
-	token = NULL;
-	token_head = token;
-	while (*prompt)
+	if (tok && tok->next)
 	{
-		while (ft_strchr(" \t\v\n", *prompt))
+		if ((in_array(tok->type, optok, nb_elems(optok, sizeof(optok)))
+				&& in_array(tok->next->type, optok,
+					nb_elems(optok, sizeof(optok))))
+			|| (in_array(tok->type, redirs, nb_elems(redirs, sizeof(redirs)))
+				&& tok->next->type != WORD)
+			|| (tok->type == DLESS && tok->next->type != WORD)
+			|| (tok->type == CPAR && tok->next->type == OPAR))
+			return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n", PROMPT_NAME,
+					ERRMSG_SYNTAX, tok->next->value), exit(1), tok->next);
+		return (check_completion(tok, head));
+	}
+	return (head);
+}
+
+t_token	*tokenize(char *prompt, t_token *token_head)
+{
+	static t_token	*prev_token = NULL;
+	t_token			*token;
+	char			*tmp;
+
+	tmp = prompt;
+	token = NULL;
+	while (1)
+	{
+		while (*prompt && ft_strchr(SEP_CHARSET, *prompt))
 			prompt++;
 		token = ft_lstnew(&(t_token){0});
-		// if !token
-		prompt += create_token(prompt, token);
-		// ft_printf("Returned token type is %u and content is %s next with %p ptr\\n\n", 
-		// 	token->type, token->value, token->next);
+		if (!token)
+			put_err("Failled to allocate memory for tokens");
+		if (!*prompt)
+			*token = (t_token){T_NEWLINE, "newline", NULL};
+		else
+			prompt += create_token(prompt, token);
+		prev_token = ft_lstlast(token_head);
 		ft_lstadd_back(&token_head, token);
+		token = check_syntax(prev_token, token_head);
+		if (token->type == T_NEWLINE)
+			break ;
 	}
-	if (token)
-		ft_lstiter(token_head, &lst_put);
-	check_syntax(token_head);
+	free(tmp);
 	return (token_head);
 }

@@ -6,41 +6,44 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/03/21 14:48:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:31:01 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef	CMD_TABLE_H
 # define CMD_TABLE_H
-# include <stddef.h>
+# include "minishell.h"
 
-enum    e_node_types
-{
-    CMD,
-    ANDIF,
-    ORIF
-};
+typedef enum e_node_type {
+    NODE_COMMAND,    // Represents a command (e.g., "echo 1")
+    NODE_OPERATOR,   // Represents an operator (e.g., "&&")
+    NODE_PIPE,
+    NODE_SUBSHELL,    // Represents a subshell (e.g., "(...)")
+	NODE_REDIRECTION
+}	t_node_type;
 
-typedef struct  s_redirs
-{
-   size_t  infile;
-   size_t  outfile;
-}  t_redirs;
+typedef enum e_redir_type {
+	REDIR_IN = LESS,
+	REDIR_OUT = GREAT,
+	HEREDOC = DLESS,
+	APPEND = DGREAT
+}	t_redir_type;
 
-typedef struct  s_command
+typedef struct  s_redir
 {
-    int       type;
-    void      *prev;
-    char      *cmd;
-    char      **args;
-    t_redirs  io_streams;
-} t_command;
+	t_redir_type	type;
+	char			*file;
+	struct s_redir	*next;
+   
+}	t_redir;
 
-typedef struct s_if_node
-{
-    int     type;
-    void    *prev;
-    void    *next_a;
-    void    *next_b;
-}    t_if_node;
+typedef struct s_ast_node {
+    t_node_type         type;    // Type of the node (command, operator, subshell)
+    char              	*value;  // Value of the node (e.g., command name, operator)
+	char              	**args; 
+	char				**vars;
+	t_redir				*io_streams;
+    struct s_ast_node 	*left;   // Left child (e.g., left operand of an operator)
+    struct s_ast_node 	*right;  // Right child (e.g., right operand of an operator)
+}	t_ast_node;
 #endif

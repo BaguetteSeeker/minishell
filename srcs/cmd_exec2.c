@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:44:48 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/22 15:36:10 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/22 18:57:16 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,15 @@ int	exec_cmd(t_cmd *cmd)
 	int	status;
 	int	pid;
 
+	status = -1;
 	pid = execve(cmd->cmd_str, cmd->cmd_args, NULL);
 	if (pid == -1)
 	{
 		perror("execve error");
 	}
 	waitpid(pid, &status, 0);
+	cmd->status = status;
+	//TODO: how return status works ?
 	return (status);
 }
 
@@ -54,6 +57,10 @@ int	cmd_exe_cmd2(t_cmd *cmd)
 		if (pid == 0)
 			status = exec_cmd(cmd);
 		wait(&pid);
+		if (status == -1)
+		{
+			perror("exec_cmd error");
+		}
 		return (status);
 	}
 	return (status);

@@ -5,124 +5,178 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 16:41:38 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/22 15:33:56 by souaret          ###   ########.fr       */
+/*   Created: 2025/04/17 18:41:33 by souaret           #+#    #+#             */
+/*   Updated: 2025/04/22 18:59:31 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/***************************************************************************
- * 
- * WARNING: 
- * This is alternate code for the builtin.c file.
- * It includes the same functionality
- * but is structured differently.
- * 
- * Only one versioon should go to production.
- *  
-****************************************************************************/
-
-/***************************************************************************
- * 
- * 
- * 
-***************************************************************************/
-t_builtin	*builtin_init(void)
+/***********************************************************************
+ * Fonction bouchon 
+ * TODO: a remplacer par la vraie fonction
+ ***********************************************************************/
+int	cmd_exit(char **args)
 {
-	static t_builtin	g_builtin[] = {
-	{"echo", CMD_ECHO, cmd_echo},
-	{"cd", CMD_CD, cmd_cd},
-	{"pwd", CMD_PWD, cmd_pwd},
-	{"unset", CMD_UNSET, cmd_unset},
-	{"export", CMD_EXPORT, cmd_export},
-	{"env", CMD_ENV, cmd_env},
-	{"exit", CMD_EXIT, cmd_exit},
-	{NULL, CMD_ERROR, NULL} // Sentinel value to mark the end of the array
-	};
+	int	status;
 
-	ft_printf("builtin_init\n");
-	// ft_printf("<%s>\n", g_builtin[0].keyword);
-	// ft_printf("<%s>\n", g_builtin[1].keyword);
-	// ft_printf("<%s>\n", g_builtin[2].keyword);
-	return (g_builtin);
+	(void) args;
+	status = 0;
+	ft_dprintf(STDERR_FILENO, "--- builtin: exit\n");
+	return (status);
 }
 
-/***************************************************************************
- * 
- * 
-***************************************************************************/
-t_builtin	*builtin_get(char *cmd_str)
+/***********************************************************************
+ * Fonction bouchon 
+ * TODO: a remplacer par la vraie fonction
+ ***********************************************************************/
+int	cmd_env(char **args)
 {
-	if (cmd_str == NULL)
-		return (builtin_init());
-	else
-		do_error_exit(ERR_BUILTIN);
-	return (NULL);
+	int	status;
+
+	(void) args;
+	status = 0;
+	ft_dprintf(STDERR_FILENO, "--- builtin: env\n");
+	return (status);
 }
 
-int	get_builtin_id(char *cmd_str)
+/***********************************************************************
+ * Fonction bouchon 
+ * TODO: a remplacer par la vraie fonction
+ ***********************************************************************/
+int	cmd_unset(char **args)
 {
-	int			i;
-	t_builtin	*g_builtin;
+	int	status;
 
-	g_builtin = builtin_get(NULL);
-	if (cmd_str == NULL)
-		return (CMD_ERROR);
-	i = 0;
-	while (g_builtin[i].keyword != NULL)
-	{
-		if (ft_strcmp(g_builtin[i].keyword, cmd_str) == 0)
-			return (g_builtin[i].cmd_bi_id);
-		i++;
-	}
-	return (CMD_ERROR);
+	(void) args;
+	status = 0;
+	ft_dprintf(STDERR_FILENO, "--- builtin: unset\n");
+	return (status);
 }
 
-/***************************************************************************
+/***********************************************************************
+ * Fonction bouchon 
+ * TODO: a remplacer par la vraie fonction
+ ***********************************************************************/
+int	cmd_export(char **args)
+{
+	int	status;
+
+	(void) args;
+	status = 0;
+	ft_dprintf(STDERR_FILENO, "--- builtin: export\n");
+	return (status);
+}
+
+/***********************************************************************
+ * Fonction bouchon 
+ * TODO: a remplacer par la vraie fonction
+ ***********************************************************************/
+int	cmd_pwd(char **args)
+{
+	int	status;
+
+	(void) args;
+	status = 0;
+	ft_dprintf(STDERR_FILENO, "--- builtin: pwd\n");
+	return (status);
+}
+
+/***********************************************************************
+ * Fonction bouchon 
+ * TODO: a remplacer par la vraie fonction
+ ***********************************************************************/
+int	cmd_cd(char **args)
+{
+	int	status;
+
+	(void) args;
+	status = 0;
+	ft_dprintf(STDERR_FILENO, "--- builtin: cd\n");
+	return (status);
+}
+
+/***********************************************************************
+ * Fonction bouchon 
+ * TODO: a remplacer par la vraie fonction
+ ***********************************************************************/
+int	cmd_echo(char **args)
+{
+	int	status;
+
+	(void) args;
+	status = 0;
+	ft_dprintf(STDERR_FILENO, "--- builtin: echo\n");
+	return (status);
+}
+
+/***********************************************************************
  * 
- *	// Check if a command is a built-in
  * 
-***************************************************************************/
+ * 
+ ***********************************************************************/
+/*
 bool	is_builtin(char *cmd_str)
 {
-	int			i;
-	t_builtin	*g_builtin;
+	int         i;
+	const char  *builtins[] = {"echo", "cd", "pwd", "unset", "export", \
+		"exit", "env", NULL};
 
-	g_builtin = builtin_get(NULL);
-	if (cmd_str == NULL)
+	if (cmd_str == NULL || cmd_str[0] == '\0')
 		return (false);
-	i = 0;
-	while (g_builtin[i].keyword != NULL)
+    i = 0;
+	while (builtins[i])
 	{
-		if (ft_strcmp(g_builtin[i].keyword, cmd_str) == 0)
+		if (ft_strcmp(builtins[i], cmd_str) == 0)
 			return (true);
 		i++;
 	}
 	return (false);
 }
-
-/***************************************************************************
+*/
+/***********************************************************************
  * 
- *	// Execute a built-in command
  * 
-***************************************************************************/
+ * 
+ ***********************************************************************/
+/*
 int	cmd_exe_builtin(t_cmd *cmd)
 {
-	char		**args;
-	int			i;
-	t_builtin	*g_builtin;
+	char	**args;
+	char	*cmd_str;
+	int		status;
 
-	g_builtin = builtin_get(NULL);
+	status = -1;
 	args = cmd->cmd_args;
-	if (args == NULL || args[0] == NULL)
-		return (-1);
-	i = 0;
-	while (g_builtin[i].keyword != NULL)
+	cmd_str = cmd->cmd_str;
+	if (!cmd_str || !cmd_str[0])
 	{
-		if (ft_strcmp(g_builtin[i].keyword, args[0]) == 0)
-			return (g_builtin[i].func(args)); // Call the corresponding function
-		i++;
+		ft_dprintf(STDERR_FILENO, "*** Error: builtin is NULL\n");
+		return (status);
 	}
-	return (-1); // Error: Command not found
+	//TODO: manage redirections
+	if (ft_strcmp("echo", cmd_str) == 0)
+		status = cmd_echo(args);
+	else if (ft_strcmp("unset", cmd_str) == 0)
+		status = cmd_unset(args);
+	else if (ft_strcmp("cd", cmd_str) == 0)
+		status = cmd_cd(args);
+	else if (ft_strcmp("pwd", cmd_str) == 0)
+		status = cmd_pwd(args);
+	else if (ft_strcmp("export", cmd_str) == 0)
+		status = cmd_export(args);
+	else if (ft_strcmp("env", cmd_str) == 0)
+		status = cmd_env(args);
+	//TODO: when do we close the file descriptors ?
+	//ft_close(&cmd->file_in);
+	//ft_close(&cmd->file_out);
+	else if (ft_strcmp("exit", cmd_str) == 0)
+	{
+		//TODO: review how we process the 'exit' command
+		//if (cmd->is_child == false)
+		ft_dprintf(STDERR_FILENO, "--- exit \n");
+		status = cmd_exit(args);
+	}
+	return (status);
 }
+*/

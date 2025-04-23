@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/22 15:18:42 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/23 13:25:00 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include "struct_cmds.h"
+# include "struct_exec.h"
 # include "builtin.h"
 # include "cmd_exec.h"
 # include "cmd_pipe.h"

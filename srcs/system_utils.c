@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 17:51:14 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/23 14:35:07 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,21 @@ void	free_str(char **str)
 	if (*str != NULL)
 		free(*str);
 	*str = NULL;
+}
+
+/********************************************************************
+ * 
+ * Free a mallocaed array of strings (char * or any kind of memory/pointer)
+ *	 	that is null terminated
+********************************************************************/
+void	free_str_vect(char **str)
+{
+	int	i;
+
+	if (str == NULL)
+		return ;
+	i = -1;
+	while (str[++i])
+		free(str[i]);
+	free(str);
 }

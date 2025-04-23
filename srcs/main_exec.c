@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:11:46 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 18:42:52 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/23 14:16:03 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int argc, char *argv[], char *env[])
 		cmd->cmd_args = argv + 1; //ft_split("pwd Hello World", ' ');
 		root = node_add_top(NULL, cmd);
 		cmd_set(root);
-		cmd_exec();
+		cmd_exec(env);
 	}
 	else
 		ft_printf("\n --- Usage: %s <cmd param1 param2...\n\n", argv[0]);

@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/22 14:46:14 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/23 15:09:57 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,11 +152,14 @@ int	cmd_exe_node(t_cmd *cmd)
  * it will execute the command tree
  *
 *************************************************************************/
-void	cmd_exec(void)
+void	cmd_exec(char **envv)
 {
 	t_cmd	*cmd;
+	t_exec	*exec;
 
-	//TODO: Prepare for execution
+	// TODO: initialize the environment variables
+	exec = exec_init(envv);
+	do_check_error_exit((exec == NULL), ERR_EXEC_1);
 	cmd = cmd_get(NULL);
 	do_check_error_exit((cmd == NULL), ERR_0);
 	// cmd_exe_tree(cmd_tree);
@@ -166,5 +169,6 @@ void	cmd_exec(void)
 	if (cmd->right)
 		cmd_exe_node(cmd->right);
 	//TODO: Cleanup after execution
+	exec_free();
 	return ;
 }

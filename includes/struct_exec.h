@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:49:23 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/23 14:24:17 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:25:22 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,13 @@
 # define ERR_EXEC_2	2
 # define ERR_EXEC_MSG_2	"Error: Exec variable is NULL"
 # define ERR_EXEC_3	3
-# define ERR_EXEC_MSG_3	"Error: Exec 3"
+# define ERR_EXEC_MSG_3	"Error: cannot get global variable"
+# define ERR_EXEC_4	4
+# define ERR_EXEC_MSG_4	"Error: using getter for global variable"
+# define ERR_EXEC_5	5
+# define ERR_EXEC_MSG_5	"Error: Cannot initialize global variable"
+# define ERR_EXEC_6	6
+# define ERR_EXEC_MSG_6	"Error: "
 
 /**************************************************************************
  * 

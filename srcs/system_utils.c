@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/23 14:35:07 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/25 13:46:52 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	free_str(char **str)
  * 
  * Free a mallocaed array of strings (char * or any kind of memory/pointer)
  *	 	that is null terminated
+ TODO: exise deja dans libft - a remplacer !
 ********************************************************************/
 void	free_str_vect(char **str)
 {
@@ -84,5 +85,5 @@ void	free_str_vect(char **str)
 	i = -1;
 	while (str[++i])
 		free(str[i]);
-	free(str);
+	//free(*str);
 }

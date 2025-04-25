@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 14:48:47 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 17:31:44 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/25 13:51:00 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void		cmd_set(t_cmd *cmd);
 t_cmd		*cmd_get(t_cmd *cmd);
 t_cmd		*cmd_create(int cmd_id, char *str);
 void		cmd_add_child(t_cmd *node, t_cmd *child, int child_node);
-void		cmd_delete(t_cmd *cmd);
+void		cmd_delete_tree(t_cmd *cmd);
 void		cmd_free_all(void);
 const char	*cmd_print(int cmd_id);
 

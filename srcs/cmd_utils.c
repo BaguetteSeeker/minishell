@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 21:10:10 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/23 13:04:25 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/25 13:43:38 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,22 @@
 *************************************************************************/
 t_cmd	*cmd_get(t_cmd *cmd)
 {
-	static t_cmd	*cmd_tree = NULL;
+	t_cmd	*cmd_tree = NULL;
+	t_ms	*ms;
 
+	ms = ms_get(NULL);
+	do_check_error_exit((ms == NULL), ERR_EXEC_2);
+	cmd_tree = ms->cmd;
 	if (cmd_tree != NULL && cmd == NULL)
 		return (cmd_tree);
 	else if (cmd_tree == NULL && cmd != NULL)
+	{
 		cmd_tree = cmd;
+		ms->cmd = cmd_tree;
+	}
 	else
 		do_error_exit(ERR_CMD_1);
-	return (cmd-tree);
+	return (cmd_tree);
 }
 
 /************************************************************************
@@ -87,17 +94,17 @@ void	cmd_add_child(t_cmd *node, t_cmd *child, int child_node)
 /************************************************************************
  * delete a node and its constituents
 *************************************************************************/
-void	cmd_delete(t_cmd *cmd)
+void	cmd_delete_tree(t_cmd *cmd)
 {
 	if (!cmd)
 		return ;
-	cmd_delete(cmd->left);
+	cmd_delete_tree(cmd->left);
 	cmd->left = NULL;
-	cmd_delete(cmd->right);
+	cmd_delete_tree(cmd->right);
 	cmd->right = NULL;
 	free_str(&cmd->cmd_str);
 	cmd->cmd_str = NULL;
-	free_str(cmd->cmd_args);
-	cmd->cmd_args = NULL;
+	//free_str(cmd->cmd_args);
+	//cmd->cmd_args = NULL;
 	free(cmd);
 }

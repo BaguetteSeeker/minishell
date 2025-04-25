@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_exec.c                                        :+:      :+:    :+:   */
+/*   system_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/21 15:11:46 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/25 13:30:19 by souaret          ###   ########.fr       */
+/*   Created: 2025/04/24 11:44:38 by souaret           #+#    #+#             */
+/*   Updated: 2025/04/24 14:38:07 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char *argv[], char *env[])
+/*****************************************************************************
+ * 
+ * output Log Message: if flag is ON
+ *		otherwise, remain silent [off]
+ * 
+*****************************************************************************/
+void	putlog_fd(char *log_message)
 {
-	t_cmd	*cmd;
-	t_cmd	*root;
 	t_ms	*ms;
 
-	if (argc > 1)
-	{
-		(void)env;
-		ms = ms_init(env);
-		do_check_error_exit((ms == NULL), ERR_EXEC_5);
-		builtin_init();
-		cmd = node_new(argv[1]);
-		cmd->cmd_args = argv + 1; //ft_split("pwd Hello World", ' ');
-		root = node_add_top(NULL, cmd);
-		cmd_set(root);
-		cmd_exec();
-	}
-	else
-		ft_printf("\n --- Usage: %s <cmd param1 param2...\n\n", argv[0]);
-	return (0);
+	ms = ms_get(NULL);
+	if (!ms)
+		do_error_exit(ERR_EXEC_4);
+	if (ms->log_msg)
+		ft_putendl_fd(log_message, STDERR_FILENO);
 }

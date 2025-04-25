@@ -1,99 +1,103 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   struct_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 12:57:34 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/25 13:51:00 by souaret          ###   ########.fr       */
+/*   Created: 2025/04/24 11:44:38 by souaret           #+#    #+#             */
+/*   Updated: 2025/04/25 13:53:13 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*****************************************************************************
+ * 
+ * output Log Message: if flag is ON
+ *		otherwise, remain silent [off]
+ * 
+*****************************************************************************/
 /*************************************************************************
- * Getter for exec
+ * getter for minishell global var 
+ * 		if param is NULL then it will set the global var
+ * 		acting like a setter.
 *************************************************************************/
-/*
-t_exec	*exec_get(t_exec *ex)
+t_ms	*ms_get(t_ms *ms)
 {
-	static t_exec	*exec_var = NULL;
+	static t_ms	*ast_ms = NULL;
 
-	if (exec_var != NULL && ex == NULL)
-		return (exec_var);
-	else if (exec_var == NULL && ex != NULL)
-		exec_var = ex;
-	return (exec_var);
+	if (ast_ms != NULL && ms == NULL)
+		return (ast_ms);
+	else if (ast_ms == NULL && ms != NULL)
+		ast_ms = ms;
+	// else
+	// 	do_error_exit(ERR_EXEC_4);
+	return (ast_ms);
 }
-*/
+
 /************************************************************************
- * Setter for exec
+ * Setter for ms
 *************************************************************************/
-/*
-void	exec_set(t_exec *exec_var)
+static void	ms_set(t_ms *ms)
 {
-	exec_get(exec_var);
+	ms_get(ms);
 }
-*/
 
 /************************************************************************
  * 
- * Initialization of exec structure
+ * Initialization of global structure
  * WARNING: this is the first function to call in the execution part.
  * 
 *************************************************************************/
-/*
-t_ms	*exec_init(char **envv)
+t_ms	*ms_init(char **envv)
 {
-	t_exec	*exec;
 	t_ms	*ms;
-ms_init
+
 	ms = ms_get(NULL);
 	if (ms == NULL)
-	{
 		ms = (t_ms *)malloc(sizeof(t_ms));
-		do_check_error_exit((ms == NULL), ERR_EXEC_5);
-	}
-	//exec = exec_get(NULL);
-	// if (exec == NULL)
-	// 	exec = (t_exec *)malloc(sizeof(t_exec));
-	// do_check_error_exit((exec == NULL), ERR_MALLOC);
-	// exec_set(exec);
-	ms->envv = envv;
-	ms->cmd_args = NULL;
-	//ms->cmd_args_len = 0;
-	ms->cmd = NULL;
+	do_check_error_exit((ms == NULL), ERR_MALLOC);
+	ms_set(ms);
 	ms->paths = NULL;
-	//ms->paths_len = 0;
-	ms->envv_len = count_env(envv);
+	ms->paths_len = 0;
+	ms->envv = envv;
+	ms->args = NULL;
+	ms->cmd = NULL;
+	ms->prompt = NULL;
+	ms->status = 0;
+	// ms->envv_len = count_env(envv);
 	return (ms);
 }
-*/
+
 /************************************************************************
- * Setter for exec
- * INFO: 
- *		If exec is NULL, nothing to be done here !
- * TODO: voir si foncion libft qui nettoie un array de str [free_str_vect]
+ * 
+ * Free for global ms variables
+ * 
 *************************************************************************/
-/*
-void	exec_free(void)
+void	ms_free(void)
 {
 	t_ms	*ms;
-	int		i;
 
 	ms = ms_get(NULL);
 	if (ms == NULL)
 		return ;
-	free_str_vect(ms->paths);
-	ms->paths = NULL;
-	free_str_vect(ms->args);
-	ms->args = NULL;
-	cmd_free_all(ms->cmd);
-	ms->cmd = NULL;
-	ms_free
+	if (ms->paths) 
+	{
+		free_str_vect(ms->paths);
+		ms->paths = NULL;
 	}
 	ms->paths_len = 0;
-	//free(exec);
+	if (ms->envv) 
+	{
+		free_str_vect(ms->envv);
+		ms->envv = NULL;
+	}
+	if (ms->cmd) 
+	{
+		cmd_delete_tree(ms->cmd);
+		ms->cmd = NULL;
+	}
+	free_str((char **)&ms);
 }
-*/
+

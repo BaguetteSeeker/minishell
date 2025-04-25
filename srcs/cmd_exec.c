@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/23 15:09:57 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/25 16:21:22 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@
  * Execute && command 
  * a command that executes well, returns OK.
  * 	if status of LEFT cmd is not OK ( = 0), 
- * 		then no need to execute the RIGHT cmd
+ * 		then childneed to execute the RIGHT cmd
 ************************************************************************/
 int	cmd_exe_and(t_cmd *cmd)
 {
@@ -152,15 +152,15 @@ int	cmd_exe_node(t_cmd *cmd)
  * it will execute the command tree
  *
 *************************************************************************/
-void	cmd_exec(char **envv)
+void	cmd_exec(void)
 {
+	t_ms	*ms;
 	t_cmd	*cmd;
-	t_exec	*exec;
 
 	// TODO: initialize the environment variables
-	exec = exec_init(envv);
-	do_check_error_exit((exec == NULL), ERR_EXEC_1);
-	cmd = cmd_get(NULL);
+	ms = ms_get(NULL);
+	do_check_error_exit((ms == NULL), ERR_EXEC_1);
+	cmd = ms->cmd;
 	do_check_error_exit((cmd == NULL), ERR_0);
 	// cmd_exe_tree(cmd_tree);
 	cmd_exe_node(cmd);
@@ -169,6 +169,6 @@ void	cmd_exec(char **envv)
 	if (cmd->right)
 		cmd_exe_node(cmd->right);
 	//TODO: Cleanup after execution
-	exec_free();
+	ms_free();
 	return ;
 }

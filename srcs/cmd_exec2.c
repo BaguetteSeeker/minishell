@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:44:48 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/25 16:37:16 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/26 15:31:42 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,45 @@ TODO:
  *
  * 
 *************************************************************************/
-int	get_status(int pid)
+int	get_status(int child_status)
 {
 	int	status;
+	//int term_signal;
+	//int exit_code;
 
 	status = -1;
-	if (pid == -1)
+	if (child_status == -1)
 	{
 		perror("get_status error");
 		return (-1);
 	}
-	if (WIFEXITED(pid))
-		status = WEXITSTATUS(pid);
-	else if (WIFSIGNALED(pid))
-		status = WTERMSIG(pid);
-	else if (WIFSTOPPED(pid))
-		status = WSTOPSIG(pid);
+	if (WIFEXITED(child_status))
+		status = WEXITSTATUS(child_status);
+	else if (WIFSIGNALED(child_status))
+		status = WTERMSIG(child_status);
+	else if (WIFSTOPPED(child_status))
+		status = WSTOPSIG(child_status);
+	ft_dprintf(STDERR_FILENO, "get_status: child_status = %d\n", status);
 	return (status);
+
+	// exit_coode = -1;
+	// // --- Analyze the child's termination status ---
+	// if (WIFEXITED(child_status)) {
+	// 	// Child terminated normally using exit() or return
+	// 	exit_code = WEXITSTATUS(child_status);
+	// 	printf("Parent: Child exited normally with status code: %d\n", exit_code);
+	// 	// In a real shell, you might store this value (e.g., in $?)
+	// } else if (WIFSIGNALED(child_status)) {
+	// 	// Child was terminated by a signal
+	// 	term_signal = WTERMSIG(child_status);
+	// 	printf("Parent: Child was terminated by signal: %d (%s)\n",
+	// 			term_signal, strsignal(term_signal));
+	// 		// In a real shell, you might report this differently, e.g. 128 + signal number
+	// } else {
+	// 	// Other possibilities (stopped, continued - less common for basic exec)
+	// 	printf("Parent: Child terminated with unusual status: %d\n", child_status);
+	// }
+	// return 
 }
 
 /************************************************************************
@@ -47,7 +69,7 @@ int	get_status(int pid)
  *
  * 
 *************************************************************************/
-int	ft_waitpid(int pid, int *status, int options)
+void	ft_waitpid(int pid, int *status, int options)
 {
 	int ret;
 
@@ -57,22 +79,21 @@ int	ft_waitpid(int pid, int *status, int options)
 		perror("waitpid error");
 		free_and_exit(EXIT_FAILURE);
 	}
-	// if (waitpid(pid, status, 0) == -1)
-	// {
-	// 	perror("waitpid failed");
-	// 	exit(EXIT_FAILURE);
-	// }
+	// cmd = cmd_get(NULL);
+	// do_check_error_exit((cmd == NULL), EXIT_FAILURE);
 
-	// Check if the child exited normally
-	if (WIFEXITED(*status))
-	{
-		printf("Child exited with status: %d\n", WEXITSTATUS(*status));
-	}
-	else
-	{
-		printf("Child did not exit normally\n");
-	}
-	return (ret);
+	// 	// Check if the child exited normally
+	// if (WIFEXITED(*status))
+	// {
+	// 	printf("Child exited with status: %d\n", WEXITSTATUS(*status));
+	// 	cmd->status = WEXITSTATUS(*status);
+	// }
+	// else
+	// {
+	// 	printf("Child did not exit normally\n");
+	// 	cmd->status = -1;
+	// }
+	// return (ret);
 }
 /************************************************************************
  * 
@@ -82,16 +103,16 @@ int	ft_waitpid(int pid, int *status, int options)
 int	exec_cmd(t_cmd *cmd)
 {
 	int	status;
-	int	ret;
 
 	status = -1;
-	ret = execve(cmd->cmd_str, cmd->cmd_args, NULL);
-	if (ret == -1)
+	execve(cmd->cmd_str, cmd->cmd_args, NULL);
 	{
 		perror("execve error");
+		free_and_exit(EXIT_FAILURE);
 	}
-	status = get_status(ret);
-	cmd->status = status;
+	// ft_dprintf(STDERR_FILENO, "after the call to exeve\n");
+	// status = get_status(ret);
+	// cmd->status = -1;
 	//TODO: how return status works ?
 	return (status);
 }
@@ -106,7 +127,7 @@ int	cmd_exe_cmd2(t_cmd *cmd)
 	int	status;
 	int	pid;
 
-	status = -1;
+	status = -99;
 	if (cmd->is_child)
 	{
 		pid = ft_fork(cmd);
@@ -122,15 +143,16 @@ int	cmd_exe_cmd2(t_cmd *cmd)
 			if (status == -1)
 				perror("exec_cmd error");
 			else
-				status = get_status(pid);
-			if (WIFEXITED(status))
-				status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				status = WTERMSIG(status);
-			else if (WIFSTOPPED(status))
-				status = WSTOPSIG(status);
-			else
-				status = -1;
+				status = get_status(status);
+			// if (WIFEXITED(status))
+			// 	status = WEXITSTATUS(status);
+			// else if (WIFSIGNALED(status))
+			// 	status = WTERMSIG(status);
+			// else if (WIFSTOPPED(status))
+			// 	status = WSTOPSIG(status);
+			// else
+			// 	status = -1;
+			cmd->status = status;
 		}
 		return (status);
 	}
@@ -180,7 +202,7 @@ int	cmd_exe_cmd(t_cmd *cmd)
 int	ft_fork(t_cmd *cmd)
 {
 	int	pid;
-	int	status;
+	// int	status;
 
 	pid = fork();
 	do_check_error_exit((pid == -1), EXIT_FAILURE);
@@ -192,21 +214,22 @@ int	ft_fork(t_cmd *cmd)
 		//TODO: exec_cmd(cmd);
 		//set_child_signals();
 	}
-	else
-	{
+	// else
+	// {
         // Parent process
         ft_dprintf(STDERR_FILENO, "Parent process: Waiting for child to finish...\n");
-        if (waitpid(pid, &status, 0) == -1)
-        {
-            perror("waitpid failed");
-            free_and_exit(EXIT_FAILURE);
-        }
+		
+    //     if (waitpid(pid, &status, 0) == -1)
+    //     {
+    //         perror("waitpid failed");
+    //         free_and_exit(EXIT_FAILURE);
+    //     }
 
-        // Check if the child exited normally
-        if (WIFEXITED(status))
-			ft_dprintf(STDERR_FILENO, "Child exited with status: %d\n", WEXITSTATUS(status));
-        else
-            ft_dprintf(STDERR_FILENO, "Child did not exit normally\n");
-    }
+    //     // Check if the child exited normally
+    //     if (WIFEXITED(status))
+	// 		ft_dprintf(STDERR_FILENO, "Child exited <%d>with status: %d\n", WIFEXITED(status), WEXITSTATUS(status));
+    //     else
+    //         ft_dprintf(STDERR_FILENO, "Child did not exit normally\n");
+    // }
 	return (pid);
 }

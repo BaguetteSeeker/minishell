@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 11:44:38 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/25 13:53:13 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/26 15:34:19 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,11 @@ void	ms_free(void)
 		ms->paths = NULL;
 	}
 	ms->paths_len = 0;
-	if (ms->envv) 
-	{
-		free_str_vect(ms->envv);
-		ms->envv = NULL;
-	}
+	// if (ms->envv) 
+	// {
+	// 	free_str_vect(ms->envv);
+	// 	ms->envv = NULL;
+	// }
 	if (ms->cmd) 
 	{
 		cmd_delete_tree(ms->cmd);

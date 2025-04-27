@@ -6,13 +6,13 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/20 19:15:06 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/28 00:36:33 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_minishell	*getset_env(void *g)
+t_minishell	*g_getset(void *g)
 {
 	static t_minishell	*stored_g = {NULL};
 
@@ -31,9 +31,9 @@ char	*open_prompt(char *prompt)
 	return (input_line);
 }
 
-// recurse_put(getset_env(NULL)->var_env);
+// recurse_put(g_getset(NULL)->var_env);
 // ft_printf("Imported env has %u variables\n",
-	// ft_ptrlen((const void **)getset_env(NULL)->var_env));
+	// ft_ptrlen((const void **)g_getset(NULL)->var_env));
 			// // parser(tokens);
 //Handles Minishell' routine
 int	main(int argc, char *argv[], char *env[])
@@ -44,8 +44,8 @@ int	main(int argc, char *argv[], char *env[])
 
 	(void)argc;
 	(void)argv;
-	getset_env(&(t_minishell){.var_env = env});
-	while (1)
+	g_getset(&(t_minishell){.var_env = env});
+ 	while (1)
 	{
 		tokens = NULL;
 		input_line = open_prompt(PROMPT_NAME);
@@ -55,9 +55,10 @@ int	main(int argc, char *argv[], char *env[])
 			continue ;
 		tokens = tokenize(input_line, tokens);
 		handle_heredocs(tokens);
-		getset_env(NULL)->cmd_table = parse_tokens(&tokens, NULL);
 		tokens_tmp = tokens;
-		print_ast(getset_env(NULL)->cmd_table);
+		// g_getset(NULL)->cmd_table = parse_tokens(&tokens, NULL);
+		ft_printf("Prev val %s\nExpanded Val: %s\n", tokens->value, expand(tokens->value, 0));
+		//print_ast(g_getset(NULL)->cmd_table);
 		// if (tokens)
 		// 	ft_lstiter(tokens, &lst_put);
 		//refresh the ast

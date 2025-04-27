@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:49:23 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 17:40:05 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/27 12:40:19 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ typedef struct s_cmd
 	struct s_cmd	*left;
 	struct s_cmd	*right;
 	bool			is_child;
+	int				pid_child;
+	bool			is_builtin;
 	int				file_in;
 	int				file_out;
 	bool			file_append;

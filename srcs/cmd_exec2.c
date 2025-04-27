@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:44:48 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/26 15:31:42 by souaret          ###   ########.fr       */
+/*   Updated: 2025/04/27 14:22:05 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	cmd_exe_cmd2(t_cmd *cmd)
 	int	pid;
 
 	status = -99;
-	if (cmd->is_child)
+	if (cmd->is_child || !cmd->is_child)	// TODO: review this part
 	{
 		pid = ft_fork(cmd);
 		if (pid == 0)
@@ -188,7 +188,7 @@ int	cmd_exe_cmd(t_cmd *cmd)
 		ft_dprintf(STDERR_FILENO, "*** Error: command is not a leaf node\n");
 		return (status);
 	}
-	cmd->is_child = true;
+	//cmd->is_child = true;
 	status = cmd_exe_cmd2(cmd);
 	return (status);
 }
@@ -208,17 +208,18 @@ int	ft_fork(t_cmd *cmd)
 	do_check_error_exit((pid == -1), EXIT_FAILURE);
 	if (pid == 0)
 	{
-		ft_dprintf(STDERR_FILENO, "Child process: Executing...\n");
+		ft_dprintf(STDERR_FILENO, "Child: Executing...\n");
 		cmd->is_child = true;
-		cmd->pid = pid;
 		//TODO: exec_cmd(cmd);
 		//set_child_signals();
 	}
-	// else
-	// {
+	else
+	{
         // Parent process
-        ft_dprintf(STDERR_FILENO, "Parent process: Waiting for child to finish...\n");
-		
+		cmd->pid_child = pid;
+        //ft_dprintf(STDERR_FILENO, "Parent: Waiting for child <%d>\n", \
+		//	cmd->pid_child);
+		printf("Parent: Waiting for child <%d>\n", cmd->pid_child);			
     //     if (waitpid(pid, &status, 0) == -1)
     //     {
     //         perror("waitpid failed");
@@ -230,6 +231,6 @@ int	ft_fork(t_cmd *cmd)
 	// 		ft_dprintf(STDERR_FILENO, "Child exited <%d>with status: %d\n", WIFEXITED(status), WEXITSTATUS(status));
     //     else
     //         ft_dprintf(STDERR_FILENO, "Child did not exit normally\n");
-    // }
+    }
 	return (pid);
 }

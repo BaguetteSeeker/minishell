@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/28 00:36:33 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/29 11:27:45 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*open_prompt(char *prompt)
 	return (input_line);
 }
 
-// recurse_put(g_getset(NULL)->var_env);
+// put_recurse_dynarr(g_getset(NULL)->var_env);
 // ft_printf("Imported env has %u variables\n",
 	// ft_ptrlen((const void **)g_getset(NULL)->var_env));
 			// // parser(tokens);

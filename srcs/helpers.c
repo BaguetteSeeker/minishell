@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/22 17:34:14 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/29 11:27:45 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ void	print_ast(t_ast_node *node)
 	{
 		ft_printf("Command: %s\n", node->value);
 		ft_putendl_fd("Printing vars :", 1);
-		recurse_put(node->vars);
+		put_recurse_dynarr(node->vars);
 		ft_putendl_fd("Stops printing", 1);
 		ft_putendl_fd("Printing args :", 1);
-		recurse_put(node->args);
+		put_recurse_dynarr(node->args);
 		ft_putendl_fd("Stops printing", 1);
 		ft_putendl_fd("Printing redirs:", 1);
 		ft_lstiter(((t_token *)node->io_streams), lst_put);
-		//ft_clean_memtree(node->args);
+		//ft_free_dynarr(node->args);
 	}
 	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
 	{

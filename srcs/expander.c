@@ -6,11 +6,36 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/28 01:04:27 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/29 12:44:18 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*strip_outquotes(char *str)
+{
+	char	quote;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (ft_strchr("\"\'", str[i]))
+		{
+			quote = str[i++];
+			while (str[i] && str[i] != quote)
+				str[j++] = str[i++];
+			if (str[i] == quote)
+				i++;
+		}
+		else
+			str[j++] = str[i++];
+	}
+	str[j] = '\0';
+	return (str);
+}
 
 //Searches for strlen(str) char the string str in the dynamic array lst
 char	*ft_lststrn(char **lst, char *str)
@@ -18,6 +43,9 @@ char	*ft_lststrn(char **lst, char *str)
 	int		i;
 	size_t	strlen;
 
+	//TODO:Remove this check once shell vars has been properly populated
+	if (!lst)
+		return (NULL);
 	i = 0;
 	strlen = ft_strlen(str);
 	while (lst[i])
@@ -78,7 +106,9 @@ char	*eval_placeholder(char *str, char *pcdr)
 {
 	char	*str_head;
 	char	*values;
+	// char	*vnil_str;
 	
+	// vnil_str = str;
 	str_head = ft_substr(str, 0, pcdr - str);
 	if (!str_head)
 		put_err("Expand : Failled to alloc memory for str_head;");
@@ -86,8 +116,15 @@ char	*eval_placeholder(char *str, char *pcdr)
 		values = get_envvar(pcdr);
 	else if (*pcdr == '*') //Wont work in some cases as * exp sometimes imply a preceeding path
 		return (NULL);
+	if (!values)
+		values = ft_strdup("");
+	if (!values)
+		put_err("Expand : Failled to alloc memory for var content;");
 	//varsiz only computes size for $VAR placeholders
 	str = ft_strjoin2(str_head, values, pcdr + ft_varsiz(pcdr + 1) + 1);
+	free(str_head);
+	free(values);
+	//free(vnil_str);
 	if (!str)
 		put_err("Expand : Failled to alloc memory for expanded str;");
 	return (str);
@@ -105,19 +142,19 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 	char	*pcdr_pos;
 
 	(void)flag;
-
-	qts_start = str + *i;
-	qts_end = ft_strchr(qts_start + 1, qts_start[0]);
-	pcdr_pos = ft_strnstr(qts_start, "$", qts_end - qts_start);
-	if (qts_end)
+	while (1)
 	{
-		if (str[*i] == DQUOTE && pcdr_pos)
-		{
+		qts_start = str + *i;
+		qts_end = ft_strchr(qts_start + 1, qts_start[0]);
+		if (!qts_end)
+			return (++*i, str);
+		pcdr_pos = ft_strnstr(qts_start, "$", qts_end - qts_start);
+		if (qts_start[0] == DQUOTE && pcdr_pos)
 			str = eval_placeholder(str, pcdr_pos);
-		}
 		else
-			*i += qts_end - qts_start;
+			break ;
 	}
+	*i += qts_end - qts_start;
 	return (str);
 }
 
@@ -140,7 +177,7 @@ char	*expand(char *buff, size_t mode)
 			buff = skip_quotes(buff, &i, 0);
 		if (buff[i] == '$')
 		{
-			if (ft_strncmp(&buff[i], "$?", 2))
+			if (ft_strncmp(&buff[i], "$?", ft_strlen(buff + i)) == 0)
 				i += 2;
 			else
 				buff = eval_placeholder(buff, buff + i);
@@ -150,5 +187,5 @@ char	*expand(char *buff, size_t mode)
 		else
 			i++;
 	}
-	return (buff);
+	return (strip_outquotes(buff));
 }

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/29 12:44:18 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/04 00:27:14 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,7 @@ char	*strip_outquotes(char *str)
 	return (str);
 }
 
-//Searches for strlen(str) char the string str in the dynamic array lst
-char	*ft_lststrn(char **lst, char *str)
-{
-	int		i;
-	size_t	strlen;
-
-	//TODO:Remove this check once shell vars has been properly populated
-	if (!lst)
-		return (NULL);
-	i = 0;
-	strlen = ft_strlen(str);
-	while (lst[i])
-	{
-		if (ft_strncmp(str, lst[i], strlen) == 0)
-			return (lst[i]);
-		i++;
-	}
-	return (NULL);
-}
-
-size_t	ft_varsiz(char *var);
-
-size_t	ft_varsiz(char *var)
+static size_t	ft_varsiz(char *var)
 {
 	size_t	i;
 
@@ -73,68 +51,69 @@ size_t	ft_varsiz(char *var)
 	return (i);
 }
 
-static char	*get_envvar(char *varname)
+static size_t	check_pathname(const char *path)
 {
-	char	*match;
-	char	**full_var;
+    size_t	i;
 
-	varname = ft_substr(varname, 1, ft_varsiz(varname + 1));
-	if (!varname)
-		put_err("Expand : Failled to alloc memory for varname;");
-	//what if env and shell both contains the same variable ?
-	match = ft_lststrn(g_getset(NULL)->var_env, varname);
-	if (!match)
-		match = ft_lststrn(g_getset(NULL)->var_shell, varname);
-	if (match)
-	{
-		match = ft_strdup(match);
-		if (!match)
-			put_err("Expand : Failled to alloc memory for varvalue;");
-		full_var = ft_split(match, '=');
-		free(match);
-		if (!full_var)
-			put_err("Expand : Failled to alloc memory for full_var;");
-		match = full_var[1];
-		free(full_var[0]);
-		free(full_var);
-	}
-	free(varname);
-	return (match);
+    if (!path)
+        return (0);
+    i = 0;
+    while (path[i])
+    {
+        // Valid characters: alphanumeric, '_', '-', '.', '/', and '~'
+        if (!(isalnum(path[i]) || path[i] == '_' || path[i] == '-' ||
+              path[i] == '.' || path[i] == '/' || path[i] == '~' || path[i] == '*'))
+            break;
+        // Consecutive '/' are not allowed (except at the start)
+        if (i > 0 && path[i] == '/' && path[i - 1] == '/')
+            break;
+        i++;
+    }
+    return (i);
 }
 
-char	*eval_placeholder(char *str, char *pcdr)
+char	*concat_expansion(char *str, char *pcdr, char *val, size_t type)
 {
 	char	*str_head;
-	char	*values;
-	// char	*vnil_str;
-	
-	// vnil_str = str;
+	char	*vnil_str;
+
 	str_head = ft_substr(str, 0, pcdr - str);
 	if (!str_head)
 		put_err("Expand : Failled to alloc memory for str_head;");
-	if (*pcdr == '$')
-		values = get_envvar(pcdr);
-	else if (*pcdr == '*') //Wont work in some cases as * exp sometimes imply a preceeding path
-		return (NULL);
+	vnil_str = str;
+	if (type == TYPE_DLRS)
+		str = ft_strjoin2(str_head, val, pcdr + ft_varsiz(pcdr + 1) + 1);
+	else if (type == TYPE_WCRD)
+		str = ft_strjoin2(str_head, val, pcdr + check_pathname(pcdr));
+	free(str_head);
+	free(val);
+	free(vnil_str);
+	if (!str)
+		put_err("Expand : Failled to alloc memory for expanded str;");
+	return (str);
+}
+
+char	*eval_placeholder(char *str, char *pcdr, size_t type)
+{
+	char	*values;
+
+	if (type == TYPE_DLRS)
+		values = get_envvar(pcdr, ft_varsiz(pcdr + 1));
+	else if (type == TYPE_WCRD)
+		values = get_path(pcdr, check_pathname(pcdr));
 	if (!values)
 		values = ft_strdup("");
 	if (!values)
 		put_err("Expand : Failled to alloc memory for var content;");
 	//varsiz only computes size for $VAR placeholders
-	str = ft_strjoin2(str_head, values, pcdr + ft_varsiz(pcdr + 1) + 1);
-	free(str_head);
-	free(values);
-	//free(vnil_str);
-	if (!str)
-		put_err("Expand : Failled to alloc memory for expanded str;");
-	return (str);
+	return (concat_expansion(str, pcdr, values, type));
 }
 
 #define SQUOTE '\''
 #define DQUOTE '\"'
 //Called when quotes encountered and returns a pointer + 1 to where they end. 
 //Same for unmatched quotes
-//If $ found while skipping, expand is called, 
+//If $ found while skipping, expand is called
 static char	*skip_quotes(char *str, size_t *i, size_t flag)
 {
 	char	*qts_start;
@@ -150,7 +129,7 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 			return (++*i, str);
 		pcdr_pos = ft_strnstr(qts_start, "$", qts_end - qts_start);
 		if (qts_start[0] == DQUOTE && pcdr_pos)
-			str = eval_placeholder(str, pcdr_pos);
+			str = eval_placeholder(str, pcdr_pos, flag);
 		else
 			break ;
 	}
@@ -158,32 +137,31 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 	return (str);
 }
 
-/* ************************************************************************** */
-/* 
-
-#define EXP_ERR_CODE
-Heredoc content must be treated litteraly, except when their delimiter is
+/*Heredoc content must be treated litteraly, except when their delimiter is
 not surrounded by quotes; No * filename expand for herdoc regardless */
-char	*expand(char *buff, size_t mode)
+char	*expand(char *buff)
 {
 	size_t	i;
-	(void)mode;
 
 	i = 0;
-	//trim semantic quotes
 	while (buff[i])
 	{
 		if (buff[i] == SQUOTE || buff[i] == DQUOTE)
-			buff = skip_quotes(buff, &i, 0);
+			buff = skip_quotes(buff, &i, TYPE_DLRS);
 		if (buff[i] == '$')
 		{
 			if (ft_strncmp(&buff[i], "$?", ft_strlen(buff + i)) == 0)
 				i += 2;
 			else
-				buff = eval_placeholder(buff, buff + i);
+				buff = eval_placeholder(buff, buff + i, TYPE_DLRS);
 		}
-		// else if (buff[i] == '*')
-		// 	buff = append_filenames();
+		else if (buff[i] == '*')
+		{
+			while (i > 0 && buff[i] != ' ')
+				i--;
+			buff = eval_placeholder(buff, buff + i, TYPE_WCRD);
+			i += check_pathname(buff);
+		}
 		else
 			i++;
 	}

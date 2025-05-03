@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/29 11:27:45 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/04 00:37:51 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int argc, char *argv[], char *env[])
 		handle_heredocs(tokens);
 		tokens_tmp = tokens;
 		// g_getset(NULL)->cmd_table = parse_tokens(&tokens, NULL);
-		ft_printf("Prev val %s\nExpanded Val: %s\n", tokens->value, expand(tokens->value, 0));
+		ft_printf("Prev val %s\nExpanded Val: %s\n", tokens->value, expand(tokens->value));
 		//print_ast(g_getset(NULL)->cmd_table);
 		// if (tokens)
 		// 	ft_lstiter(tokens, &lst_put);

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/04 12:12:18 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/04 22:58:47 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,17 @@
 # define ERRMSG_SYNTAX "syntax error near unexpected token `"
 # define QUOTES_SET "\"\'"
 
+typedef enum s_msh_state
+{
+	MSH_PROMPTING,
+	MSH_TOKENIZING,
+	MSH_PARSING,
+	MSH_EXECUTING
+}	t_msh_state;
+
 typedef struct s_minishell
 {
+	t_msh_state state;
 	char 		**var_env;
 	char		**var_shell;
 	char		*prompt;
@@ -44,6 +53,8 @@ typedef struct s_minishell
 #define	PARSE_SUBSQ_VARS 2
 #define TYPE_DLRS 1
 #define TYPE_WCRD 2
+#define CHR_SQUOTE '\''
+#define CHR_DQUOTE '\"'
 
 //Core
 t_minishell	*g_getset(void *g);

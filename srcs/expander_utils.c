@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_bis.c                                     :+:      :+:    :+:   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/04 12:22:10 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/04 23:46:04 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ char	*get_path(char *pcdr)
 	DIR				*dir;
 	struct dirent	*entry;
 	char			*paths;
+	char			*vnil_path;
 
 	paths = ft_strdup("");
 	if (!paths)
@@ -116,15 +117,15 @@ char	*get_path(char *pcdr)
 	{
 		entry = readdir(dir);
 		if (!entry)
-			break ;
+			return (closedir(dir), paths);
 		if (match_pattern(pcdr, entry->d_name))
 		{
+			vnil_path = paths;
 			ft_printf("Match -> %s\n", entry->d_name);
 			paths = ft_strjoin2(paths, " ", entry->d_name);
+			free(vnil_path);
 			if (!paths)
 				put_err("Expander : Failled to malloc for $path");
 		}
 	}
-	closedir(dir);
-	return (paths);
 }

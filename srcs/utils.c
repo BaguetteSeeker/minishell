@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/20 19:06:28 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/04/27 00:55:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ void	free_token_value(t_token *token)
 
 void	clean_shell(void)
 {
-	ft_lstclear(&getset_env(NULL)->tok_lst, free_token_value);
+	ft_lstclear(&g_getset(NULL)->tok_lst, free_token_value);
 }
 
 void	lst_put(t_token *lst)
 {
 	if (!lst)
-		return (ft_putendl_fd("token node str is empty", 1));
-	ft_putstr_fd("Stack member has token : ", 1);
+		return (ft_putendl_fd("Node does not exist", 1));
+	ft_putstr_fd("Node content > : ", 1);
 	ft_putstr_fd(lst->value, 1);
 	ft_printf(" of type %d\n", lst->type);
 }

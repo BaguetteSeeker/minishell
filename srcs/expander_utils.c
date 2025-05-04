@@ -6,35 +6,48 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/04 00:38:29 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/04 12:22:10 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* 
-char	*delim_pathname(char *str, char *card_pos)
+size_t	varsiz(const char *var)
 {
-	char	*pathname;
+	size_t	i;
 
-	while (card_pos != str && *card_pos != '/')
-		card_pos--;
-		pathname = ft_substr(str, 0, card_pos - str);
-		if (!pathname)
-			put_err("Failled to alloc mem for pathname");
-		if (ft_strchr(pathname, '*'))
-		{
-			ft_bzero(pathname, sizeof(*pathname) * ft_strlen(pathname));
-			pathname[0] = '.';
-		}
-
-	return (pathname);
+	i = 0;
+	while (var[i] && (ft_isalnum(var[i]) || var[i] == '_'))
+	{
+		if (i == 0 && ft_isdigit(var[i]))
+			break ;
+		i++;
+	}
+	return (i);
 }
-*/
+
+size_t	pathsiz(const char *path)
+{
+	size_t	i;
+
+	if (!path)
+		return (0);
+	i = 0;
+	while (path[i])
+	{
+		if (!(isalnum(path[i]) || ft_strchr("_-./~*", path[i])))
+			break ;
+		if (i > 0 && path[i] == '/' && path[i - 1] == '/')
+			break ;
+		i++;
+	}
+	return (i);
+}
 
 #define NO_MATCH 0
 #define MATCH 1
-int match_pattern(const char *pattern, const char *filename)
+
+int	match_pattern(const char *pattern, const char *filename)
 {
 	while (*pattern && *filename)
 	{
@@ -43,20 +56,17 @@ int match_pattern(const char *pattern, const char *filename)
 			while (*pattern == '*')
 				pattern++;
 			if (!*pattern)
-				return (MATCH); // Match if '*' is the last character
+				return (MATCH);
 			while (*filename)
-			{
-				if (match_pattern(pattern, filename))
+				if (match_pattern(pattern, filename++))
 					return (MATCH);
-				filename++;
-			}
 			return (NO_MATCH);
-		} 
+		}
 		else if (*pattern == *filename)
 		{
 			pattern++;
 			filename++;
-		} 
+		}
 		else
 			return (NO_MATCH);
 	}
@@ -65,42 +75,20 @@ int match_pattern(const char *pattern, const char *filename)
 	return (!*pattern && !*filename);
 }
 
-//Searches for strlen(str) char the string str in the dynamic array lst
-static char	*ft_lststrn(char **lst, char *str)
+char	*get_envvar(char *varname)
 {
-	int		i;
-	size_t	strlen;
+	char		*match;
+	char		**full_var;
+	t_minishell	*mshell;
 
-	if (!lst)
-		return (NULL);
-	i = 0;
-	strlen = ft_strlen(str);
-	while (lst[i])
-	{
-		if (ft_strncmp(str, lst[i], strlen) == 0)
-			return (lst[i]);
-		i++;
-	}
-	return (NULL);
-}
-
-
-char	*get_envvar(char *varname, size_t varsiz)
-{
-	char	*match;
-	char	**full_var;
-
-	varname = ft_substr(varname, 1, varsiz);
+	mshell = g_getset(NULL);
 	if (!varname)
 		put_err("Expand : Failled to alloc memory for varname;");
-	match = ft_lststrn(g_getset(NULL)->var_env, varname);
+	match = ft_lststrn(mshell->var_env, varname, ft_strlen(varname));
 	if (!match)
-		match = ft_lststrn(g_getset(NULL)->var_shell, varname);
+		match = ft_lststrn(mshell->var_shell, varname, ft_strlen(varname));
 	if (match)
 	{
-		// match = ft_strdup(match);
-		// if (!match)
-		// 	put_err("Expand : Failled to alloc memory for varvalue;");
 		full_var = ft_split(match, '=');
 		if (!full_var)
 			put_err("Expand : Failled to alloc memory for full_var;");
@@ -108,27 +96,22 @@ char	*get_envvar(char *varname, size_t varsiz)
 		free(full_var[0]);
 		free(full_var);
 	}
-	free(varname);
 	return (match);
 }
 
 ////!!!! get rid of the trailing space
-char	*get_path(char *pcdr, size_t pathsiz)
+char	*get_path(char *pcdr)
 {
 	DIR				*dir;
 	struct dirent	*entry;
 	char			*paths;
-	
+
 	paths = ft_strdup("");
 	if (!paths)
 		put_err("Expander : Failled to malloc for $path");
-	pcdr = ft_substr(pcdr, 0, pathsiz);
-	if (!pcdr)
-		put_err("Expander : Failled to malloc for $pcdr");
 	dir = opendir(".");
 	if (!dir)
 		put_err("Expander: failled to open directory");
-	ft_putendl_fd("Current dir contains :\n", 1);
 	while (1)
 	{
 		entry = readdir(dir);
@@ -142,7 +125,6 @@ char	*get_path(char *pcdr, size_t pathsiz)
 				put_err("Expander : Failled to malloc for $path");
 		}
 	}
-	free(pcdr);
 	closedir(dir);
 	return (paths);
 }

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/04 00:23:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/04 12:12:18 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,10 @@ t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);
 t_ast_node	*init_node(t_token **tokens);
 char		*expand(char *buff);
-char		*get_envvar(char *pcdr, size_t varsiz);
-char		*get_path(char *pcdr, size_t pathsiz);
+char		*get_envvar(char *pcdr);
+char		*get_path(char *pcdr);
+size_t		varsiz(const char *var);
+size_t		pathsiz(const char *path);
 
 //Helper Functions
 void		lst_put(t_token *lst);

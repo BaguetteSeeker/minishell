@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/04 22:58:47 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/05 19:29:33 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_minishell
 	char		*prompt;
 	t_token		*tok_lst;
 	t_ast_node	*cmd_table;
+	int			last_exitcode;
 }	t_minishell;
 
 //Functions' Flags
@@ -53,8 +54,12 @@ typedef struct s_minishell
 #define	PARSE_SUBSQ_VARS 2
 #define TYPE_DLRS 1
 #define TYPE_WCRD 2
+#define TYPE_CODE 3
 #define CHR_SQUOTE '\''
 #define CHR_DQUOTE '\"'
+#define XPD_ALL 0
+#define XPD_HDOC_VARS 1
+#define XPD_HDOC 2
 
 //Core
 t_minishell	*g_getset(void *g);
@@ -66,7 +71,7 @@ void		free_token_value(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);
 t_ast_node	*init_node(t_token **tokens);
-char		*expand(char *buff);
+char		*expand(char *buff, size_t flag);
 char		*get_envvar(char *pcdr);
 char		*get_path(char *pcdr);
 size_t		varsiz(const char *var);

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/05 19:29:33 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/05 22:31:23 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define PROMPT_NAME "$minishell:"
 # define PS2 "> "
 # define ERRMSG_SYNTAX "syntax error near unexpected token `"
-# define QUOTES_SET "\"\'"
+# define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 
 typedef enum s_msh_state
 {
@@ -40,31 +40,34 @@ typedef enum s_msh_state
 
 typedef struct s_minishell
 {
-	t_msh_state state;
-	char 		**var_env;
+	t_msh_state	state;
+	char		**var_env;
 	char		**var_shell;
-	char		*prompt;
-	t_token		*tok_lst;
+	char		*input;
+	t_token		*tokens;
 	t_ast_node	*cmd_table;
 	int			last_exitcode;
 }	t_minishell;
 
 //Functions' Flags
-#define	PARSE_SUBSQ_WORDS 1
-#define	PARSE_SUBSQ_VARS 2
-#define TYPE_DLRS 1
-#define TYPE_WCRD 2
-#define TYPE_CODE 3
-#define CHR_SQUOTE '\''
-#define CHR_DQUOTE '\"'
-#define XPD_ALL 0
-#define XPD_HDOC_VARS 1
-#define XPD_HDOC 2
+# define QUOTES_SET "\"\'"
+# define PARSE_SUBSQ_WORDS 1
+# define PARSE_SUBSQ_VARS 2
+# define TYPE_DLRS 1
+# define TYPE_WCRD 2
+# define TYPE_CODE 3
+# define CHR_SQUOTE '\''
+# define CHR_DQUOTE '\"'
+# define XPD_ALL 0
+# define XPD_HDOC_VARS 1
+# define XPD_HDOC 2
+# define ADD_HISTORY 1
+# define NO_HISTORY 2
 
 //Core
 t_minishell	*g_getset(void *g);
 t_token		*tokenize(char *prompt, t_token *token_head);
-char		*open_prompt(char *prompt);
+char		*open_prompt(char *prompt, size_t history);
 void		handle_heredocs(t_token *token);
 char		*new_heredoc(char *delimiter, bool apd_newline);
 void		free_token_value(t_token *token);
@@ -82,4 +85,5 @@ void		lst_put(t_token *lst);
 void		clean_shell(void);
 void		put_err(char *msg);
 void		print_ast(t_ast_node *node);
+void		*chkalloc(char *val, char *msg);
 #endif

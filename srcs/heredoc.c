@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/27 22:05:28 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/05 22:32:39 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*open_heredoc(char *input)
 	char	*tmp;
 
 	tmp = input;
-	input = ft_strjoin(input, open_prompt(PS2));
+	input = ft_strjoin(input, open_prompt(PS2, NO_HISTORY));
 	add_history(input);
 	free(tmp);
 	return (input);
@@ -54,7 +54,7 @@ char	*new_heredoc(char *delimiter, bool apd_newline)
 	doc = ft_strdup("");
 	while (1)
 	{
-		line = open_prompt(PS2);
+		line = open_prompt(PS2, NO_HISTORY);
 		if (ft_strcmp(line, delimiter))
 		{
 			tmp = doc;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_exec2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:44:48 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/27 14:22:05 by souaret          ###   ########.fr       */
+/*   Updated: 2025/05/06 14:43:36 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,8 @@ TODO:
 /************************************************************************
  *
  *
- * 
-*************************************************************************/
-int	get_status(int child_status)
-{
-	int	status;
-	//int term_signal;
-	//int exit_code;
-
-	status = -1;
-	if (child_status == -1)
-	{
-		perror("get_status error");
-		return (-1);
-	}
-	if (WIFEXITED(child_status))
-		status = WEXITSTATUS(child_status);
-	else if (WIFSIGNALED(child_status))
-		status = WTERMSIG(child_status);
-	else if (WIFSTOPPED(child_status))
-		status = WSTOPSIG(child_status);
-	ft_dprintf(STDERR_FILENO, "get_status: child_status = %d\n", status);
-	return (status);
-
-	// exit_coode = -1;
+ *  olkd tentative 
+ * 	// exit_coode = -1;
 	// // --- Analyze the child's termination status ---
 	// if (WIFEXITED(child_status)) {
 	// 	// Child terminated normally using exit() or return
@@ -62,38 +40,57 @@ int	get_status(int child_status)
 	// 	printf("Parent: Child terminated with unusual status: %d\n", child_status);
 	// }
 	// return 
+
+*************************************************************************/
+int	last_status_code(int status, bool setter)
+{
+	static int	code = 0;
+
+	if (setter == true)
+		code = status;
+	return (code);
+}
+
+int	get_status(void)
+{
+	return (last_status_code(0, GET));
 }
 
 /************************************************************************
  *
  *
- * 
 *************************************************************************/
-void	ft_waitpid(int pid, int *status, int options)
+int	set_status(int child_status)
 {
-	int ret;
+	int	status;
 
-	ret = waitpid(pid, status, options);
-	if (ret == -1)
+	status = -1;
+	if (WIFEXITED(child_status))
+		status = WEXITSTATUS(child_status);
+	else if (WIFSIGNALED(child_status))
+		status = WTERMSIG(child_status);
+	else if (WIFSTOPPED(child_status))
+		status = WSTOPSIG(child_status);
+	ft_dprintf(STDERR_FILENO, "get_status: child_status = %d\n", status);
+	last_status_code(status, SET);
+	return (status);
+}
+
+/************************************************************************
+ *
+ *
+*************************************************************************/
+int	ft_waitpid(int pid)
+{
+	int status;
+
+	if (waitpid(pid, &status, 0) == -1)
 	{
 		perror("waitpid error");
 		free_and_exit(EXIT_FAILURE);
 	}
-	// cmd = cmd_get(NULL);
-	// do_check_error_exit((cmd == NULL), EXIT_FAILURE);
-
-	// 	// Check if the child exited normally
-	// if (WIFEXITED(*status))
-	// {
-	// 	printf("Child exited with status: %d\n", WEXITSTATUS(*status));
-	// 	cmd->status = WEXITSTATUS(*status);
-	// }
-	// else
-	// {
-	// 	printf("Child did not exit normally\n");
-	// 	cmd->status = -1;
-	// }
-	// return (ret);
+	set_status(status);
+	return (get_status());
 }
 /************************************************************************
  * 
@@ -121,6 +118,15 @@ int	exec_cmd(t_cmd *cmd)
  * 
  * Execute a standallone cmd
  * 
+ * old tentative:
+ * 			// if (WIFEXITED(status))
+			// 	status = WEXITSTATUS(status);
+			// else if (WIFSIGNALED(status))
+			// 	status = WTERMSIG(status);
+			// else if (WIFSTOPPED(status))
+			// 	status = WSTOPSIG(status);
+			// else
+			// 	status = -1;
 ************************************************************************/
 int	cmd_exe_cmd2(t_cmd *cmd)
 {
@@ -139,19 +145,11 @@ int	cmd_exe_cmd2(t_cmd *cmd)
 		else
 		{
 			// TODO: redo this part ...!
-			ft_waitpid(pid, &status, 0);
+			ft_waitpid(pid);
 			if (status == -1)
 				perror("exec_cmd error");
 			else
-				status = get_status(status);
-			// if (WIFEXITED(status))
-			// 	status = WEXITSTATUS(status);
-			// else if (WIFSIGNALED(status))
-			// 	status = WTERMSIG(status);
-			// else if (WIFSTOPPED(status))
-			// 	status = WSTOPSIG(status);
-			// else
-			// 	status = -1;
+				status = get_status();
 			cmd->status = status;
 		}
 		return (status);
@@ -217,9 +215,9 @@ int	ft_fork(t_cmd *cmd)
 	{
         // Parent process
 		cmd->pid_child = pid;
-        //ft_dprintf(STDERR_FILENO, "Parent: Waiting for child <%d>\n", \
+        //ft_dprintf(STDERR_FILENO, "Parent: Waiting for child <%d>\n",
 		//	cmd->pid_child);
-		printf("Parent: Waiting for child <%d>\n", cmd->pid_child);			
+		ft_printf("Parent: Waiting for child <%d>\n", cmd->pid_child);			
     //     if (waitpid(pid, &status, 0) == -1)
     //     {
     //         perror("waitpid failed");

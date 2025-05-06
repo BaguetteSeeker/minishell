@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_pipe.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 17:56:17 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/21 18:33:45 by souaret          ###   ########.fr       */
+/*   Updated: 2025/05/06 14:27:53 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	ft_fork_node_pipe(t_cmd *node, int pos, int fd[2])
 
 /************************************************************************
  * 
+ * close pipe flows, and reset file descriptors to default values
  * 
  * TODO: Review this code & test behavior
 ************************************************************************/
@@ -94,21 +95,28 @@ void	ft_close_pipe_flows(t_cmd *cmd, int fd[2])
 ************************************************************************/
 int	cmd_exe_pipe(t_cmd *cmd)
 {
-	int	status;
 	int	fd[2];
 	int	pid[2];
 
-	status = -1;
 	ft_printf("Executing | : \n");
 	if (!cmd->left || !cmd->right)
 	{
-		ft_printf("*** Error: operator | needs two operands\n");
+		ft_dprintf(STDERR_FILENO, "*** Error:  | needs two operands\n");
 		return (-1); // error
 	}
-	ft_prepare_pipe(cmd);
+	// ft_prepare_pipe(cmd);
+	if (pipe(fd) == -1)
+	{
+		perror("pipe");
+		do_error_exit(EXIT_FAILURE);
+	}
 	pid[0] = ft_fork_node_pipe(cmd->left, NODE_LEFT, fd);
 	pid[1] = ft_fork_node_pipe(cmd->right, NODE_RIGHT, fd);
 	ft_close_pipe_flows(cmd, fd);
-	// TODO: TO BE COMPLETED
-	return (status);
+	if (ft_waitpid(pid[0]) == -1 || ft_waitpid(pid[1]) == -1)
+	{
+		perror("waitpid");
+		do_error_exit(EXIT_FAILURE);
+	}
+	return (get_status());
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/25 16:21:22 by souaret          ###   ########.fr       */
+/*   Updated: 2025/05/06 14:31:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
  * a command that executes well, returns OK.
  * 	if status of LEFT cmd is not OK ( = 0), 
  * 		then childneed to execute the RIGHT cmd
+ * TODO: --- for the moment, passthrough 
 ************************************************************************/
 int	cmd_exe_and(t_cmd *cmd)
 {
@@ -72,6 +73,7 @@ int	cmd_exe_and(t_cmd *cmd)
  * 
  * Execute || command (with 2 commands : LEFT || RIGHT )
  * 
+ *  * TODO: --- for the moment, passthrough 
  ***********************************************************************/
 int	cmd_exe_or(t_cmd *cmd)
 {
@@ -96,6 +98,7 @@ int	cmd_exe_or(t_cmd *cmd)
  * 		if operator at node level, then we call the operator execution
  *		if cmd at node level, then we execute left command first,
  *			then right command	
+ * TODO: --- for the moment, passthrough  
  ***********************************************************************/
 int	cmd_exe_subshell(t_cmd *cmd)
 {
@@ -148,8 +151,7 @@ int	cmd_exe_node(t_cmd *cmd)
 
 /************************************************************************
  * 
- * Main entry point for executing a command in the minishell
- * it will execute the command tree
+ * Main entry point for EXECUTING a command/AST in the minishell
  *
 *************************************************************************/
 void	cmd_exec(void)
@@ -163,11 +165,12 @@ void	cmd_exec(void)
 	cmd = ms->cmd;
 	do_check_error_exit((cmd == NULL), ERR_0);
 	// cmd_exe_tree(cmd_tree);
-	cmd_exe_node(cmd);
-	if (cmd->left)
-		cmd_exe_node(cmd->left);
-	if (cmd->right)
-		cmd_exe_node(cmd->right);
+	if (cmd_exe_node(cmd) == -1)
+		ft_dprintf(STDERR_FILENO, "*** Error: node execution failed\n");
+	else if (cmd->left && cmd_exe_node(cmd->left) == -1)
+		ft_dprintf(STDERR_FILENO, "*** Error: left execution failed\n");
+	else if (cmd->right && cmd_exe_node(cmd->right) == -1)
+		ft_dprintf(STDERR_FILENO, "*** Error: right execution failed\n");
 	//TODO: Cleanup after execution
 	ms_free();
 	return ;

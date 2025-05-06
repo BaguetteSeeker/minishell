@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/12 17:11:47 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/05 22:32:09 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ t_token	*check_completion(t_token *token, t_token *head)
 	{
 		ft_lstdelone(token->next, free_token_value);
 		token->next = NULL;
-		tokenize(open_prompt(PS2), head);
+		tokenize(open_prompt(PS2, NO_HISTORY), head);
 	}
 	return ((ft_lstlast(head)));
 }
@@ -126,7 +126,7 @@ t_token	*tokenize(char *prompt, t_token *token_head)
 		if (!token)
 			put_err("Failled to allocate memory for tokens");
 		if (!*prompt)
-			*token = (t_token){T_NEWLINE, "newline", NULL};
+			*token = (t_token){T_NEWLINE, chkalloc(ft_strdup("newline"), 0), 0};
 		else
 			prompt += create_token(prompt, token);
 		prev_token = ft_lstlast(token_head);

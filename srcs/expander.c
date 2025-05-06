@@ -6,13 +6,14 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/04 12:24:59 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/06 17:28:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*concat_expansion(char *str, char *pcdr, char *val, size_t type)
+//Replaces *pcdr based on type with provided *val within *str
+static char	*concat_expansion(char *str, char *pcdr, char *val, size_t type)
 {
 	char	*str_head;
 	char	*vnil_str;
@@ -25,6 +26,8 @@ char	*concat_expansion(char *str, char *pcdr, char *val, size_t type)
 		str = ft_strjoin2(str_head, val, pcdr + varsiz(pcdr + 1) + 1);
 	else if (type == TYPE_WCRD)
 		str = ft_strjoin2(str_head, val, pcdr + pathsiz(pcdr));
+	else if (type == TYPE_CODE)
+		str = ft_strjoin2(str_head, val, pcdr + 2);
 	free(str_head);
 	free(val);
 	free(vnil_str);
@@ -33,6 +36,9 @@ char	*concat_expansion(char *str, char *pcdr, char *val, size_t type)
 	return (str);
 }
 
+//Extract the placeholder depending on its type
+//Fetches the corresponding value(s)
+//Returns the original string with expanded values
 static char	*eval_placeholder(char *str, char *pcdr_pos, size_t type)
 {
 	char	*values;
@@ -56,11 +62,24 @@ static char	*eval_placeholder(char *str, char *pcdr_pos, size_t type)
 	return (concat_expansion(str, pcdr_pos, values, type));
 }
 
-#define CHR_SQUOTE '\''
-#define CHR_DQUOTE '\"'
-//Called when quotes encountered and returns a pointer + 1 to where they end. 
-//Same for unmatched quotes
-//If $ found while skipping, expand is called
+static char	*get_exitcode(char *str, size_t *i)
+{
+	char	*exitcode;
+
+	if (g_getset(NULL)->state == MSH_EXECUTING)
+	{
+		exitcode = ft_itoa(g_getset(NULL)->last_exitcode);
+		if (!exitcode)
+			put_err("Expand : Failled to alloc memory for exitcode;");
+		str = concat_expansion(str, str + *i, exitcode, TYPE_CODE);
+	}
+	else
+		*i += 2;
+	return (str);
+}
+
+//Skips quotes in original *str by modifying *i index
+//If $ found within dquotes, expand is called and *str is updated
 static char	*skip_quotes(char *str, size_t *i, size_t flag)
 {
 	char	*qts_start;
@@ -86,23 +105,20 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 
 /*Heredoc content must be treated litteraly, except when their delimiter is
 not surrounded by quotes; No * filename expand for herdoc regardless */
-char	*expand(char *buff)
+char	*expand(char *buff, size_t flag)
 {
 	size_t	i;
 
 	i = 0;
 	while (buff[i])
 	{
-		if (buff[i] == CHR_SQUOTE || buff[i] == CHR_DQUOTE)
+		if (flag == XPD_ALL && (buff[i] == CHR_SQUOTE || buff[i] == CHR_DQUOTE))
 			buff = skip_quotes(buff, &i, TYPE_DLRS);
-		if (buff[i] == '$')
-		{
-			if (ft_strncmp(&buff[i], "$?", ft_strlen(buff + i)) == 0)
-				i += 2;
-			else
-				buff = eval_placeholder(buff, buff + i, TYPE_DLRS);
-		}
-		else if (buff[i] == '*')
+		if (ft_strncmp(buff + i, "$?", 2) == 0 && flag != XPD_HDOC)
+			buff = get_exitcode(buff, &i);
+		else if (buff[i] == '$' && flag != XPD_HDOC)
+			buff = eval_placeholder(buff, buff + i, TYPE_DLRS);
+		else if (buff[i] == '*' && flag == XPD_ALL)
 		{
 			while (i > 0 && buff[i] != ' ')
 				i--;
@@ -111,5 +127,5 @@ char	*expand(char *buff)
 		else
 			i++;
 	}
-	return (strip_outquotes(buff));
+	return (buff);
 }

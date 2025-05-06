@@ -6,11 +6,20 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/29 11:27:45 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/06 10:21:52 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	lst_put(t_token *lst)
+{
+	if (!lst)
+		return (ft_putendl_fd("Node does not exist", 1));
+	ft_putstr_fd("Node content > : ", 1);
+	ft_putstr_fd(lst->value, 1);
+	ft_printf(" of type %d\n", lst->type);
+}
 
 void	print_ast(t_ast_node *node)
 {

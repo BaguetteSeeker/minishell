@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/05 20:51:45 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/06 17:28:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static char	*get_exitcode(char *str, size_t *i)
 		str = concat_expansion(str, str + *i, exitcode, TYPE_CODE);
 	}
 	else
-		i += 2;
+		*i += 2;
 	return (str);
 }
 

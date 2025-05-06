@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/05 22:17:18 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/06 15:19:15 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,6 @@ void	free_token_value(t_token *token)
 void	clean_shell(void)
 {
 	ft_lstclear(&g_getset(NULL)->tokens, free_token_value);
-}
-
-void	lst_put(t_token *lst)
-{
-	if (!lst)
-		return (ft_putendl_fd("Node does not exist", 1));
-	ft_putstr_fd("Node content > : ", 1);
-	ft_putstr_fd(lst->value, 1);
-	ft_printf(" of type %d\n", lst->type);
 }
 
 void	put_err(char *msg)

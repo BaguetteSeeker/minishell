@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/05 22:32:39 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/06 18:58:29 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,7 @@ char	*strip_quotes(char *str)
 	return (str);
 }
 
-char	*open_heredoc(char *input)
-{
-	char	*tmp;
-
-	tmp = input;
-	input = ft_strjoin(input, open_prompt(PS2, NO_HISTORY));
-	add_history(input);
-	free(tmp);
-	return (input);
-}
-
-char	*new_heredoc(char *delimiter, bool apd_newline)
+static char	*new_heredoc(char *delimiter, bool apd_newline)
 {
 	char	*doc;
 	char	*line;
@@ -73,19 +62,43 @@ char	*new_heredoc(char *delimiter, bool apd_newline)
 	}
 }
 
+//Stamps a DEL (int 127) character right between the heredoc' end
+//and the EOF character to mark the heredoc as "expandable"
+static char	*stamp_xpd_proc(char *content, char *dltr)
+{
+	char	*stamped_hdc;
+	size_t	content_len;
+
+	if (!ft_strchr(dltr, CHR_DQUOTE) && !ft_strchr(dltr, CHR_SQUOTE))
+	{
+		content_len = ft_strlen(content);
+		stamped_hdc = ft_realloc(content, content_len + 2);
+		if (!stamped_hdc)
+			put_err("Heredoc processing : realloc fail");
+		*(stamped_hdc + content_len) = EXPANDABLE_HEREDOC;
+		*(stamped_hdc + content_len + 1) = '\0';
+		content = stamped_hdc;
+	}
+	return (content);
+}
+
 void	handle_heredocs(t_token *token)
 {
 	char	*hereline;
-	char	*here_start;
+	char	*delimiter;
+	char	*delimiter_copy;
 
 	while (token && token->next)
 	{
 		if (token->type == DLESS && token->next->type == WORD)
 		{
-			here_start = strip_quotes(token->next->value);
-			hereline = new_heredoc(here_start, true);
-			free(token->next->value);
+			delimiter = token->next->value;
+			delimiter_copy = chkalloc(ft_strdup(delimiter), "DLTR_CPY");
+			hereline = new_heredoc(strip_quotes(delimiter_copy), true);
+			free(delimiter_copy);
+			hereline = stamp_xpd_proc(hereline, delimiter);
 			token->next->value = hereline;
+			free(delimiter);
 		}
 		token = token->next;
 	}

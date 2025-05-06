@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/05 22:30:28 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/06 18:59:38 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,6 @@ char	*open_prompt(char *prompt, size_t history)
 	return (input_line);
 }
 
-// void	expand_node(t_ast_node *node)
-// {
-// 	node->value = expand(node->value);
-// 	node.
-// }
-
-void	expand_token(t_token *tokens)
-{
-	if (tokens->type == DLESS)
-		tokens->value = expand(tokens->value, XPD_HDOC);
-	else
-		tokens->value = strip_outquotes(expand(tokens->value, XPD_ALL));
-}
-
 // put_recurse_dynarr(g_getset(NULL)->var_env);
 // ft_printf("Imported env has %u variables\n",
 	// ft_ptrlen((const void **)g_getset(NULL)->var_env));
@@ -63,7 +49,6 @@ int	main(int argc, char *argv[], char *env[])
 	msh_g->var_env = env;
 	while (1)
 	{
-		msh_g->tokens = NULL;
 		msh_g->state = MSH_PROMPTING;
 		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
 		msh_g->state = MSH_TOKENIZING;
@@ -78,6 +63,7 @@ int	main(int argc, char *argv[], char *env[])
 		//refresh the ast
 		msh_g->state = MSH_EXECUTING;
 		ft_lstclear(&tokens_tmp, free_token_value);
+		msh_g->tokens = NULL;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/06 10:21:52 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/06 21:02:14 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ void	print_ast(t_ast_node *node)
 		ft_printf("Command: %s\n", node->value);
 		ft_putendl_fd("Printing vars :", 1);
 		put_recurse_dynarr(node->vars);
-		ft_putendl_fd("Stops printing", 1);
 		ft_putendl_fd("Printing args :", 1);
 		put_recurse_dynarr(node->args);
-		ft_putendl_fd("Stops printing", 1);
 		ft_putendl_fd("Printing redirs:", 1);
 		ft_lstiter(((t_token *)node->io_streams), lst_put);
 		//ft_free_dynarr(node->args);

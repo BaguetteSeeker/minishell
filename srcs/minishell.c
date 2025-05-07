@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/06 18:59:38 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/07 13:20:28 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ int	main(int argc, char *argv[], char *env[])
 		handle_heredocs(msh_g->tokens);
 		ft_lstiter(msh_g->tokens, &expand_token);
 		ft_lstiter(msh_g->tokens, &lst_put);
-		msh_g->state = MSH_EXECUTING;
+		msh_g->state = MSH_PARSING;
 		tokens_tmp = msh_g->tokens;
-		// msh_g->cmd_table = parse_tokens(&tokens, NULL);
-		//print_ast(msh_g->cmd_table);
-		//refresh the ast
+		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
+		print_ast(msh_g->cmd_table);
 		msh_g->state = MSH_EXECUTING;
-		ft_lstclear(&tokens_tmp, free_token_value);
+		ft_lstclear(&msh_g->tokens, free_token_value);
 		msh_g->tokens = NULL;
+		//refresh the ast
 	}
 	return (0);
 }

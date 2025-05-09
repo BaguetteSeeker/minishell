@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/07 13:20:28 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/10 01:34:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ char	*open_prompt(char *prompt, size_t history)
 	return (input_line);
 }
 
+void	exit_shell(void)
+{
+	clean_shell();
+	ft_putendl_fd("exit", 1);
+	exit(0);
+}
 // put_recurse_dynarr(g_getset(NULL)->var_env);
 // ft_printf("Imported env has %u variables\n",
 	// ft_ptrlen((const void **)g_getset(NULL)->var_env));
@@ -45,14 +51,17 @@ int	main(int argc, char *argv[], char *env[])
 
 	(void)argc;
 	(void)argv;
+	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
-	msh_g->var_env = env;
+	//msh_g->var_env = env;
 	while (1)
 	{
 		msh_g->state = MSH_PROMPTING;
 		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
+		if (ft_strncmp(msh_g->input, "exit", 4) == 0)
+			exit_shell();
 		msh_g->state = MSH_TOKENIZING;
-		msh_g->tokens = tokenize(msh_g->input, msh_g->tokens);
+		msh_g->tokens = tokenize(&msh_g->input, msh_g->tokens);
 		handle_heredocs(msh_g->tokens);
 		ft_lstiter(msh_g->tokens, &expand_token);
 		ft_lstiter(msh_g->tokens, &lst_put);
@@ -61,7 +70,7 @@ int	main(int argc, char *argv[], char *env[])
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
 		print_ast(msh_g->cmd_table);
 		msh_g->state = MSH_EXECUTING;
-		ft_lstclear(&msh_g->tokens, free_token_value);
+		clean_routine();
 		msh_g->tokens = NULL;
 		//refresh the ast
 	}

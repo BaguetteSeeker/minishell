@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/06 21:02:14 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/09 15:45:17 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void	print_ast(t_ast_node *node)
 		ft_printf("Right Node: \n");
 		print_ast(node->right);
 	}
-	node->left = NULL;
-	node->right = NULL;
-	free(node);
+	// node->left = NULL;
+	// node->right = NULL;
+	// free(node);
 }
 
 // void    wipe_ast(t_ast_node *node)

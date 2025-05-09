@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/05 22:32:09 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/10 01:19:16 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ size_t	create_token(char *input, t_token *token)
 t_token	*check_completion(t_token *token, t_token *head)
 {
 	static int	par_dft = 0;
+	char		*input_completion;
 
 	if (token->type == OPAR)
 		par_dft++;
@@ -84,7 +85,8 @@ t_token	*check_completion(t_token *token, t_token *head)
 	{
 		ft_lstdelone(token->next, free_token_value);
 		token->next = NULL;
-		tokenize(open_prompt(PS2, NO_HISTORY), head);
+		input_completion = open_prompt(PS2, NO_HISTORY);
+		tokenize(&input_completion, head);
 	}
 	return ((ft_lstlast(head)));
 }
@@ -110,31 +112,30 @@ t_token	*check_syntax(t_token *tok, t_token *head)
 	return (head);
 }
 
-t_token	*tokenize(char *prompt, t_token *token_head)
+t_token	*tokenize(char **inpt_ptr, t_token *token_head)
 {
 	static t_token	*prev_token = NULL;
 	t_token			*token;
-	char			*tmp;
+	char			*input;
 
-	tmp = prompt;
-	token = NULL;
+	input = *inpt_ptr;
 	while (1)
 	{
-		while (*prompt && ft_strchr(SEP_CHARSET, *prompt))
-			prompt++;
+		while (input[0] && ft_strchr(SEP_CHARSET, input[0]))
+			input++;
 		token = ft_lstnew(&(t_token){0});
 		if (!token)
-			put_err("Failled to allocate memory for tokens");
-		if (!*prompt)
+			return (free(*inpt_ptr), inpt_ptr = NULL,
+				put_err("Tokenizer: malloc faillure"), NULL);
+		if (!input[0])
 			*token = (t_token){T_NEWLINE, chkalloc(ft_strdup("newline"), 0), 0};
 		else
-			prompt += create_token(prompt, token);
+			input += create_token(input, token);
 		prev_token = ft_lstlast(token_head);
 		ft_lstadd_back(&token_head, token);
 		token = check_syntax(prev_token, token_head);
 		if (token->type == T_NEWLINE)
 			break ;
 	}
-	free(tmp);
-	return (token_head);
+	return (free(*inpt_ptr), *inpt_ptr = NULL, token_head);
 }

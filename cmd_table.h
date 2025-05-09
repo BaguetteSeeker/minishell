@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/06 19:00:52 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/09 14:10:12 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ typedef enum e_node_type {
 	NODE_OPERATOR,   // Represents an operator (e.g., "&&")
 	NODE_PIPE,
 	NODE_SUBSHELL,	// Represents a subshell (e.g., "(...)")
-	NODE_REDIRECTION
 }	t_node_type;
 
 typedef enum e_redir_type {

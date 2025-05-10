@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/09 15:45:17 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/10 13:48:45 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	print_ast(t_ast_node *node)
 		put_recurse_dynarr(node->args);
 		ft_putendl_fd("Printing redirs:", 1);
 		ft_lstiter(((t_token *)node->io_streams), lst_put);
-		//ft_free_dynarr(node->args);
 	}
 	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
 	{
@@ -49,18 +48,4 @@ void	print_ast(t_ast_node *node)
 		ft_printf("Right Node: \n");
 		print_ast(node->right);
 	}
-	// node->left = NULL;
-	// node->right = NULL;
-	// free(node);
 }
-
-// void    wipe_ast(t_ast_node *node)
-// {
-//     if (node == NULL)
-//         return ;
-
-//     free_ast(node->left);
-//     free_ast(node->right);
-//     // free(node->value); // Free the value if it was dynamically allocated
-//     free(node);
-// }

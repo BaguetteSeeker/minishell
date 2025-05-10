@@ -6,12 +6,13 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/10 01:19:16 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/10 13:55:32 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//TODO:Check for AMPERSAND token 
 static t_token	get_grammar_token(char *input)
 {
 	static t_token	grammar_tokens[] = {
@@ -67,6 +68,8 @@ size_t	create_token(char *input, t_token *token)
 	return (i);
 }
 
+//TODO: Craft a printf that returns a concatenated chain instead of printing it
+//In order to handle properly the syntax error
 t_token	*check_completion(t_token *token, t_token *head)
 {
 	static int	par_dft = 0;

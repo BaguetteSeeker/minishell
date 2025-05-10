@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/10 01:34:25 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/10 14:18:42 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*open_prompt(char *prompt, size_t history)
 
 	input_line = readline(prompt);
 	if (input_line == NULL)
-		return (free(input_line), put_err("Readline faillure\n"), NULL);
+		return (exit_shell(), NULL);
 	else if (history == ADD_HISTORY && *input_line)
 		add_history(input_line);
 	return (input_line);
@@ -35,25 +35,19 @@ char	*open_prompt(char *prompt, size_t history)
 
 void	exit_shell(void)
 {
+	ft_putendl_fd("exit", STDOUT_FILENO);
 	clean_shell();
-	ft_putendl_fd("exit", 1);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 // put_recurse_dynarr(g_getset(NULL)->var_env);
 // ft_printf("Imported env has %u variables\n",
 	// ft_ptrlen((const void **)g_getset(NULL)->var_env));
 			// // parser(tokens);
 //Handles Minishell' routine
-int	main(int argc, char *argv[], char *env[])
+void	prompt_routine(t_minishell *msh_g)
 {
-	t_minishell	*msh_g;
 	t_token		*tokens_tmp;
-
-	(void)argc;
-	(void)argv;
-	(void)env;
-	msh_g = g_getset(&(t_minishell){0});
-	//msh_g->var_env = env;
+	
 	while (1)
 	{
 		msh_g->state = MSH_PROMPTING;
@@ -72,7 +66,19 @@ int	main(int argc, char *argv[], char *env[])
 		msh_g->state = MSH_EXECUTING;
 		clean_routine();
 		msh_g->tokens = NULL;
-		//refresh the ast
 	}
+}
+
+int	main(int argc, char *argv[], char *env[])
+{
+	t_minishell	*msh_g;
+
+	(void)argc;
+	(void)argv;
+	(void)env;
+	msh_g = g_getset(&(t_minishell){0});
+	set_sigaction(&signals_handler);
+	//msh_g->var_env = env;
+	prompt_routine(msh_g);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/05/06 18:32:42 by epinaud          ###   ########.fr        #
+#    Updated: 2025/05/10 14:23:31 by epinaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 OBJ_DIR = .obj
 
 SRCS = minishell.c lexer.c heredoc.c parser.c parser_utils.c \
-		expander.c expander_utils.c expand_callers.c utils.c helpers.c
+		expander.c expander_utils.c expand_callers.c utils.c putlogs.c signals.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

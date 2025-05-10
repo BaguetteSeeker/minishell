@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/10 00:36:58 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/10 14:13:19 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	clean_shell(void)
 void	put_err(char *msg)
 {
 	if (msg && *msg)
-		ft_putendl_fd(msg, STDERR_FILENO);
+		perror(msg);
 	clean_shell();
 	exit(EXIT_FAILURE);
 }

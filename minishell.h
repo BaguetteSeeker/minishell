@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/10 01:35:14 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/10 14:19:37 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# define PROMPT_NAME "$minishell:"
+# define PROMPT_NAME "$minishell: "
 # define PS2 "> "
 # define ERRMSG_SYNTAX "syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
@@ -50,7 +50,7 @@ typedef struct s_minishell
 }	t_minishell;
 
 //Functions' Flags
-# define GET NULL
+# define GET 0
 # define QUOTES_SET "\"\'"
 # define PARSE_SUBSQ_WORDS 1
 # define PARSE_SUBSQ_VARS 2
@@ -68,6 +68,7 @@ typedef struct s_minishell
 # define NO_HISTORY 2
 
 //Core
+extern int 	g_signal;
 t_minishell	*g_getset(void *g);
 t_token		*tokenize(char **inpt_ptr, t_token *token_head);
 char		*open_prompt(char *prompt, size_t history);
@@ -91,4 +92,8 @@ void		clean_routine(void);
 void		put_err(char *msg);
 void		print_ast(t_ast_node *node);
 void		*chkalloc(char *val, char *msg);
+void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
+void		signals_handler(int sig, siginfo_t *siginfo, void *context);
+// void		prompt_routine(t_minishell *msh_g);
+void		exit_shell(void);
 #endif

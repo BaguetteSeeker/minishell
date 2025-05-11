@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	g_signal = 0;
+
 /***************************************************************************
  * 
  *  Subprocess interruption ?
@@ -75,5 +77,5 @@ void	if_sigint(int sig)
 {
 	g_signal = 128 + sig;
 	rl_done = 1;
-	last_status_code(128 + sig, SET);
+	last_status_code(g_signal, SET);
 }

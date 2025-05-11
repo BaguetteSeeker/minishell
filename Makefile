@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: souaret <souaret@student.42.fr>            +#+  +:+       +#+         #
+#    By: sidi <sidi@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/04/25 14:03:01 by souaret          ###   ########.fr        #
+#    Updated: 2025/05/11 13:02:15 by sidi             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,12 @@ OBJ_DIR = .obj
 SRCS = lexer.c parser.c \
 		builtin1.c 	builtin2.c 	cmd_pipe.c 	cmd_tree.c 	\
 		cmd_exec.c 	cmd_exec2.c 	cmd_utils.c 	cmd_utils2.c \
-		file_utils.c  system_utils.c  system_utils2.c 	struct_utils.c \
-		main_exec.c
-#		exec_utils.c 	\
-#		main_readline.c 
-#		env_array.c 	
+		file_utils.c  system_utils.c  system_utils2.c 	\
+		struct_utils.c 	main_exec.c
+#	 	signals.c
+#		exec_utils.c
+#		main_readline.c
+#		env_array.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

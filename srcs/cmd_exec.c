@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sidi <sidi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 17:15:59 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/06 18:40:39 by souaret          ###   ########.fr       */
+/*   Updated: 2025/05/11 12:57:16 by sidi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_fork_node_pipe2(t_cmd *node, int pos, int fd[]);
+int	cmd_exe_pipe2(t_cmd *cmd);
 
 /*------------------------------------------------------------------------
  * This is the execution part of the minishell
@@ -142,7 +145,7 @@ int	cmd_exe_node(t_cmd *cmd)
 	else if (cmd->node_type == N_OPE_OR2)
 		status = cmd_exe_or(cmd);
 	else if (cmd->node_type == N_OPE_PIPE)
-		status = cmd_exe_pipe(cmd);
+		status = cmd_exe_pipe2(cmd);
 	else
 		ft_dprintf(STDERR_FILENO, "*** Unknown command type: %d : %s\n", \
 			cmd->node_type, cmd->cmd_str);
@@ -167,10 +170,11 @@ void	cmd_exec(void)
 	// cmd_exe_tree(cmd_tree);
 	if (cmd_exe_node(cmd) == -1)
 		ft_dprintf(STDERR_FILENO, "*** Error: node execution failed\n");
-	else if (cmd->left && cmd_exe_node(cmd->left) == -1)
-		ft_dprintf(STDERR_FILENO, "*** Error: left execution failed\n");
-	else if (cmd->right && cmd_exe_node(cmd->right) == -1)
-		ft_dprintf(STDERR_FILENO, "*** Error: right execution failed\n");
+	// TODO: cancel left and right for the moment...
+	// else if (cmd->left && cmd_exe_node(cmd->left) == -1)
+	// 	ft_dprintf(STDERR_FILENO, "*** Error: left execution failed\n");
+	// else if (cmd->right && cmd_exe_node(cmd->right) == -1)
+	// 	ft_dprintf(STDERR_FILENO, "*** Error: right execution failed\n");
 	//TODO: Cleanup after execution
 	ms_free();
 	return ;

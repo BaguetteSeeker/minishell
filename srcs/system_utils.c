@@ -6,7 +6,7 @@
 /*   By: souaret <souaret@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 23:15:39 by souaret           #+#    #+#             */
-/*   Updated: 2025/04/25 13:46:52 by souaret          ###   ########.fr       */
+/*   Updated: 2025/05/09 11:32:42 by souaret          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	free_and_exit(int reason)
 {
+	ft_dprintf(STDERR_FILENO, "Free-Exit : reason: %d\n", reason); fflush(stderr);
 	//TODO: clean cmds
 	// cmd_free_all()
 	// TODO: clean files & fds

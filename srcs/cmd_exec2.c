@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_exec2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sidi <sidi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 14:44:48 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/06 14:43:36 by marvin           ###   ########.fr       */
+/*   Updated: 2025/05/11 13:43:29 by sidi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	set_signals_child();
+
 /* -----------------------------------------------------------------
 TODO:
 	[ ] return status of child/forked process : H2 ?
@@ -90,6 +93,7 @@ int	ft_waitpid(int pid)
 		free_and_exit(EXIT_FAILURE);
 	}
 	set_status(status);
+	//ft_dprintf(STDERR_FILENO, "status: %d\n", get_status());
 	return (get_status());
 }
 /************************************************************************
@@ -107,7 +111,7 @@ int	exec_cmd(t_cmd *cmd)
 		perror("execve error");
 		free_and_exit(EXIT_FAILURE);
 	}
-	// ft_dprintf(STDERR_FILENO, "after the call to exeve\n");
+	ft_dprintf(STDERR_FILENO, "after the call to exeve\n");
 	// status = get_status(ret);
 	// cmd->status = -1;
 	//TODO: how return status works ?
@@ -131,29 +135,31 @@ int	exec_cmd(t_cmd *cmd)
 int	cmd_exe_cmd2(t_cmd *cmd)
 {
 	int	status;
-	int	pid;
+	//int	pid;
 
 	status = -99;
-	if (cmd->is_child || !cmd->is_child)	// TODO: review this part
-	{
-		pid = ft_fork(cmd);
-		if (pid == 0)
-		{
-			status = exec_cmd(cmd);
-			free_and_exit(EXIT_SUCCESS);	// TODO:: review real status here 
-		}
-		else
-		{
-			// TODO: redo this part ...!
-			ft_waitpid(pid);
-			if (status == -1)
-				perror("exec_cmd error");
-			else
-				status = get_status();
-			cmd->status = status;
-		}
-		return (status);
-	}
+	// if (cmd->is_child || !cmd->is_child)	// TODO: review this part
+	// {
+	// 	pid = ft_fork(cmd);
+	// 	if (pid == 0)
+	// 	{
+	// 		status = exec_cmd(cmd);
+	// 		free_and_exit(EXIT_SUCCESS);	// TODO:: review real status here 
+	// 	}
+	// 	else
+	// 	{
+	// 		// TODO: redo this part ...!
+	// 		ft_waitpid(pid);
+	// 		if (status == -1)
+	// 			perror("exec_cmd error");
+	// 		else
+	// 			status = get_status();
+	// 		cmd->status = status;
+	// 	}
+	// 	return (status);
+	// }
+	status = exec_cmd(cmd);
+	free_and_exit(EXIT_SUCCESS);	// TODO:: review real status here 
 	return (status);
 }
 
@@ -165,28 +171,24 @@ int	cmd_exe_cmd2(t_cmd *cmd)
 int	cmd_exe_cmd(t_cmd *cmd)
 {
 	int		status;
-	char	*cmd_str;
 
 	status = -1;
 	if (!cmd)
 	{
-		ft_dprintf(STDERR_FILENO, "*** Error: command is NULL\n");
+		ft_dprintf(STDERR_FILENO, "*** Error: no command \n");
 		return (status);
 	}
-	cmd_str = cmd->cmd_str;
-	if (!cmd_str)
+	if (!cmd->cmd_str)
 	{
-		ft_dprintf(STDERR_FILENO, "*** Error: command is NULL\n");
+		ft_dprintf(STDERR_FILENO, "*** Error: command str is NULL\n");
 		return (status);
 	}
-	else
-		ft_dprintf(STDERR_FILENO, "Executing command: %s\n", cmd_str);
 	if (cmd->left || cmd->right)
 	{
 		ft_dprintf(STDERR_FILENO, "*** Error: command is not a leaf node\n");
 		return (status);
 	}
-	//cmd->is_child = true;
+	ft_dprintf(STDERR_FILENO, "Executing command: %s\n", cmd->cmd_str);
 	status = cmd_exe_cmd2(cmd);
 	return (status);
 }
@@ -206,29 +208,32 @@ int	ft_fork(t_cmd *cmd)
 	do_check_error_exit((pid == -1), EXIT_FAILURE);
 	if (pid == 0)
 	{
-		ft_dprintf(STDERR_FILENO, "Child: Executing...\n");
+		ft_dprintf(STDERR_FILENO, "Child: Executing...\n"); fflush(stderr);
 		cmd->is_child = true;
-		//TODO: exec_cmd(cmd);
-		//set_child_signals();
+		//TODO: set_child_signals();
+	}
+	// Parent process
+	cmd->pid_child = pid;
+	return (pid);
+}
+
+int	ft_fork2(t_cmd *cmd)
+{
+	int	pid;
+
+	pid = fork();
+	do_check_error_exit((pid == -1), EXIT_FAILURE);
+	if (pid == 0)
+	{
+		ft_dprintf(STDERR_FILENO, "Child: Executing...\n"); fflush(stderr);
+		cmd->is_child = true;
+		//TODO: set_signals_child();
 	}
 	else
 	{
-        // Parent process
 		cmd->pid_child = pid;
-        //ft_dprintf(STDERR_FILENO, "Parent: Waiting for child <%d>\n",
-		//	cmd->pid_child);
-		ft_printf("Parent: Waiting for child <%d>\n", cmd->pid_child);			
-    //     if (waitpid(pid, &status, 0) == -1)
-    //     {
-    //         perror("waitpid failed");
-    //         free_and_exit(EXIT_FAILURE);
-    //     }
-
-    //     // Check if the child exited normally
-    //     if (WIFEXITED(status))
-	// 		ft_dprintf(STDERR_FILENO, "Child exited <%d>with status: %d\n", WIFEXITED(status), WEXITSTATUS(status));
-    //     else
-    //         ft_dprintf(STDERR_FILENO, "Child did not exit normally\n");
+		//TODO: set_signals_parent();
+		ft_dprintf(STDERR_FILENO, "Parent: Waiting for child <%d>\n", cmd->pid_child); fflush(stderr);
     }
 	return (pid);
 }

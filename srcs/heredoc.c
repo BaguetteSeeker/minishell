@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/06 18:58:29 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 11:16:14 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,23 @@ char	*strip_quotes(char *str)
 	return (str);
 }
 
-static char	*new_heredoc(char *delimiter, bool apd_newline)
+static void	put_heredoc_eof(char *clean_delimiter)
 {
-	char	*doc;
+	ft_putstr_fd("msh: warning: heredoc delimited by EOF", STDERR_FILENO);
+	ft_dprintf(STDERR_FILENO, "(expected `%s')\n", clean_delimiter);
+}
+
+static char	*new_heredoc(char *delimiter, char *doc, bool apd_newline)
+{
 	char	*line;
 	char	*tmp;
 
-	doc = ft_strdup("");
 	while (1)
 	{
 		line = open_prompt(PS2, NO_HISTORY);
-		if (ft_strcmp(line, delimiter))
+		if (!line)
+			return (put_heredoc_eof(delimiter), doc);
+		else if (ft_strcmp(line, delimiter))
 		{
 			tmp = doc;
 			if (apd_newline)
@@ -54,7 +60,7 @@ static char	*new_heredoc(char *delimiter, bool apd_newline)
 			free(tmp);
 			free(line);
 			if (!doc)
-				put_err("Failled to alloc memory");
+				put_err("Heredoc processing: malloc faillure");
 			add_history(doc);
 		}
 		else
@@ -84,20 +90,22 @@ static char	*stamp_xpd_proc(char *content, char *dltr)
 
 void	handle_heredocs(t_token *token)
 {
-	char	*hereline;
+	char	*doc;
 	char	*delimiter;
 	char	*delimiter_copy;
 
+	g_getset(NULL)->state = MSH_HRDC_PROMPTING;
 	while (token && token->next)
 	{
 		if (token->type == DLESS && token->next->type == WORD)
 		{
+			doc = ft_strdup("");
 			delimiter = token->next->value;
 			delimiter_copy = chkalloc(ft_strdup(delimiter), "DLTR_CPY");
-			hereline = new_heredoc(strip_quotes(delimiter_copy), true);
+			doc = new_heredoc(strip_quotes(delimiter_copy), doc, true);
 			free(delimiter_copy);
-			hereline = stamp_xpd_proc(hereline, delimiter);
-			token->next->value = hereline;
+			doc = stamp_xpd_proc(doc, delimiter);
+			token->next->value = doc;
 			free(delimiter);
 		}
 		token = token->next;

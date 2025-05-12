@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:07:04 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/06 18:46:03 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/11 19:20:15 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,6 @@
 	ft_lstadd_back((LL_TYP **)(list_head), (LL_TYP *)(new_list))
 # define lstnew_redirs(content) ft_lstnew((void *)(content))
 # define lstiter_redirs(lst, f) ft_lstiter((t_token *)(lst), (void *)f)
+# define lstclear_redirs(lst, f) ft_lstclear((t_token **)(lst), (void *)f)
 # include "token.h"
 #endif

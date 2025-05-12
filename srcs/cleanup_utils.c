@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   cleanup_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/10 14:13:19 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 11:38:17 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ void	free_token_value(t_token *token)
 		free(token->value);
 }
 
-void	clean_ast(t_ast_node *node)
+static void	clean_ast(t_ast_node *node)
 {
 	if (!node)
 		return ;
 	if (node->type == NODE_COMMAND)
 	{
 		if (node->io_streams)
-			lstiter_redirs(node->io_streams, free);
+			lstclear_redirs(&node->io_streams, NULL);
 	}
 	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
 	{
@@ -79,14 +79,6 @@ void	clean_shell(void)
 	msh->var_env = NULL;
 	msh->var_shell = NULL;
 	rl_clear_history();
-}
-
-void	put_err(char *msg)
-{
-	if (msg && *msg)
-		perror(msg);
-	clean_shell();
-	exit(EXIT_FAILURE);
 }
 
 void	*chkalloc(char *val, char *msg)

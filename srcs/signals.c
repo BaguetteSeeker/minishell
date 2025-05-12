@@ -6,29 +6,24 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 11:11:04 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/11 17:46:33 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 11:40:51 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int 		g_signal = 0;
 void	signals_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	(void) context;
 	(void) siginfo;
 	if (sig == SIGINT)
 	{
-		g_signal = 0;
+		if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)
+			exit_shell(NO_EXIT_MSG);
 		ft_putendl_fd("", STDOUT_FILENO);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-	}
-	else if (sig == SIGQUIT)
-	{
-		g_signal = 0;
-		// ft_putendl_fd("Handling SIGQUIT", 1);
 	}
 	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/10 14:19:37 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 11:40:13 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef enum s_msh_state
 {
 	MSH_PROMPTING,
 	MSH_TOKENIZING,
+	MSH_HRDC_PROMPTING,
 	MSH_PARSING,
 	MSH_EXECUTING
 }	t_msh_state;
@@ -65,15 +66,15 @@ typedef struct s_minishell
 # define EXPANDABLE_HEREDOC 127
 # define LITTERAL_HEREDOC 0
 # define ADD_HISTORY 1
-# define NO_HISTORY 2
+# define NO_HISTORY 0
+# define NO_EXIT_MSG 0
+# define EXIT_MSG 1
 
-//Core
-extern int 	g_signal;
+//Core Prototypes
 t_minishell	*g_getset(void *g);
 t_token		*tokenize(char **inpt_ptr, t_token *token_head);
 char		*open_prompt(char *prompt, size_t history);
 void		handle_heredocs(t_token *token);
-void		free_token_value(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);
 t_ast_node	*init_node(t_token **tokens);
@@ -89,11 +90,12 @@ size_t		pathsiz(const char *path);
 void		lst_put(t_token *lst);
 void		clean_shell(void);
 void		clean_routine(void);
+void		free_token_value(t_token *token);
 void		put_err(char *msg);
 void		print_ast(t_ast_node *node);
 void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
 // void		prompt_routine(t_minishell *msh_g);
-void		exit_shell(void);
+void		exit_shell(bool exit_msg);
 #endif

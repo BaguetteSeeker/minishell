@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/10 14:18:42 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 11:40:46 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,29 @@ char	*open_prompt(char *prompt, size_t history)
 
 	input_line = readline(prompt);
 	if (input_line == NULL)
-		return (exit_shell(), NULL);
+	{
+		if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)
+			return (NULL);
+		else
+			return (exit_shell(EXIT_MSG), NULL);
+	}
 	else if (history == ADD_HISTORY && *input_line)
 		add_history(input_line);
 	return (input_line);
 }
 
-void	exit_shell(void)
+void	put_err(char *msg)
 {
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (msg && *msg)
+		perror(msg);
+	clean_shell();
+	exit(EXIT_FAILURE);
+}
+
+void	exit_shell(bool output_msg)
+{
+	if (output_msg == EXIT_MSG)
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	clean_shell();
 	exit(EXIT_SUCCESS);
 }
@@ -53,7 +67,7 @@ void	prompt_routine(t_minishell *msh_g)
 		msh_g->state = MSH_PROMPTING;
 		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
 		if (ft_strncmp(msh_g->input, "exit", 4) == 0)
-			exit_shell();
+			exit_shell(EXIT_MSG);
 		msh_g->state = MSH_TOKENIZING;
 		msh_g->tokens = tokenize(&msh_g->input, msh_g->tokens);
 		handle_heredocs(msh_g->tokens);

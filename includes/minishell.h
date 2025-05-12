@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 12:16:01 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 13:06:03 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_minishell
 //Core Prototypes
 t_minishell	*g_getset(void *g);
 t_token		*tokenize(char **inpt_ptr, t_token *token_head);
-char		*open_prompt(char *prompt, size_t history);
+char		*open_prompt(char *prompt, bool history);
 void		handle_heredocs(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);

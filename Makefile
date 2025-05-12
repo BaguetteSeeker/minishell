@@ -6,7 +6,7 @@
 #    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/05/12 11:36:39 by epinaud          ###   ########.fr        #
+#    Updated: 2025/05/12 13:16:04 by epinaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ OBJ_DIR = .obj
 
 SRCS = minishell.c lexer.c heredoc.c parser.c parser_utils.c \
 		expander.c expander_utils.c expand_callers.c \
-		cleanup_utils.c signals.c putlogs.c
+		cleanup_utils.c signals.c putlogs.c prompt.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 11:11:04 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 11:40:51 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 13:08:19 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	signals_handler(int sig, siginfo_t *siginfo, void *context)
 	return ;
 }
 
+//Sets up custom handling for SIGINT and ignores SIGQUIT
 void	set_sigaction(void (sighandle)(int, siginfo_t *, void *))
 {
 	struct sigaction	act;

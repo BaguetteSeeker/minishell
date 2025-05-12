@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/12 11:59:17 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 17:31:23 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ enum	e_Token_Types
 
 typedef struct s_token
 {
-	size_t			type;
 	char			*value;
 	struct s_token	*next;
+	size_t			type;
 }	t_token;
 
 #endif

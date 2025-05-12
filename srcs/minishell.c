@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/12 12:38:44 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 13:09:35 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,6 @@ t_minishell	*g_getset(void *g)
 	if (!stored_g)
 		stored_g = g;
 	return (stored_g);
-}
-
-char	*open_prompt(char *prompt, size_t history)
-{
-	char	*input_line;
-
-	input_line = readline(prompt);
-	if (input_line == NULL)
-	{
-		if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)
-			return (NULL);
-		else
-			return (exit_shell(EXIT_MSG), NULL);
-	}
-	else if (history == ADD_HISTORY && *input_line)
-		add_history(input_line);
-	return (input_line);
 }
 
 void	put_err(char *msg)
@@ -53,15 +36,12 @@ void	exit_shell(bool output_msg)
 	clean_shell();
 	exit(EXIT_SUCCESS);
 }
-// put_recurse_dynarr(g_getset(NULL)->var_env);
-// ft_printf("Imported env has %u variables\n",
-	// ft_ptrlen((const void **)g_getset(NULL)->var_env));
-			// // parser(tokens);
+
 //Handles Minishell' routine
 void	prompt_routine(t_minishell *msh_g)
 {
 	t_token		*tokens_tmp;
-	
+
 	while (1)
 	{
 		msh_g->state = MSH_PROMPTING;
@@ -83,6 +63,13 @@ void	prompt_routine(t_minishell *msh_g)
 	}
 }
 
+//TODO: Load ENV and SHELL variables into the global struct
+/* Env tests :
+	put_recurse_dynarr(g_getset(NULL)->var_env);
+	ft_printf("Imported env has %u variables\n",
+		ft_ptrlen((const void **)g_getset(NULL)->var_env));
+				// parser(tokens);
+*/
 int	main(int argc, char *argv[], char *env[])
 {
 	t_minishell	*msh_g;
@@ -92,7 +79,6 @@ int	main(int argc, char *argv[], char *env[])
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
 	set_sigaction(&signals_handler);
-	//msh_g->var_env = env;
 	prompt_routine(msh_g);
 	return (0);
 }

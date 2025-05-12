@@ -6,14 +6,13 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:07:04 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 12:41:37 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 17:56:15 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LLTYPE_CONVERTS_H
 # define LLTYPE_CONVERTS_H
 //Generic MSH Converts
-# define msh_lstnew(content) ft_lstnew((void *)(content))
 # define msh_lstclear(lst, f) ft_lstclear((t_list **)(lst), (void *)f)
 # define msh_lstiter(lst, f) ft_lstiter((t_list *)(lst), (void *)f)
 //Tokens Convert

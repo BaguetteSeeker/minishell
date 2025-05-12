@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 11:16:14 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 13:14:13 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	handle_heredocs(t_token *token)
 		{
 			doc = ft_strdup("");
 			delimiter = token->next->value;
-			delimiter_copy = chkalloc(ft_strdup(delimiter), "DLTR_CPY");
+			delimiter_copy = chkalloc(ft_strdup(delimiter), "HRDC: dup faill");
 			doc = new_heredoc(strip_quotes(delimiter_copy), doc, true);
 			free(delimiter_copy);
 			doc = stamp_xpd_proc(doc, delimiter);

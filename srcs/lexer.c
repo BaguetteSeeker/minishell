@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 12:34:35 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 17:55:20 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,13 @@ t_token	*tokenize(char **inpt_ptr, t_token *token_head)
 	{
 		while (input[0] && ft_strchr(SEP_CHARSET, input[0]))
 			input++;
-		token = (t_token *)msh_lstnew(&(t_token){0});
+		token = malloc(sizeof(t_token));
 		if (!token)
 			return (free(*inpt_ptr), inpt_ptr = NULL,
 				put_err("Tokenizer: malloc faillure"), NULL);
+		*token = (t_token){0};
 		if (input[0] == '\0')
-			*token = (t_token){T_NEWLINE, chkalloc(ft_strdup("newline"), 0), 0};
+			*token = (t_token){chkalloc(ft_strdup("newline"), 0), 0, T_NEWLINE};
 		else
 			input += create_token(input, token);
 		prev_token = (t_token *)lstlast_tokens(token_head);

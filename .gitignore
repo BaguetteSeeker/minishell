@@ -35,9 +35,6 @@
 *.i*86
 *.x86_64
 *.hex
-minishell
-_so/minishell_so
-main_readline
 
 # Debug files
 *.dSYM/
@@ -53,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Custom
+minishell
+*.txt
+.vscode/*
+*test*

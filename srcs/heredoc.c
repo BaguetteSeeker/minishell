@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 13:14:13 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 23:14:40 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*strip_quotes(char *str)
 static void	put_heredoc_eof(char *clean_delimiter)
 {
 	ft_putstr_fd("msh: warning: heredoc delimited by EOF", STDERR_FILENO);
-	ft_dprintf(STDERR_FILENO, "(expected `%s')\n", clean_delimiter);
+	ft_dprintf(STDERR_FILENO, " (expected `%s')\n", clean_delimiter);
 }
 
 static char	*new_heredoc(char *delimiter, char *doc, bool apd_newline)
@@ -88,26 +88,19 @@ static char	*stamp_xpd_proc(char *content, char *dltr)
 	return (content);
 }
 
-void	handle_heredocs(t_token *token)
+void	handle_heredoc(t_token *token)
 {
 	char	*doc;
 	char	*delimiter;
 	char	*delimiter_copy;
 
 	g_getset(NULL)->state = MSH_HRDC_PROMPTING;
-	while (token && token->next)
-	{
-		if (token->type == DLESS && token->next->type == WORD)
-		{
-			doc = ft_strdup("");
-			delimiter = token->next->value;
-			delimiter_copy = chkalloc(ft_strdup(delimiter), "HRDC: dup faill");
-			doc = new_heredoc(strip_quotes(delimiter_copy), doc, true);
-			free(delimiter_copy);
-			doc = stamp_xpd_proc(doc, delimiter);
-			token->next->value = doc;
-			free(delimiter);
-		}
-		token = token->next;
-	}
+	doc = ft_strdup("");
+	delimiter = token->next->value;
+	delimiter_copy = chkalloc(ft_strdup(delimiter), "HRDC: dup fail");
+	doc = new_heredoc(strip_quotes(delimiter_copy), doc, true);
+	free(delimiter_copy);
+	doc = stamp_xpd_proc(doc, delimiter);
+	token->next->value = doc;
+	free(delimiter);
 }

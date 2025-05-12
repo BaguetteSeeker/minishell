@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/12 17:31:23 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 23:26:07 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ enum	e_Token_Types
 	IO_NUMBER
 };
 
-# define OP_CHARSET "><|&()"
+# define TOKEN_DELIMITORS "><|()& \t\r\n\v\f"
+# define OP_CHARSET "><|()&"
 # define OP_RECORD 7
 # define SEP_CHARSET " \t\r\n\v\f"
 

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 12:28:43 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 23:18:42 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node)
 			node->right = parse_tokens(tokens, node->right);
 	}
 	else
-		put_err("Uncatched Syntax Error : \
-			Expecting Operator token but none was provided");
+		put_err(ERRMSG_MISSING_OPTOK);
 	return (parse_tokens(tokens, node));
 }

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 13:06:03 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 23:20:18 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@
 
 # define PROMPT_NAME "$minishell: "
 # define PS2 "> "
-# define ERRMSG_SYNTAX "syntax error near unexpected token `"
+# define ERRMSG_SYNTAX "msh: syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
+# define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
+			Expecting Operator token but none was provided"
 
 typedef enum s_msh_state
 {
@@ -73,9 +75,9 @@ typedef struct s_minishell
 
 //Core Prototypes
 t_minishell	*g_getset(void *g);
-t_token		*tokenize(char **inpt_ptr, t_token *token_head);
+t_token		*tokenize(char **inpt_ptr, t_token **token_head);
 char		*open_prompt(char *prompt, bool history);
-void		handle_heredocs(t_token *token);
+void		handle_heredoc(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);
 t_ast_node	*init_node(t_token **tokens);
@@ -97,6 +99,5 @@ void		print_ast(t_ast_node *node);
 void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
-// void		prompt_routine(t_minishell *msh_g);
 void		exit_shell(bool exit_msg);
 #endif

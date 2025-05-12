@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:53:00 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/06 18:59:08 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 12:39:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	expand_node(t_ast_node *node)
 	i = -1;
 	while (node->vars[++i])
 		node->vars[i] = expand(node->vars[i], XPD_ALL);
-	lstiter_redirs(node->io_streams, &expand_redirs);
+	msh_lstiter(node->io_streams, &expand_redirs);
 }
 
 void	expand_token(t_token *tokens)

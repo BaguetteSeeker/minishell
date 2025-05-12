@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 11:38:17 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 12:41:29 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	clean_ast(t_ast_node *node)
 	if (node->type == NODE_COMMAND)
 	{
 		if (node->io_streams)
-			lstclear_redirs(&node->io_streams, NULL);
+			msh_lstclear(&node->io_streams, NULL);
 	}
 	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
 	{
@@ -58,7 +58,7 @@ void	clean_routine(void)
 	if (msh->input)
 		free(msh->input);
 	if (msh->tokens)
-		ft_lstclear(&msh->tokens, free_token_value);
+		msh_lstclear(&msh->tokens, free_token_value);
 	if (msh->cmd_table)
 		clean_ast(msh->cmd_table);
 	msh->input = NULL;

@@ -1,6 +1,8 @@
 {
 	"files.associations": {
 		"linked_lists.h": "c",
-		"ll_typ.h": "c"
+		"ll_typ.h": "c",
+		"minishell.h": "c",
+		"readline.h": "c"
 	}
 }

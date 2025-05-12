@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/12 11:40:46 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 12:38:44 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ void	prompt_routine(t_minishell *msh_g)
 		msh_g->state = MSH_TOKENIZING;
 		msh_g->tokens = tokenize(&msh_g->input, msh_g->tokens);
 		handle_heredocs(msh_g->tokens);
-		ft_lstiter(msh_g->tokens, &expand_token);
-		ft_lstiter(msh_g->tokens, &lst_put);
+		msh_lstiter(msh_g->tokens, &expand_token);
+		msh_lstiter(msh_g->tokens, &lst_put);
 		msh_g->state = MSH_PARSING;
 		tokens_tmp = msh_g->tokens;
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);

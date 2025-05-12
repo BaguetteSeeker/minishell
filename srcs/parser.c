@@ -6,33 +6,11 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/22 15:19:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 12:28:43 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// static void	parse_assignations(t_token **tokens, t_variable **vars)
-// {
-// 	t_variable	*var;
-// 	char		**var_tab;
-
-// 	while (ft_strchr((*tokens)->value, '='))
-// 	{
-// 		var_tab	= ft_split((*tokens)->value, '=');
-// 		if (!var_tab)
-// 			put_err("MALLOC FAILLURE: Failled to split assignation string");
-// 		var = ft_lstnew(&(t_variable){.});
-// 		ft_lstadd_back();
-// 		*tokens = (*tokens)->next;
-// 	}
-
-// 	if ((*tokens)->value == WORD)
-// 	{
-// 		node->value = (*tokens)->value;
-// 		*tokens = (*tokens)->next;
-// 	}
-// }
 
 //Parses one or more subsequent PIPEs into a pipe chain
 static t_ast_node	*parse_pipe(t_token **tokens)

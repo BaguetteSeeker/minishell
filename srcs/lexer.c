@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 11:14:56 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 12:34:35 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,12 @@ t_token	*check_completion(t_token *token, t_token *head)
 			|| token->type == OR_IF || token->type == AND_IF
 			|| token->type == PIPE))
 	{
-		ft_lstdelone(token->next, free_token_value);
+		lstdelone_tokens(token->next, free_token_value);
 		token->next = NULL;
 		input_completion = open_prompt(PS2, NO_HISTORY);
 		tokenize(&input_completion, head);
 	}
-	return ((ft_lstlast(head)));
+	return ((t_token *)lstlast_tokens(head));
 }
 
 t_token	*check_syntax(t_token *tok, t_token *head)
@@ -126,16 +126,16 @@ t_token	*tokenize(char **inpt_ptr, t_token *token_head)
 	{
 		while (input[0] && ft_strchr(SEP_CHARSET, input[0]))
 			input++;
-		token = ft_lstnew(&(t_token){0});
+		token = (t_token *)msh_lstnew(&(t_token){0});
 		if (!token)
 			return (free(*inpt_ptr), inpt_ptr = NULL,
 				put_err("Tokenizer: malloc faillure"), NULL);
-		if (!input[0])
+		if (input[0] == '\0')
 			*token = (t_token){T_NEWLINE, chkalloc(ft_strdup("newline"), 0), 0};
 		else
 			input += create_token(input, token);
-		prev_token = ft_lstlast(token_head);
-		ft_lstadd_back(&token_head, token);
+		prev_token = (t_token *)lstlast_tokens(token_head);
+		lstadd_back_tokens(&token_head, token);
 		token = check_syntax(prev_token, token_head);
 		if (token->type == T_NEWLINE)
 			break ;

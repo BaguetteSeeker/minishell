@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/04/22 17:42:16 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 12:29:33 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,9 @@ static t_redir	*parse_redir(t_token **tokens)
 
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
-		put_err("Failled allocation for redirection");
+		put_err("Parser Utils : Malloc faillure");
 	*redir = (t_redir){(*tokens)->type, (*tokens)->next->value, NULL};
 	*tokens = (*tokens)->next->next;
-	ft_printf("Pointer for redir %p and content %s\n", redir, redir->file);
 	return (redir);
 }
 

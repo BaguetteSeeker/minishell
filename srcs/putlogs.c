@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   putlogs.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/10 13:48:45 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/12 12:38:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	print_ast(t_ast_node *node)
 		ft_putendl_fd("Printing args :", 1);
 		put_recurse_dynarr(node->args);
 		ft_putendl_fd("Printing redirs:", 1);
-		ft_lstiter(((t_token *)node->io_streams), lst_put);
+		msh_lstiter((node->io_streams), lst_put);
 	}
 	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
 	{

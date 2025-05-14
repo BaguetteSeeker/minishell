@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/12 23:01:48 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/13 23:54:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	prompt_routine(t_minishell *msh_g)
 		print_ast(msh_g->cmd_table);
 		msh_g->state = MSH_EXECUTING;
 		clean_routine();
-		msh_g->tokens = NULL;
+		// msh_g->tokens = NULL;
 	}
 }
 

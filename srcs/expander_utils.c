@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/05 19:24:54 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/14 21:01:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ char	*get_envvar(char *varname)
 	return (match);
 }
 
-////!!!! get rid of the trailing space
 char	*get_path(char *pcdr)
 {
 	DIR				*dir;

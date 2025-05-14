@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 22:48:04 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/14 21:23:36 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,17 @@ static char	**parse_args(t_token **tokens, size_t parse_type)
 	while (*tokens && (*tokens)->type == WORD && (
 			(parse_type == PARSE_SUBSQ_WORDS)
 			|| (parse_type == PARSE_SUBSQ_VARS
-				&& ft_strchr((*tokens)->value, '='))))
+				&& ft_strchr((*tokens)->value, '=')
+				&& check_varname((*tokens)->value))))
 	{
-		args = ft_realloc(args, sizeof(char *) * (arg_count + 2));
+		args = ft_realloc(args, sizeof(char *) * (arg_count + 2),
+				sizeof(char *) * (arg_count));
 		if (!args)
-			put_err("Parsing : Failled to alloc memory for NODE_COMMAND");
-		args[arg_count++] = (*tokens)->value;
+			put_err("Parsing : Malloc Faillure");
+		args[arg_count] = (*tokens)->value;
+		args[++arg_count] = NULL;
 		*tokens = (*tokens)->next;
 	}
-	args[arg_count] = NULL;
 	return (args);
 }
 

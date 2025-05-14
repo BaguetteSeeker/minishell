@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 23:14:40 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/14 19:30:38 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static char	*stamp_xpd_proc(char *content, char *dltr)
 	if (!ft_strchr(dltr, CHR_DQUOTE) && !ft_strchr(dltr, CHR_SQUOTE))
 	{
 		content_len = ft_strlen(content);
-		stamped_hdc = ft_realloc(content, content_len + 2);
+		stamped_hdc = ft_realloc(content, content_len + 2, content_len);
 		if (!stamped_hdc)
 			put_err("Heredoc processing : realloc fail");
 		*(stamped_hdc + content_len) = EXPANDABLE_HEREDOC;

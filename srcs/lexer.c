@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/13 00:01:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/14 19:31:15 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,30 +37,25 @@ static t_token	get_grammar_token(char *input)
 	return ((t_token){0});
 }
 
+// && !(input[i] == '&' && input[i + 1] != '&'))
 size_t	create_token(char *input, t_token *token)
 {
 	size_t	i;
 
 	i = 0;
-	if (ft_strchr(OP_CHARSET, input[i])
-		&& !(input[i] == '&' && input[i + 1] != '&'))
-	{
-		*token = get_grammar_token(input);
-		if (token->type)
-			i += ft_strlen(token->value);
-		return (i);
-	}
+	*token = get_grammar_token(input);
+	if (token->type != WORD)
+		return (ft_strlen(token->value));
 	else
 	{
-		while (input[i] && (!ft_strchr(TOKEN_DELIMITORS, input[i]
-					|| get_grammar_token(input + i).type == WORD)))
+		while (input[i] && !ft_strchr(SEP_CHARSET, input[i])
+			&& get_grammar_token(input + i).type == WORD)
 		{
 			if (ft_strchr(QUOTES_SET, input[i])
 				&& ft_strchr(&input[i + 1], input[i]))
 				i += ft_strchr(&input[i + 1], input[i]) - &input[i];
 			i++;
 		}
-		token->type = WORD;
 	}
 	token->value = chkalloc(ft_substr(input, 0, i), "Lexer: Malloc Faillure");
 	return (i);
@@ -78,7 +73,7 @@ t_token	*check_completion(t_token *token, t_token **head)
 	else if (token->type == CPAR)
 		par_dft--;
 	if (par_dft < 0)
-		return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n", PROMPT_NAME,
+		return (ft_dprintf(STDERR_FILENO, "%s%s\'\n",
 				ERRMSG_SYNTAX, token->value), put_err(""), token->next);
 	if (token->type == DLESS)
 		handle_heredoc(token);
@@ -108,7 +103,7 @@ t_token	*check_syntax(t_token *tok, t_token **head)
 				&& tok->next->type != WORD)
 			|| (tok->type == DLESS && tok->next->type != WORD)
 			|| (tok->type == CPAR && tok->next->type == OPAR))
-			return (ft_dprintf(STDERR_FILENO, "%s %s%s\'\n", PROMPT_NAME,
+			return (ft_dprintf(STDERR_FILENO, "%s%s\'\n",
 					ERRMSG_SYNTAX, tok->next->value), put_err(""), tok);
 		return (check_completion(tok, head));
 	}

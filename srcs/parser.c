@@ -6,11 +6,26 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:12:51 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 23:18:42 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/14 21:24:51 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+bool	check_varname(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if ((!ft_isalnum(str[i]) && str[i] != '_')
+			|| (i == 0 && ft_isdigit(str[i])))
+			return (false);
+		i++;
+	}
+	return (true);
+}
 
 //Parses one or more subsequent PIPEs into a pipe chain
 static t_ast_node	*parse_pipe(t_token **tokens)

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 23:20:18 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/14 21:24:24 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void		handle_heredoc(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);
 t_ast_node	*init_node(t_token **tokens);
+bool		check_varname(char *str);
 char		*expand(char *buff, size_t flag);
 void		expand_token(t_token *tokens);
 void		expand_node(t_ast_node *node);

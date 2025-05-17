@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/06 17:28:25 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/17 14:29:05 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ char	*expand(char *buff, size_t flag)
 			while (i > 0 && buff[i] != ' ')
 				i--;
 			buff = eval_placeholder(buff, buff + i, TYPE_WCRD);
+			strstripchr(buff, " ", 1);
 		}
 		else
 			i++;

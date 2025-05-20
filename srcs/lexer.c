@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/20 12:59:41 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/21 01:13:07 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ t_token	*check_completion(t_token *token, t_token **head)
 
 t_token	*check_syntax(t_token *tok, t_token **head)
 {
-	static int	optok[] = {LESS, DLESS, GREAT, DGREAT, PIPE, OR_IF, AND_IF};
+	static int	optok[] = {PIPE, OR_IF, AND_IF};
 	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
 
 	if (tok && tok->next)

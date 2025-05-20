@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/13 23:54:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/20 12:57:03 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,12 @@ void	prompt_routine(t_minishell *msh_g)
 			exit_shell(EXIT_MSG);
 		msh_g->state = MSH_TOKENIZING;
 		msh_g->tokens = tokenize(&msh_g->input, &msh_g->tokens);
-		// handle_heredocs(msh_g->tokens);
+		if (msh_g->state == MSH_FAILLURE)
+		{
+			clean_routine();
+			continue ;
+		}
+		msh_g->state = MSH_EXPANDING;
 		msh_lstiter(msh_g->tokens, &expand_token);
 		msh_lstiter(msh_g->tokens, &lst_put);
 		msh_g->state = MSH_PARSING;
@@ -59,7 +64,6 @@ void	prompt_routine(t_minishell *msh_g)
 		print_ast(msh_g->cmd_table);
 		msh_g->state = MSH_EXECUTING;
 		clean_routine();
-		// msh_g->tokens = NULL;
 	}
 }
 

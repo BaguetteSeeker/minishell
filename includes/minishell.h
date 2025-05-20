@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/14 21:24:24 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/20 12:57:21 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ typedef enum s_msh_state
 	MSH_PROMPTING,
 	MSH_TOKENIZING,
 	MSH_HRDC_PROMPTING,
+	MSH_EXPANDING,
 	MSH_PARSING,
-	MSH_EXECUTING
+	MSH_EXECUTING,
+	MSH_FAILLURE
 }	t_msh_state;
 
 typedef struct s_minishell
@@ -75,8 +77,9 @@ typedef struct s_minishell
 
 //Core Prototypes
 t_minishell	*g_getset(void *g);
-t_token		*tokenize(char **inpt_ptr, t_token **token_head);
+void		prompt_routine(t_minishell *msh_g);
 char		*open_prompt(char *prompt, bool history);
+t_token		*tokenize(char **inpt_ptr, t_token **token_head);
 void		handle_heredoc(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);

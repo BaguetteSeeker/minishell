@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/14 19:31:15 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/20 12:59:41 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static t_token	get_grammar_token(char *input)
 	return ((t_token){0});
 }
 
-// && !(input[i] == '&' && input[i + 1] != '&'))
 size_t	create_token(char *input, t_token *token)
 {
 	size_t	i;
@@ -65,19 +64,20 @@ size_t	create_token(char *input, t_token *token)
 //In order to handle properly the syntax error
 t_token	*check_completion(t_token *token, t_token **head)
 {
-	static int	par_dft = 0;
+	static int	par_depth = 0;
 	char		*input_completion;
 
 	if (token->type == OPAR)
-		par_dft++;
+		par_depth++;
 	else if (token->type == CPAR)
-		par_dft--;
-	if (par_dft < 0)
-		return (ft_dprintf(STDERR_FILENO, "%s%s\'\n",
-				ERRMSG_SYNTAX, token->value), put_err(""), token->next);
+		par_depth--;
+	if (par_depth < 0)
+		return (g_getset(NULL)->state = MSH_FAILLURE,
+			ft_dprintf(STDERR_FILENO, "%s%s\'\n",
+				ERRMSG_SYNTAX, token->value), NULL);
 	if (token->type == DLESS)
 		handle_heredoc(token);
-	if (token->next->type == T_NEWLINE && (par_dft > 0
+	if (token->next->type == T_NEWLINE && (par_depth > 0
 			|| token->type == OR_IF || token->type == AND_IF
 			|| token->type == PIPE))
 	{
@@ -103,8 +103,9 @@ t_token	*check_syntax(t_token *tok, t_token **head)
 				&& tok->next->type != WORD)
 			|| (tok->type == DLESS && tok->next->type != WORD)
 			|| (tok->type == CPAR && tok->next->type == OPAR))
-			return (ft_dprintf(STDERR_FILENO, "%s%s\'\n",
-					ERRMSG_SYNTAX, tok->next->value), put_err(""), tok);
+			return (g_getset(NULL)->state = MSH_FAILLURE,
+				ft_dprintf(STDERR_FILENO, "%s%s\'\n",
+					ERRMSG_SYNTAX, tok->next->value), NULL);
 		return (check_completion(tok, head));
 	}
 	return (*head);
@@ -133,7 +134,7 @@ t_token	*tokenize(char **inpt_ptr, t_token **token_head)
 		prev_token = (t_token *)lstlast_tokens(*token_head);
 		lstadd_back_tokens(token_head, token);
 		token = check_syntax(prev_token, token_head);
-		if (token->type == T_NEWLINE)
+		if (token == NULL || token->type == T_NEWLINE)
 			break ;
 	}
 	return (free(*inpt_ptr), *inpt_ptr = NULL, *token_head);

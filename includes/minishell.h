@@ -25,6 +25,7 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 
 # define PROMPT_NAME "$minishell: "
 # define PS2 "> "
@@ -113,4 +114,10 @@ void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
 void		exit_shell(bool exit_msg);
+
+//Exec
+int			execute_node(t_ast_node *node);
+char		*get_cmdpath(char *cmd, char **envp);
+int			redirections_handler(t_ast_node *node);
+int			execute_pipe(t_ast_node *node);
 #endif

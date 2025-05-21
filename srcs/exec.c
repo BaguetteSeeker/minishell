@@ -1,0 +1,134 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/18 18:22:12 by anle-pag          #+#    #+#             */
+/*   Updated: 2025/05/18 18:22:12 by anle-pag         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+//debug function
+void print_tab(char **t)
+{
+    int i;
+
+    i = 0;
+    printf("argv :\n");
+	if (!t)
+		printf("(null)\n");
+    while (t[i])
+    {
+        printf("%d : %s \n",i, t[i]);
+        i++;
+    }
+}
+
+char **get_cmdargv(char *cmd, char **args)
+{
+	char    **argv;
+	size_t  argc = 0;
+	size_t  i;
+	while (args && args[argc])
+		argc++;
+	argv = malloc(sizeof(char *) * (argc + 2));
+	if (!argv)
+		return (NULL);
+	argv[0] = ft_strdup(cmd);
+	if (!argv[0])
+		return (free(argv), NULL);
+	for (i = 0; i < argc; i++)
+	{
+		argv[i + 1] = strdup(args[i]);
+		if (!argv[i + 1])
+		{
+			while (i > 0)
+				free(argv[i--]);
+			free(argv[0]);
+			free(argv);
+			return (NULL);
+		}
+	}
+	argv[argc + 1] = NULL;
+	return (argv);
+}
+
+// a reecrire plus safe sur les mallocs
+// et sortie plus jolie si erreur
+// if (!envp) ... etc
+int	execute_command(t_ast_node *node)
+{
+	pid_t	pid;
+    char    *path;
+    char    **argv;
+    char    **envp;
+	int		status;
+
+    pid = fork();
+	if (pid == 0)
+	{
+		//redirections_handler(node);
+		signal(SIGPIPE, SIG_DFL);
+		envp = g_getset(NULL)->var_env;
+    	path = get_cmdpath(node->value, envp);
+    	argv = get_cmdargv(node->value, node->args);
+		execve(path, argv, envp);
+		perror("execve failed");
+		exit(1);
+	}
+	waitpid(pid, &status, 0);
+	return (WEXITSTATUS(status));
+}
+
+int	execute_operator(t_ast_node *node)
+{
+	int	left_status;
+
+	left_status = execute_node(node->left);
+	if (node->value && ft_strcmp(node->value, "&&") == 0)
+	{
+		if (left_status == 0)
+			return (execute_node(node->right));
+		return (left_status);
+	}
+	else if (node->value && ft_strcmp(node->value, "||") == 0)
+	{
+		if (left_status != 0)
+			return (execute_node(node->right));
+		return (left_status);
+	}
+	return (1);
+}
+
+int	execute_subshell(t_ast_node *node)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		exit(execute_node(node->left));
+	}
+	waitpid(pid, &status, 0);
+	return (WEXITSTATUS(status));
+}
+
+int	execute_node(t_ast_node *node)
+{
+	if (!node)
+		return (1);
+	if (node->type == NODE_COMMAND)
+		return (execute_command(node));
+	if (node->type == NODE_OPERATOR)
+		return (execute_operator(node));
+	if (node->type == NODE_PIPE)
+		return (execute_pipe(node));
+	if (node->type == NODE_SUBSHELL)
+		return (execute_subshell(node));
+	return (1);
+}

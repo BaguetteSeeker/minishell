@@ -71,7 +71,7 @@ int	execute_command(t_ast_node *node)
     pid = fork();
 	if (pid == 0)
 	{
-		//redirections_handler(node);
+		redirections_handler(node);
 		signal(SIGPIPE, SIG_DFL);
 		envp = g_getset(NULL)->var_env;
     	path = get_cmdpath(node->value, envp);

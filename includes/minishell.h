@@ -118,6 +118,6 @@ void		exit_shell(bool exit_msg);
 //Exec
 int			execute_node(t_ast_node *node);
 char		*get_cmdpath(char *cmd, char **envp);
-int			redirections_handler(t_ast_node *node);
+void		redirections_handler(t_ast_node *node);
 int			execute_pipe(t_ast_node *node);
 #endif

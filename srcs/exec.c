@@ -13,48 +13,19 @@
 #include "minishell.h"
 
 //debug function
-void print_tab(char **t)
+void	print_tab(char **t)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    printf("argv :\n");
+	i = 0;
+	printf("argv :\n");
 	if (!t)
 		printf("(null)\n");
-    while (t[i])
-    {
-        printf("%d : %s \n",i, t[i]);
-        i++;
-    }
-}
-
-char **get_cmdargv(char *cmd, char **args)
-{
-	char    **argv;
-	size_t  argc = 0;
-	size_t  i;
-	while (args && args[argc])
-		argc++;
-	argv = malloc(sizeof(char *) * (argc + 2));
-	if (!argv)
-		return (NULL);
-	argv[0] = ft_strdup(cmd);
-	if (!argv[0])
-		return (free(argv), NULL);
-	for (i = 0; i < argc; i++)
+	while (t[i])
 	{
-		argv[i + 1] = strdup(args[i]);
-		if (!argv[i + 1])
-		{
-			while (i > 0)
-				free(argv[i--]);
-			free(argv[0]);
-			free(argv);
-			return (NULL);
-		}
+		printf("%d : %s \n", i, t[i]);
+		i++;
 	}
-	argv[argc + 1] = NULL;
-	return (argv);
 }
 
 // a reecrire plus safe sur les mallocs
@@ -63,19 +34,19 @@ char **get_cmdargv(char *cmd, char **args)
 int	execute_command(t_ast_node *node)
 {
 	pid_t	pid;
-    char    *path;
-    char    **argv;
-    char    **envp;
+	char	*path;
+	char	**argv;
+	char	**envp;
 	int		status;
 
-    pid = fork();
+	pid = fork();
 	if (pid == 0)
 	{
 		redirections_handler(node);
 		signal(SIGPIPE, SIG_DFL);
 		envp = g_getset(NULL)->var_env;
-    	path = get_cmdpath(node->value, envp);
-    	argv = get_cmdargv(node->value, node->args);
+		path = get_cmdpath(node->value, envp);
+		argv = get_cmdargv(node->value, node->args);
 		execve(path, argv, envp);
 		perror("execve failed");
 		exit(1);

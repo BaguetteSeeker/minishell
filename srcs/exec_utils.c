@@ -66,6 +66,39 @@ char	*get_newpath(char *path, char *cmd, int i)
 	return (newpath);
 }
 
+//trop long
+char	**get_cmdargv(char *cmd, char **args)
+{
+	char	**argv;
+	size_t	argc;
+	size_t	i;
+
+	argc = 0;
+	i = 0;
+	while (args && args[argc])
+		argc++;
+	argv = malloc(sizeof(char *) * (argc + 2));
+	if (!argv)
+		return (NULL);
+	argv[0] = ft_strdup(cmd);
+	if (!argv[0])
+		return (free(argv), NULL);
+	while (i < argc)
+	{
+		argv[i + 1] = strdup(args[i]);
+		if (!argv[i + 1])
+		{
+			while (i >= 0)
+				free(argv[i--]);
+			free(argv);
+			return (NULL);
+		}
+		i++;
+	}
+	argv[argc + 1] = NULL;
+	return (argv);
+}
+
 //eventually should handle persmission error
 //error_exit("permission denied: ", arg, EXIT_NOEXEC, NULL);
 char	*get_cmdpath(char *cmd, char **envp)

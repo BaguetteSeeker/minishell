@@ -32,6 +32,14 @@
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
+# define EXIT_NOCMD 127
+# define EXIT_NOEXEC 126
+
+# define COLOR_RED "\033[31;1m"
+# define COLOR_TEAL "\033[0;36m"
+# define COLOR_WHITE_BOLD "\033[37;1m"
+# define COLOR_WHITE_BOLD_U "\033[1;4;37m"
+# define COLOR_RESET "\033[0m"
 
 typedef enum s_msh_state
 {
@@ -100,6 +108,7 @@ void		clean_routine(void);
 void		free_token_value(t_token *token);
 void		put_err(char *msg);
 void		print_ast(t_ast_node *node);
+void		draw_ast(t_ast_node *node, const char *prefix, int is_left);
 void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);

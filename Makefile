@@ -24,7 +24,8 @@ OBJ_DIR = .obj
 
 SRCS = minishell.c lexer.c heredoc.c parser.c parser_utils.c \
 		expander.c expander_utils.c expand_callers.c \
-		cleanup_utils.c signals.c putlogs.c prompt.c
+		cleanup_utils.c signals.c putlogs.c prompt.c \
+		draw_ast.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@

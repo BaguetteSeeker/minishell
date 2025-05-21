@@ -22,6 +22,20 @@ typedef enum e_node_type
 	NODE_SUBSHELL,	// Represents a subshell (e.g., "(...)")
 }	t_node_type;
 
+//je mets ca la pour l'instant
+//tu peux le bouger dans un "built-ins.h ou autre part stv
+typedef enum e_builtin_type
+{
+	BUILTIN_NONE = -1,
+	BUILTIN_ECHO,
+	BUILTIN_CD,
+	BUILTIN_PWD,
+	BUILTIN_EXPORT,
+	BUILTIN_UNSET,
+	BUILTIN_ENV,
+	BUILTIN_EXIT
+}	t_builtin_type;
+
 typedef enum e_redir_type
 {
 	REDIR_IN = LESS,

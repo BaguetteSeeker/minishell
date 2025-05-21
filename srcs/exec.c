@@ -67,9 +67,14 @@ void	exec_fork(t_ast_node *node)
 //returns adequate exit code
 int	execute_command(t_ast_node *node)
 {
-	pid_t	pid;
 	int		status;
+	pid_t	pid;
+	t_builtin_type type = is_builtin(node->value);
 
+	if (type != BUILTIN_NONE && type != BUILTIN_ECHO)
+		return(run_builtin(type, node));
+	if (type == BUILTIN_ECHO)
+		printf("(echo not implemented yet, falling back to /usr/bin/echo, oops)");
 	pid = fork();
 	if (pid == 0)
 		exec_fork(node);

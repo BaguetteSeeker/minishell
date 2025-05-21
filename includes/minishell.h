@@ -53,6 +53,9 @@ typedef enum s_msh_state
 	MSH_FAILLURE
 }	t_msh_state;
 
+//should add a 
+//char *last_arg;
+//for $?
 typedef struct s_minishell
 {
 	t_msh_state	state;
@@ -114,6 +117,7 @@ void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
 void		exit_shell(bool exit_msg);
+char		**copy_env(char **env);
 
 //Exec
 int			execute_node(t_ast_node *node);
@@ -122,4 +126,23 @@ char		**get_cmdargv(char *cmd, char **args);
 int			redirections_handler(t_ast_node *node);
 int			execute_pipe(t_ast_node *node);
 void		free_tab(void **tab);
+
+//built-ins
+t_builtin_type	is_builtin(const char *cmd);
+int		run_builtin(t_builtin_type	builtin_type, t_ast_node *node);
+int		builtin_pwd(void);
+int		builtin_env(void);
+int		builtin_exit(void);
+int		builtin_echo(t_ast_node *node);
+int		builtin_cd(t_ast_node *node);
+int		builtin_export(t_ast_node *node);
+int		builtin_unset(t_ast_node *node);
+char	**write_new_env(char **env, char *new_entry);
+void	update_add_env(char *var_name, char *value);
+void	update_remove_env(char *var_name);
+char	**write_remmove_env(char **env, char *var_name);
+char	**write_add_env(char **env, char *new_entry);
+char	*get_new_entry(char *var_name, char *value);
+int		var_pos(char **env, const char *var_name);
+
 #endif

@@ -143,6 +143,9 @@ int	main(int argc, char *argv[], char *env[])
 	the output is "Uncatched Parsing Error :                       Expecting Operator token but none was provided: Success"
 
 	exec errors
-	-still no built-ins
+	-no echo :
+		$_
+		$?
+		-n argument
 	-exec_utils.c sucks
 */

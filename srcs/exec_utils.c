@@ -88,7 +88,7 @@ char	**get_cmdargv(char *cmd, char **args)
 		argv[i + 1] = strdup(args[i]);
 		if (!argv[i + 1])
 		{
-			while (i >= 0)
+			while (i > 0)
 				free(argv[i--]);
 			free(argv);
 			return (NULL);
@@ -109,10 +109,8 @@ char	*get_cmdpath(char *cmd, char **envp)
 
 	i = -1;
 	path = NULL;
-	if ((*cmd == '/' || *cmd == '.') && access(cmd, F_OK | X_OK) == 0)
+	if (*cmd == '/' || *cmd == '.')
 		return (cmd);
-	if ((*cmd == '/' || *cmd == '.') && access(cmd, F_OK | X_OK) != 0)
-		return (printf("permission denied: %s", cmd), NULL); //here
 	if (!envp || *envp == NULL || *cmd == '\0')
 		return (NULL);
 	envpaths = get_envpaths(envp);

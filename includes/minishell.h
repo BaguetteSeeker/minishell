@@ -33,8 +33,8 @@
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
-# define EXIT_NOCMD 127
-# define EXIT_NOEXEC 126
+# define EXITC_NOCMD 127
+# define EXITC_NOEXEC 126
 
 # define COLOR_RED "\033[31;1m"
 # define COLOR_TEAL "\033[0;36m"
@@ -121,4 +121,5 @@ char		*get_cmdpath(char *cmd, char **envp);
 char		**get_cmdargv(char *cmd, char **args);
 void		redirections_handler(t_ast_node *node);
 int			execute_pipe(t_ast_node *node);
+void		free_tab(void **tab);
 #endif

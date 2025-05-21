@@ -56,3 +56,4 @@ minishell
 *.txt
 .vscode/*
 *test*
+_debug_files

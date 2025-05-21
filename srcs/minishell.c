@@ -61,7 +61,7 @@ void	prompt_routine(t_minishell *msh_g)
 		msh_g->state = MSH_PARSING;
 		tokens_tmp = msh_g->tokens;
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
-		//print_ast(msh_g->cmd_table);
+		print_ast(msh_g->cmd_table);
 		ft_printf("\n ===== AST visual representation: =====\n");
 		draw_ast(msh_g->cmd_table, "", 1);
 		ft_printf("\n ===== AST execution : =====\n");
@@ -123,3 +123,20 @@ int	main(int argc, char *argv[], char *env[])
 	prompt_routine(msh_g);
 	return (0);
 }
+
+/*
+	parsing errors
+	- redirections should be parsed wherever they are inside the chain of arguments
+		examples :
+		ls > file1 -la
+		(works as "ls -la > file1")
+		< Makefile cat | head -n > file1 1
+		(works as "cat < Makefile  | head -n 1 > file1")
+	basically, parsing logic is :
+		-everything counts as a program argument, until a redirection character is found
+		-if token <, >, << or >> is found, next token is the file (or delimiter) of the redirection
+
+	exec errors
+	-redirections failure and exit codes still not implemented
+	-exec_utils.c sucks
+*/

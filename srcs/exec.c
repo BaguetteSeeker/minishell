@@ -28,30 +28,50 @@ void	print_tab(char **t)
 	}
 }
 
+void	exec_fork(t_ast_node *node)
+{
+	char	*path;
+	char	**argv;
+	char	**envp;
+	///int	redirs;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGPIPE, SIG_DFL);
+	redirections_handler(node);
+	//redirs = redirections_handler(node);
+	// if (redirs !=0)
+	// 	return (perror(node->value), exit(redirs), 1);
+	envp = g_getset(NULL)->var_env;
+	path = get_cmdpath(node->value, envp);
+	if (!path)
+		return (perror(node->value), clean_shell(), exit(EXITC_NOCMD));
+	if (access(path, F_OK | X_OK) != 0)
+		return (perror(node->value), clean_shell(), exit(EXITC_NOEXEC));
+	argv = get_cmdargv(node->value, node->args);
+	if (!argv)
+		return (perror(node->value), clean_shell(), free(path), exit(1));
+	execve(path, argv, envp);
+	perror("execve failed");
+	free(path);
+	free_tab((void **)argv);
+	clean_shell();
+	exit(1);
+}
+
 // a reecrire plus safe sur les mallocs
 // et sortie plus jolie si erreur
 // if (!envp) ... etc
 int	execute_command(t_ast_node *node)
 {
 	pid_t	pid;
-	char	*path;
-	char	**argv;
-	char	**envp;
 	int		status;
 
 	pid = fork();
 	if (pid == 0)
-	{
-		redirections_handler(node);
-		signal(SIGPIPE, SIG_DFL);
-		envp = g_getset(NULL)->var_env;
-		path = get_cmdpath(node->value, envp);
-		argv = get_cmdargv(node->value, node->args);
-		execve(path, argv, envp);
-		perror("execve failed");
-		exit(1);
-	}
+		exec_fork(node);
 	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
 	return (WEXITSTATUS(status));
 }
 

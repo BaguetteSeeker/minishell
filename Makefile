@@ -16,6 +16,8 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -g3
 
+ASAN = -fsanitize=address -g
+
 INCLUDES = -I. -Iincludes/ -Ilibft/includes
 
 LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline

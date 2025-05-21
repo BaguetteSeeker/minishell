@@ -119,7 +119,7 @@ void		exit_shell(bool exit_msg);
 int			execute_node(t_ast_node *node);
 char		*get_cmdpath(char *cmd, char **envp);
 char		**get_cmdargv(char *cmd, char **args);
-void		redirections_handler(t_ast_node *node);
+int			redirections_handler(t_ast_node *node);
 int			execute_pipe(t_ast_node *node);
 void		free_tab(void **tab);
 #endif

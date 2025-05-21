@@ -27,20 +27,23 @@ void	print_tab(char **t)
 		i++;
 	}
 }
-
+//routine called inside the fork
+//if redirection failed, exit with adequate exit code
+//if command not found, exit with 127
+//if command can't be executed, exit with 126
+//if failed to create argv, exit with 1
 void	exec_fork(t_ast_node *node)
 {
 	char	*path;
 	char	**argv;
 	char	**envp;
-	///int	redirs;
+	int		redirs;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGPIPE, SIG_DFL);
-	redirections_handler(node);
-	//redirs = redirections_handler(node);
-	// if (redirs !=0)
-	// 	return (perror(node->value), exit(redirs), 1);
+	redirs = redirections_handler(node);
+	if (redirs !=0)
+		return (clean_shell(), exit(redirs), exit(1));
 	envp = g_getset(NULL)->var_env;
 	path = get_cmdpath(node->value, envp);
 	if (!path)
@@ -58,9 +61,10 @@ void	exec_fork(t_ast_node *node)
 	exit(1);
 }
 
-// a reecrire plus safe sur les mallocs
-// et sortie plus jolie si erreur
-// if (!envp) ... etc
+//forks and calls the execution routine
+//waits for process to exit
+//catches exit signal if any
+//returns adequate exit code
 int	execute_command(t_ast_node *node)
 {
 	pid_t	pid;
@@ -75,6 +79,7 @@ int	execute_command(t_ast_node *node)
 	return (WEXITSTATUS(status));
 }
 
+//implements the logical operators logic in the tree execution
 int	execute_operator(t_ast_node *node)
 {
 	int	left_status;
@@ -95,6 +100,7 @@ int	execute_operator(t_ast_node *node)
 	return (1);
 }
 
+//runs subsequent branches in a new process
 int	execute_subshell(t_ast_node *node)
 {
 	pid_t	pid;
@@ -109,6 +115,8 @@ int	execute_subshell(t_ast_node *node)
 	return (WEXITSTATUS(status));
 }
 
+//traverses the tree recursively, executes node functions when found
+//finally executes command when found, and go back up in the tree
 int	execute_node(t_ast_node *node)
 {
 	if (!node)

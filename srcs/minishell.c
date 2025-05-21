@@ -136,7 +136,13 @@ int	main(int argc, char *argv[], char *env[])
 		-everything counts as a program argument, until a redirection character is found
 		-if token <, >, << or >> is found, next token is the file (or delimiter) of the redirection
 
+	(not sure if this should be fixed)
+	- on Uncatched error the parsing still quits
+		example :
+		copying some heavier into the shell, like C code or stuff that have tons of newline
+	the output is "Uncatched Parsing Error :                       Expecting Operator token but none was provided: Success"
+
 	exec errors
-	-redirections failure and exit codes still not implemented
+	-still no built-ins
 	-exec_utils.c sucks
 */

@@ -13,72 +13,77 @@
 #include "minishell.h"
 
 // on this function, the shell should handle a missing file
-//return value should be 1
-void	redir_in(t_redir	*redir)
+int	redir_in(t_redir	*redir)
 {
 	int		fd;
 
+	if (access(redir->file, F_OK) != 0 || access(redir->file, R_OK) != 0)
+		return (perror(redir->file), 1);
 	fd = open(redir->file, O_RDONLY);
 	if (fd < 0)
-		return (perror(redir->file));
+		return (perror(redir->file), 1);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
+	return (0);
 }
 
-void	redir_out(t_redir	*redir)
+int	redir_out(t_redir	*redir)
 {
 	int		fd;
 
 	fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
-		return (perror(redir->file));
+		return (perror(redir->file), 1);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
+	return (0);
 }
 
-void	heredoc(t_redir	*redir)
+int	heredoc(t_redir	*redir)
 {
 	int	fds[2];
 
 	if (pipe(fds) < 0)
-		return (perror("heredoc pipe"));
+		return (perror("heredoc pipe"), 1);
 	write(fds[1], redir->file, ft_strlen(redir->file));
 	close(fds[1]);
 	dup2(fds[0], STDIN_FILENO);
 	close(fds[0]);
+	return (0);
 }
 
-void	redir_append(t_redir	*redir)
+int	redir_append(t_redir	*redir)
 {
 	int		fd;
 
 	fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
-		return (perror(redir->file));
+		return (perror(redir->file), 1);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
+	return (0);
 }
-
-//TO FIX :
-//must be able to return errors and stop execution on a failed redirection
-//(it isn't right now)
-//int redirections_handler(t_ast_node *node)
-//(returns 0 on sucess, 1 on failure)
-void	redirections_handler(t_ast_node *node)
+//explore the linked list of redirections
+//on failure, returns edequate exit code
+//if multiple redirection of same fd, last one prevales
+int	redirections_handler(t_ast_node *node)
 {
+	int		exit_code;
 	t_redir	*redir;
 
+	exit_code = 0;
 	redir = node->io_streams;
 	while (redir)
 	{
 		if (redir->type == REDIR_IN)
-			redir_in(redir);
+			exit_code =redir_in(redir);
 		else if (redir->type == REDIR_OUT)
-			redir_out(redir);
+			exit_code =redir_out(redir);
 		else if (redir->type == HEREDOC)
-			heredoc(redir);
+			exit_code =heredoc(redir);
 		else if (redir->type == APPEND)
-			redir_append(redir);
+			exit_code =redir_append(redir);
 		redir = redir->next;
 	}
+	return (exit_code);
 }

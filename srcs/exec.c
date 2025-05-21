@@ -121,6 +121,8 @@ int	execute_node(t_ast_node *node)
 {
 	if (!node)
 		return (1);
+	if (!node->value || *node->value == '\0')
+		return (0);
 	if (node->type == NODE_COMMAND)
 		return (execute_command(node));
 	if (node->type == NODE_OPERATOR)

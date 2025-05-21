@@ -57,11 +57,11 @@ void	prompt_routine(t_minishell *msh_g)
 		}
 		msh_g->state = MSH_EXPANDING;
 		msh_lstiter(msh_g->tokens, &expand_token);
-		msh_lstiter(msh_g->tokens, &lst_put);
+		//msh_lstiter(msh_g->tokens, &lst_put);
 		msh_g->state = MSH_PARSING;
 		tokens_tmp = msh_g->tokens;
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
-		print_ast(msh_g->cmd_table);
+		//print_ast(msh_g->cmd_table);
 		ft_printf("\n ===== AST visual representation: =====\n");
 		draw_ast(msh_g->cmd_table, "", 1);
 		ft_printf("\n ===== AST execution : =====\n");

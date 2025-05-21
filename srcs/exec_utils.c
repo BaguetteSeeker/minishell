@@ -108,6 +108,8 @@ char	*get_cmdpath(char *cmd, char **envp)
 	char	**envpaths;
 
 	i = -1;
+	if (!cmd)
+		return (NULL);
 	path = NULL;
 	if (*cmd == '/' || *cmd == '.')
 		return (cmd);

@@ -68,7 +68,16 @@ int	builtin_pwd(void)
 
 int	builtin_env(void)
 {
-	put_recurse_dynarr(g_getset(NULL)->var_env);
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		put_recurse_dynarr(g_getset(NULL)->var_env);
+		clean_shell();
+		exit(0);
+	}
+	wait(NULL);
 	return (0);
 }
 

@@ -113,8 +113,7 @@ int	main(int argc, char *argv[], char *env[])
 	exec errors
 	-weird variables
 		$_
-		$?
-
+	-segfaults on env -i
 	-exec_utils.c still sucks
 
 	idea :

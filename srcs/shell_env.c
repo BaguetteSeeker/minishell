@@ -42,8 +42,7 @@ char	**copy_env(char **env)
 	copy[count] = NULL;
 	return (copy);
 }
-#include <stdio.h>
-#include <stdlib.h>
+
 void	update_SHLVL()
 {
 	int		level;
@@ -51,6 +50,8 @@ void	update_SHLVL()
 	char	*new_SHLVL;
 
 	SHLVL = get_val_env("SHLVL");
+	if (!SHLVL)
+		return ;
 	level = ft_atoi(SHLVL) + 1;
 	new_SHLVL = ft_itoa(level);
 	update_add_env("SHLVL", new_SHLVL);

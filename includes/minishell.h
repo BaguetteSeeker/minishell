@@ -154,4 +154,5 @@ void	update_remove_env(char *var_name);
 
 //env and shell variables
 void	update_SHLVL();
+void	update_underscore(t_ast_node *node);
 #endif

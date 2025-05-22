@@ -65,6 +65,8 @@ void	prompt_routine(t_minishell *msh_g)
 		//ft_printf("\n ===== AST execution : =====\n");
 		msh_g->last_exitcode = execute_node(msh_g->cmd_table);
 		printf("\n ===== exit code is : %d =====\n", msh_g->last_exitcode);
+		if (msh_g->last_exitcode == 0)
+			update_underscore(msh_g->cmd_table);
 		msh_g->state = MSH_EXECUTING;
 		clean_routine();
 	}

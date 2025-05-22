@@ -43,6 +43,7 @@ char	**copy_env(char **env)
 	return (copy);
 }
 
+//increment SHLVL and overwrites it in ENV
 void	update_SHLVL()
 {
 	int		level;
@@ -56,4 +57,22 @@ void	update_SHLVL()
 	new_SHLVL = ft_itoa(level);
 	update_add_env("SHLVL", new_SHLVL);
 	free(new_SHLVL);
+}
+
+//returns last argument of given node
+void	update_underscore(t_ast_node *node)
+{
+	int		i;
+	char	*last_arg;
+
+	if (!node || node->type != NODE_COMMAND || !node->args)
+		return ;
+	i = 0;
+	while (node->args[i])
+		i++;
+	if (i > 0)
+		last_arg = node->args[i - 1];
+	else
+		last_arg = node->value;
+	update_add_env("_", last_arg);
 }

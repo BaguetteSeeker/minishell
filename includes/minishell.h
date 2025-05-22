@@ -144,15 +144,15 @@ char	**write_remmove_env(char **env, char *var_name);
 char	**write_add_env(char **env, char *new_entry);
 char	*get_val_env(char *var_name);
 char	*get_var_env(char *var_name);
-
-//env inteface helpers
 char	*get_new_entry(char *var_name, char *value);
 int		var_pos(char **env, const char *var_name);
 char	**write_new_env(char **env, char *new_entry);
 void	update_add_env(char *var_name, char *value);
 void	update_remove_env(char *var_name);
 
-//env and shell variables
+//shell, env and shell VAR
 void	update_SHLVL();
 void	update_underscore(t_ast_node *node);
+int		script_args_routine(t_minishell *msh, int argc, char **argv);
+int		script_stdin_routine(t_minishell *msh);
 #endif

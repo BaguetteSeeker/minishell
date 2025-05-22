@@ -90,7 +90,12 @@ int	main(int argc, char *argv[], char *env[])
 	msh_g->var_env = copy_env(env);
 	update_SHLVL();
 	set_sigaction(&signals_handler);
-	prompt_routine(msh_g);
+	if (argc > 1)
+        return (script_args_routine(msh_g, argc, argv));
+    else if (!isatty(STDIN_FILENO))
+		return (script_stdin_routine(msh_g));
+	else
+		prompt_routine(msh_g);
 	return (0);
 }
 
@@ -106,19 +111,26 @@ int	main(int argc, char *argv[], char *env[])
 		-everything counts as a program argument, until a redirection character is found
 		-if token <, >, << or >> is found, next token is the file (or delimiter) of the redirection
 
-	(not sure if this should be fixed)
 	- on Uncatched error the parsing still quits
-		example :
+		example prompting :
+		"node->right = parse_tokens(tokens, node->right);"
 		copying some heavier expression into the shell, like C code or stuff that have tons of newline
 	the output is "Uncatched Parsing Error :                       Expecting Operator token but none was provided: Success"
+	
+	- on catched error, the parsing seems broken
+		example prompting :
+		"a00))'a ' a'a  / \\ 1= _+ =-2=2-1"
+	outputs :
+		syntax error near unexpected token `)'
+	then entering other command 
+		$minishell: exit
+		msh: syntax error near unexpected token `exit'
+	eh
 
 	exec errors
-	-weird variables
-		$_
-	-segfaults on env -i
+	-echo doesn't work with \n and other escape sequence
 	-exec_utils.c still sucks
 
 	idea :
-	-cd with shell selection
-	-
+	-cd with dir display
 */

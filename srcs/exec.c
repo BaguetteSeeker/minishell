@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+//ESCAPE SEQ AAAAAHHHHH
+
 //debug function
 void	print_tab(char **t)
 {

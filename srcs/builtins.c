@@ -36,8 +36,8 @@ int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
 
 t_builtin_type	is_builtin(const char *cmd)
 {
-	//if (ft_strcmp(cmd, "echo") == 0)
-	//	return (BUILTIN_ECHO);
+	if (ft_strcmp(cmd, "echo") == 0)
+		return (BUILTIN_ECHO);
 	if (ft_strcmp(cmd, "cd") == 0)
 		return (BUILTIN_CD);
 	if (ft_strcmp(cmd, "pwd") == 0)

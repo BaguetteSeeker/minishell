@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-//export VAR should add "VAR=" to ENV
-//export VAR=123 should add "VAR=123" to ENV
+//export VAR		adds "VAR=" to ENV
+//export VAR=123	adds "VAR=123" to ENV
 //export on a var that alread exists should be benign and change its value
 //(tema comment cest clean ptn)
 int	builtin_export(t_ast_node *node)
@@ -43,8 +43,8 @@ int	builtin_export(t_ast_node *node)
 }
 
 
-//unset VAR should remove VAR from ENV
-//unset VAR whereas VAR doesn't exist should be benign.
+//unset VAR	removes VAR from ENV
+//unset VAR	whereas VAR doesn't exist should be benign.
 int	builtin_unset(t_ast_node *node)
 {
 	int	i;
@@ -69,6 +69,7 @@ void	update_remove_env(char *var_name)
 	g_getset(NULL)->var_env = new_env;
 }
 
+//update_add_env helper
 void	add_new_entry(char *new_entry, char **env, char **new_env, int i)
 {
 	int j;

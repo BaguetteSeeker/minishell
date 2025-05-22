@@ -60,9 +60,9 @@ char	**build_env_novar(char **env, int pos, int len)
 	return (new_env);
 }
 
-//on two following function, let the caller free env
+//on two following function, the caller shall free env
 //if var_name exists, return env
-//if not, construct a new env skipping it, free old env, returns new env
+//if not, construct a new env skipping it, returns new env
 char	**write_remmove_env(char **env, char *var_name)
 {
 	int		len;

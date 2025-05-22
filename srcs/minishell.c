@@ -46,8 +46,6 @@ void	prompt_routine(t_minishell *msh_g)
 	{
 		msh_g->state = MSH_PROMPTING;
 		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
-		if (ft_strncmp(msh_g->input, "exit", 4) == 0)
-			exit_shell(EXIT_MSG);
 		msh_g->state = MSH_TOKENIZING;
 		msh_g->tokens = tokenize(&msh_g->input, &msh_g->tokens);
 		if (msh_g->state == MSH_FAILLURE)

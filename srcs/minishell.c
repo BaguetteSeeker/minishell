@@ -62,12 +62,12 @@ void	prompt_routine(t_minishell *msh_g)
 		//print_ast(msh_g->cmd_table);
 		// ft_printf("\n ===== AST visual representation: =====\n");
 		draw_ast(msh_g->cmd_table, "", 1);
+		msh_g->state = MSH_EXECUTING;
 		//ft_printf("\n ===== AST execution : =====\n");
 		msh_g->last_exitcode = execute_node(msh_g->cmd_table);
 		printf("\n ===== exit code is : %d =====\n", msh_g->last_exitcode);
 		if (msh_g->last_exitcode == 0)
 			update_underscore(msh_g->cmd_table);
-		msh_g->state = MSH_EXECUTING;
 		clean_routine();
 	}
 }
@@ -128,8 +128,8 @@ int	main(int argc, char *argv[], char *env[])
 	eh
 
 	exec errors
-	-echo doesn't work with \n and other escape sequence
 	-exec_utils.c still sucks
+	-cannot open file.sh passed as argument
 
 	idea :
 	-cd with dir display

@@ -71,8 +71,9 @@ void	update_underscore(t_ast_node *node)
 	while (node->args[i])
 		i++;
 	if (i > 0)
-		last_arg = node->args[i - 1];
+		last_arg = ft_strdup(node->args[i - 1]);
 	else
-		last_arg = node->value;
+		last_arg = ft_strdup(node->value);
+	
 	update_add_env("_", last_arg);
 }

@@ -33,12 +33,12 @@ SRCS = minishell.c lexer.c heredoc.c parser.c parser_utils.c \
 		shell_mode.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
-	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
+	$(CC) -c $(CFLAGS) $(ASAN) $(INCLUDES) $< -o $@
 
 all: ftbranch libft $(OBJ_DIR) $(EXE)
 
 $(EXE) :
-	$(CC) $(CFLAGS) $^ -o $@ $(LDLIBS)
+	$(CC) $(CFLAGS) $(ASAN) $^ -o $@ $(LDLIBS)
 #$(ASAN) 
 
 minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

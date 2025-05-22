@@ -27,7 +27,7 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 
-# define PROMPT_NAME "$minishell: "
+# define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
 # define PS2 "> "
 # define ERRMSG_SYNTAX "msh: syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"

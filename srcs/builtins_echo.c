@@ -29,6 +29,16 @@ int	has_echo_n(char *arg)
 	return (1);
 }
 
+void	echo_print(t_ast_node *node, int i, char *last_exit)
+{
+	if (!ft_strcmp(node->args[i], "$?"))
+		ft_dprintf(STDOUT_FILENO, last_exit);
+	else
+		ft_dprintf(STDOUT_FILENO, node->args[i]);
+	if (node->args[i + 1])
+		ft_dprintf(STDOUT_FILENO, " ");
+}
+
 //echo (some) (text)	outputs text on stdin
 //echo -n (some) (text)	outputs text on stdin without newline
 //echo -n -n (text)		is valid !!! only first concecutive -n count
@@ -39,6 +49,11 @@ int	builtin_echo(t_ast_node *node)
 	int		newline = 1;
 	char	*last_exit;
 
+	if (!node->args)
+	{	
+		write(STDOUT_FILENO, "\n", 1);
+		return (0);
+	}
 	last_exit = ft_itoa(g_getset(NULL)->last_exitcode);
 	while (node->args[i] && has_echo_n(node->args[i]))
 	{
@@ -47,12 +62,7 @@ int	builtin_echo(t_ast_node *node)
 	}
 	while (node->args[i])
 	{
-		if (!ft_strcmp(node->args[i], "$?"))
-			ft_dprintf(STDOUT_FILENO, last_exit);
-		else
-			ft_dprintf(STDOUT_FILENO, node->args[i]);
-		if (node->args[i + 1])
-			ft_dprintf(STDOUT_FILENO, " ");
+		echo_print(node, i, last_exit);
 		i++;
 	}
 	if (newline)

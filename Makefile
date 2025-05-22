@@ -37,7 +37,8 @@ $(OBJ_DIR)/%.o : srcs/%.c
 all: ftbranch libft $(OBJ_DIR) $(EXE)
 
 $(EXE) :
-	$(CC) $(CFLAGS) $^ -o $@ $(LDLIBS)
+	$(CC) $(CFLAGS)  $^ -o $@ $(LDLIBS)
+#$(ASAN) 
 
 minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 

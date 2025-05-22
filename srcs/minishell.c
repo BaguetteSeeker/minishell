@@ -62,9 +62,9 @@ void	prompt_routine(t_minishell *msh_g)
 		tokens_tmp = msh_g->tokens;
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
 		//print_ast(msh_g->cmd_table);
-		ft_printf("\n ===== AST visual representation: =====\n");
-		draw_ast(msh_g->cmd_table, "", 1);
-		ft_printf("\n ===== AST execution : =====\n");
+		// ft_printf("\n ===== AST visual representation: =====\n");
+		//draw_ast(msh_g->cmd_table, "", 1);
+		//ft_printf("\n ===== AST execution : =====\n");
 		msh_g->last_exitcode = execute_node(msh_g->cmd_table);
 		printf("\n ===== exit code is : %d =====\n", msh_g->last_exitcode);
 		msh_g->state = MSH_EXECUTING;
@@ -139,7 +139,7 @@ int	main(int argc, char *argv[], char *env[])
 	(not sure if this should be fixed)
 	- on Uncatched error the parsing still quits
 		example :
-		copying some heavier into the shell, like C code or stuff that have tons of newline
+		copying some heavier expression into the shell, like C code or stuff that have tons of newline
 	the output is "Uncatched Parsing Error :                       Expecting Operator token but none was provided: Success"
 
 	exec errors

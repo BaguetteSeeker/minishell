@@ -62,12 +62,30 @@ int	builtin_unset(t_ast_node *node)
 //removes an entry in ENV if it exists
 void	update_remove_env(char *var_name)
 {
-	char	**env;
-	char	**new_env;
+	char	**env = g_getset(NULL)->var_env;
+	char	**new_env = write_remmove_env(env, var_name);
+	if (new_env != env)
+		ft_free_dynarr(env);
+	g_getset(NULL)->var_env = new_env;
+}
 
-	env = g_getset(NULL)->var_env;
-	new_env = write_remmove_env(env, var_name);
-	free(env);
+void	add_new_entry(char *new_entry, char **env, char **new_env, int i)
+{
+	int j;
+	j = 0;
+	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));
+	if (!new_env)
+		return ;
+	while (env[j])
+	{
+		if (j == i)
+			new_env[j] = new_entry;
+		else
+			new_env[j] = ft_strdup(env[j]);
+		j++;
+	}
+	new_env[j] = NULL;
+	ft_free_dynarr(env);
 	g_getset(NULL)->var_env = new_env;
 }
 
@@ -76,21 +94,20 @@ void	update_remove_env(char *var_name)
 //else, right a new entry
 void	update_add_env(char *var_name, char *value)
 {
-	char	**env;
+	char	**env = g_getset(NULL)->var_env;
 	char	**new_env;
-	char	*new_entry;
-	int		i;
+	char	*new_entry = get_new_entry(var_name, value);
+	int		i = var_pos(env, var_name);
 
-	env = g_getset(NULL)->var_env;
-	new_entry = get_new_entry(var_name, value);
-	i = var_pos(env, var_name);
+	new_env = NULL;
 	if (i == -1)
-		new_env = write_add_env(env, new_entry);
-	else
 	{
-		free(env[i]);
-		env[i] = new_entry;
-		return ;
+		new_env = write_add_env(env, new_entry);
+		ft_free_dynarr(env);
+		g_getset(NULL)->var_env = new_env;
 	}
-	g_getset(NULL)->var_env = new_env;
+	else
+		add_new_entry(new_entry, env, new_env, i);
 }
+
+

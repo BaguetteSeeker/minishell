@@ -39,35 +39,43 @@ char	*get_new_entry(char *var_name, char *value)
 	return (new_entry);
 }
 
-//construct new env skipping var_name, free old env, returns it
-char	**write_remmove_env(char **env, char *var_name)
+char	**build_env_novar(char **env, int pos, int len)
 {
+	char	**new_env;
 	int		i;
 	int		j;
+
+	new_env = malloc(sizeof(char *) * len);
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (env[i])
+	{
+		if (i != pos)
+			new_env[j++] = ft_strdup(env[i]);
+		i++;
+	}
+	new_env[j] = NULL;
+	return (new_env);
+}
+
+//on two following function, let the caller free env
+//if var_name exists, return env
+//if not, construct a new env skipping it, free old env, returns new env
+char	**write_remmove_env(char **env, char *var_name)
+{
 	int		len;
 	int		pos;
 	char	**new_env;
 
+	pos = var_pos(env, var_name);
+	if (pos == -1)
+		return (env);
 	len = 0;
 	while (env[len])
 		len++;
-	new_env = malloc(sizeof(char *) * len);
-	if (!new_env)
-		return (NULL);
-	pos = var_pos(env, var_name);
-	if (pos == -1)
-		return (free(new_env), env);
-	j = 0;
-	i = 0;
-	while (j < len)
-	{
-		if (j != pos)
-			new_env[j] = ft_strdup(env[i]);
-		i++;
-		j++;
-	}
-	new_env[j] = NULL;
-	free(env);
+	new_env = build_env_novar(env, pos, len);
 	return (new_env);
 }
 
@@ -86,12 +94,11 @@ char	**write_add_env(char **env, char *new_entry)
 	i = 0;
 	while (env && env[i])
 	{
-		new_env[i] = env[i];
+		new_env[i] = ft_strdup(env[i]);
 		i++;
 	}
 	new_env[i] = new_entry;
 	new_env[i + 1] = NULL;
-	free(env);
 	return (new_env);
 }
 

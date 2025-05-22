@@ -15,8 +15,17 @@
 //checks -n argument
 int	has_echo_n(char *arg)
 {
+	int	i;
+
+	i = 1;
 	if (!arg || arg[0] != '-' || arg[1] != 'n')
 		return (0);
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
 	return (1);
 }
 

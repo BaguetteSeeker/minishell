@@ -137,12 +137,20 @@ int		builtin_echo(t_ast_node *node);
 int		builtin_cd(t_ast_node *node);
 int		builtin_export(t_ast_node *node);
 int		builtin_unset(t_ast_node *node);
+
+//env interface
+char	**write_remmove_env(char **env, char *var_name);
+char	**write_add_env(char **env, char *new_entry);
+char	*get_val_env(char *var_name);
+char	*get_var_env(char *var_name);
+
+//env inteface helpers
+char	*get_new_entry(char *var_name, char *value);
+int		var_pos(char **env, const char *var_name);
 char	**write_new_env(char **env, char *new_entry);
 void	update_add_env(char *var_name, char *value);
 void	update_remove_env(char *var_name);
-char	**write_remmove_env(char **env, char *var_name);
-char	**write_add_env(char **env, char *new_entry);
-char	*get_new_entry(char *var_name, char *value);
-int		var_pos(char **env, const char *var_name);
 
+//env and shell variables
+void	update_SHLVL();
 #endif

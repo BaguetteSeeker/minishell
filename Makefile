@@ -29,7 +29,7 @@ SRCS = minishell.c lexer.c heredoc.c parser.c parser_utils.c \
 		cleanup_utils.c signals.c putlogs.c prompt.c \
 		draw_ast.c exec.c exec_utils.c exec_pipes.c redirs.c \
 		builtins.c builtins_utils.c builtins_echo.c \
-		builtins_cd.c builtins_env.c
+		builtins_cd.c builtins_env.c builtins_exset.c shell_env.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
@@ -37,7 +37,7 @@ $(OBJ_DIR)/%.o : srcs/%.c
 all: ftbranch libft $(OBJ_DIR) $(EXE)
 
 $(EXE) :
-	$(CC) $(CFLAGS)  $^ -o $@ $(LDLIBS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDLIBS)
 #$(ASAN) 
 
 minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

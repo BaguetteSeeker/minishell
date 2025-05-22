@@ -70,37 +70,6 @@ void	prompt_routine(t_minishell *msh_g)
 	}
 }
 
-//faudrait mettre au clair la strat sur ENV et VAR, ou stocker quoi, etc..
-//et bouger cette fonction parce qu'elle a rien a faire ici lol
-char	**copy_env(char **env)
-{
-	size_t	i;
-	size_t	count;
-	char	**copy;
-
-	i = 0;
-	count = 0;
-	while (env[count])
-		count++;
-	copy = malloc(sizeof(char *) * (count + 1));
-	if (!copy)
-		put_err("ENV copy : Malloc Failure");
-	while (i < count)
-	{
-		copy[i] = ft_strdup(env[i]);
-		if (!copy[i])
-		{
-			while (i > 0)
-				free(copy[--i]);
-			free(copy);
-			return (NULL);
-		}
-		i++;
-	}
-	copy[count] = NULL;
-	return (copy);
-}
-
 //TODO: Load ENV and SHELL variables into the global struct
 /* Env tests :
 	put_recurse_dynarr(g_getset(NULL)->var_env);
@@ -117,6 +86,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
 	msh_g->var_env = copy_env(env);
+	update_SHLVL();
 	set_sigaction(&signals_handler);
 	prompt_routine(msh_g);
 	return (0);
@@ -141,9 +111,13 @@ int	main(int argc, char *argv[], char *env[])
 	the output is "Uncatched Parsing Error :                       Expecting Operator token but none was provided: Success"
 
 	exec errors
-	-no echo :
+	-weird variables
 		$_
 		$?
-		-n argument
-	-exec_utils.c sucks
+
+	-exec_utils.c still sucks
+
+	idea :
+	-cd with shell selection
+	-
 */

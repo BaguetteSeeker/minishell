@@ -5,6 +5,7 @@
 		"minishell.h": "c",
 		"readline.h": "c",
 		"compare": "c",
-		"type_traits": "c"
+		"type_traits": "c",
+		"libft.h": "c"
 	}
 }

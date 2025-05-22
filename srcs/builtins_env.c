@@ -12,61 +12,45 @@
 
 #include "minishell.h"
 
-//export VAR		adds "VAR=" to ENV
-//export VAR=123	adds "VAR=123" to ENV
-//export on a var that alread exists should be benign and change its value
-//(tema comment cest clean ptn)
-int	builtin_export(t_ast_node *node)
-{
-	int		i;
-	char	*var;
-	char	*val;
-	char	*equal_sign;
-
-	i = 0;
-	while (node->args && node->args[i])
-	{
-		equal_sign = ft_strchr(node->args[i], '=');
-		if (equal_sign)
-		{
-			*equal_sign = '\0'; //du génie
-			var = node->args[i];
-			val = equal_sign + 1;
-			update_add_env(var, val);
-			*equal_sign = '=';
-		}
-		else
-			update_add_env(node->args[i], "");
-		i++;
-	}
-	return (0);
-}
-
-
-//unset VAR	removes VAR from ENV
-//unset VAR	whereas VAR doesn't exist should be benign.
-int	builtin_unset(t_ast_node *node)
-{
-	int	i;
-
-	i = 0;
-	while (node->args && node->args[i])
-	{
-		update_remove_env(node->args[i]);
-		i++;
-	}
-	return (0);
-}
-
-//Following two functions serve as an interface to ENV
+//Following three functions serve as an interface to ENV
 //removes an entry in ENV if it exists
 void	update_remove_env(char *var_name)
 {
-	char	**env = g_getset(NULL)->var_env;
-	char	**new_env = write_remmove_env(env, var_name);
+	char	**env;
+	char	**new_env;
+
+	env = g_getset(NULL)->var_env;
+	new_env = write_remmove_env(env, var_name);
 	if (new_env != env)
 		ft_free_dynarr(env);
 	g_getset(NULL)->var_env = new_env;
+}
+
+//returns a pointer to the variables entry if it exists in ENV
+char	*get_var_env(char *var_name)
+{
+	int	i;
+	char	**env;
+
+	env = g_getset(NULL)->var_env;
+	i = var_pos(g_getset(NULL)->var_env, var_name);
+	if (i == -1)
+		return (NULL);
+	return (env[i]);
+}
+
+//returns a pointer to the the start of the value in the variable entry str
+//'\0' if no value
+char	*get_val_env(char *var_name)
+{
+	char	*value;
+	char	*entry;
+
+	entry = get_var_env(var_name);
+	if (!entry)
+		return(NULL);
+	value = ft_strchr(entry, '=') + 1;
+	return (value);
 }
 
 //update_add_env helper
@@ -74,6 +58,7 @@ void	add_new_entry(char *new_entry, char **env, char **new_env, int i)
 {
 	int j;
 	j = 0;
+
 	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));
 	if (!new_env)
 		return ;
@@ -95,12 +80,15 @@ void	add_new_entry(char *new_entry, char **env, char **new_env, int i)
 //else, right a new entry
 void	update_add_env(char *var_name, char *value)
 {
-	char	**env = g_getset(NULL)->var_env;
+	int		i;
+	char	**env;
+	char	*new_entry;
 	char	**new_env;
-	char	*new_entry = get_new_entry(var_name, value);
-	int		i = var_pos(env, var_name);
 
+	env = g_getset(NULL)->var_env;
+	new_entry = get_new_entry(var_name, value);
 	new_env = NULL;
+	i = var_pos(env, var_name);
 	if (i == -1)
 	{
 		new_env = write_add_env(env, new_entry);
@@ -110,5 +98,3 @@ void	update_add_env(char *var_name, char *value)
 	else
 		add_new_entry(new_entry, env, new_env, i);
 }
-
-

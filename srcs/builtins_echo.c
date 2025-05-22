@@ -31,14 +31,15 @@ int	has_echo_n(char *arg)
 
 //echo (some) (text)	outputs text on stdin
 //echo -n (some) (text)	outputs text on stdin without newline
-//echo -n -n (text)		is valid !!!
-//echo -n (text) -n		does print the -n though
-//exho -nnnn -coucou	outputs "-coucou" (wtf ??)
+//echo -n -n (text)		is valid !!! only first concecutive -n count
+//echo -nnnn -coucou	outputs "-coucou" (wtf ??)
 int	builtin_echo(t_ast_node *node)
 {
 	int		i = 0;
 	int		newline = 1;
+	char	*last_exit;
 
+	last_exit = ft_itoa(g_getset(NULL)->last_exitcode);
 	while (node->args[i] && has_echo_n(node->args[i]))
 	{
 		newline = 0;
@@ -46,12 +47,16 @@ int	builtin_echo(t_ast_node *node)
 	}
 	while (node->args[i])
 	{
-		ft_putstr_fd(node->args[i], STDOUT_FILENO);
+		if (!ft_strcmp(node->args[i], "$?"))
+			ft_dprintf(STDOUT_FILENO, last_exit);
+		else
+			ft_dprintf(STDOUT_FILENO, node->args[i]);
 		if (node->args[i + 1])
-			write(STDOUT_FILENO, " ", 1);
+			ft_dprintf(STDOUT_FILENO, " ");
 		i++;
 	}
 	if (newline)
 		write(STDOUT_FILENO, "\n", 1);
+	free(last_exit);
 	return (0);
 }

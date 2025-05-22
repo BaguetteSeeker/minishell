@@ -59,7 +59,7 @@ void	add_new_entry(char *new_entry, char **env, char **new_env, int i)
 	int j;
 	j = 0;
 
-	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));
+	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));	
 	if (!new_env)
 		return ;
 	while (env[j])

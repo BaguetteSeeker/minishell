@@ -61,7 +61,7 @@ void	prompt_routine(t_minishell *msh_g)
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
 		//print_ast(msh_g->cmd_table);
 		// ft_printf("\n ===== AST visual representation: =====\n");
-		//draw_ast(msh_g->cmd_table, "", 1);
+		draw_ast(msh_g->cmd_table, "", 1);
 		//ft_printf("\n ===== AST execution : =====\n");
 		msh_g->last_exitcode = execute_node(msh_g->cmd_table);
 		printf("\n ===== exit code is : %d =====\n", msh_g->last_exitcode);

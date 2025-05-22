@@ -12,35 +12,84 @@
 
 #include "minishell.h"
 
+//variable name should start with a letter
+//variable names can only contain letter, digits and underscore
+int	is_valid_export(char *name)
+{
+	int	i;
+
+	if (!name)
+		return (0);
+	if (!ft_isalpha(name[0]) && name[0] != '_')
+		return (0);
+	i = 1;
+	while (name[i])
+	{
+		if (!ft_isalnum(name[i]) && name[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+//export VAR with no value
+int	export_noval(char *name)
+{
+	if (is_valid_export(name))
+		update_add_env(name, "");
+	else
+	{
+		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, name);
+		return (1);
+	}
+	return (0);
+}
+
+//exports VAR and assignes it a value
+int	export_val(char *arg, char *equal_sign)
+{
+	char	*var;
+	char	*val;
+
+	*equal_sign = '\0';
+	var = arg;
+	val = equal_sign + 1;
+	if (is_valid_export(var))
+		update_add_env(var, val);
+	else
+	{
+		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, val);
+		*equal_sign = '=';
+		return (1);
+	}
+	*equal_sign = '=';
+	return (0);
+}
+
+
 //export VAR		adds "VAR=" to ENV
 //export VAR=123	adds "VAR=123" to ENV
 //export on a var that alread exists should be benign and change its value
-//(tema comment cest clean ptn)
 int	builtin_export(t_ast_node *node)
 {
 	int		i;
-	char	*var;
-	char	*val;
+	int		result;
 	char	*equal_sign;
 
 	i = 0;
+	result = 0;
 	while (node->args && node->args[i])
 	{
 		equal_sign = ft_strchr(node->args[i], '=');
 		if (equal_sign)
-		{
-			*equal_sign = '\0'; //du génie
-			var = node->args[i];
-			val = equal_sign + 1;
-			update_add_env(var, val);
-			*equal_sign = '=';
-		}
+			result |= export_val(node->args[i], equal_sign);
 		else
-			update_add_env(node->args[i], "");
+			result |= export_noval(node->args[i]);
 		i++;
 	}
-	return (0);
+	return (result);
 }
+
 
 //unset VAR	removes VAR from ENV
 //unset VAR	whereas VAR doesn't exist should be benign.

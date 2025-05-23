@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+//returns position of a variable in ENV
+int	var_pos(char **env, const char *var_name)
+{
+	int		i;
+	int		len;
+
+	len = ft_strlen(var_name);
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], var_name, len) == 0 && env[i][len] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
 //Following three functions serve as an interface to ENV
 //removes an entry in ENV if it exists
 void	update_remove_env(char *var_name)
@@ -53,31 +70,9 @@ char	*get_val_env(char *var_name)
 	return (value);
 }
 
-//update_add_env helper
-void	add_new_entry(char *new_entry, char **env, char **new_env, int i)
-{
-	int j;
-	j = 0;
-
-	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));	
-	if (!new_env)
-		return ;
-	while (env[j])
-	{
-		if (j == i)
-			new_env[j] = new_entry;
-		else
-			new_env[j] = ft_strdup(env[j]);
-		j++;
-	}
-	new_env[j] = NULL;
-	ft_free_dynarr(env);
-	g_getset(NULL)->var_env = new_env;
-}
-
 //Either adds or modify an entry in ENV
 //checks if var_name exists in ENV, if yes, modify its value
-//else, right a new entry
+//else, write a new entry
 void	update_add_env(char *var_name, char *value)
 {
 	int		i;
@@ -90,11 +85,9 @@ void	update_add_env(char *var_name, char *value)
 	new_env = NULL;
 	i = var_pos(env, var_name);
 	if (i == -1)
-	{
-		new_env = write_add_env(env, new_entry);
-		ft_free_dynarr(env);
-		g_getset(NULL)->var_env = new_env;
-	}
+		new_env = add_new_entry(env, new_entry);
 	else
-		add_new_entry(new_entry, env, new_env, i);
+		new_env = replace_new_entry(env, new_entry, i);
+	ft_free_dynarr(env);
+	g_getset(NULL)->var_env = new_env;
 }

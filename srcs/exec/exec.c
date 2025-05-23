@@ -12,23 +12,6 @@
 
 #include "minishell.h"
 
-//ESCAPE SEQ AAAAAHHHHH
-
-//debug function
-void	print_tab(char **t)
-{
-	int	i;
-
-	i = 0;
-	printf("argv :\n");
-	if (!t)
-		printf("(null)\n");
-	while (t[i])
-	{
-		printf("%d : %s \n", i, t[i]);
-		i++;
-	}
-}
 //routine called inside the fork
 //if redirection failed, exit with adequate exit code
 //if command not found, exit with 127

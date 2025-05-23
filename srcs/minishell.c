@@ -40,45 +40,14 @@ void	exit_shell(bool output_msg)
 //Handles Minishell' routine
 void	prompt_routine(t_minishell *msh_g)
 {
-	t_token		*tokens_tmp;
-
 	while (1)
 	{
 		msh_g->state = MSH_PROMPTING;
 		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
-		msh_g->state = MSH_TOKENIZING;
-		msh_g->tokens = tokenize(&msh_g->input, &msh_g->tokens);
-		if (msh_g->state == MSH_FAILLURE)
-		{
-			clean_routine();
-			continue ;
-		}
-		msh_g->state = MSH_EXPANDING;
-		msh_lstiter(msh_g->tokens, &expand_token);
-		//msh_lstiter(msh_g->tokens, &lst_put);
-		msh_g->state = MSH_PARSING;
-		tokens_tmp = msh_g->tokens;
-		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
-		//print_ast(msh_g->cmd_table);
-		// ft_printf("\n ===== AST visual representation: =====\n");
-		draw_ast(msh_g->cmd_table, "", 1);
-		msh_g->state = MSH_EXECUTING;
-		//ft_printf("\n ===== AST execution : =====\n");
-		msh_g->last_exitcode = execute_node(msh_g->cmd_table);
-		printf("\n ===== exit code is : %d =====\n", msh_g->last_exitcode);
-		if (msh_g->last_exitcode == 0)
-			update_underscore(msh_g->cmd_table);
-		clean_routine();
+		repl_once(msh_g);
 	}
 }
 
-//TODO: Load ENV and SHELL variables into the global struct
-/* Env tests :
-	put_recurse_dynarr(g_getset(NULL)->var_env);
-	ft_printf("Imported env has %u variables\n",
-		ft_ptrlen((const void **)g_getset(NULL)->var_env));
-				// parser(tokens);
-*/
 int	main(int argc, char *argv[], char *env[])
 {
 	t_minishell	*msh_g;
@@ -88,6 +57,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
 	msh_g->var_env = copy_env(env);
+	msh_g->var_shell = init_var_shell();
 	update_SHLVL();
 	set_sigaction(&signals_handler);
 	if (argc > 1)

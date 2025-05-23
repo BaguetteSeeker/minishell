@@ -24,21 +24,28 @@ LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 
 OBJ_DIR = .obj
 
-SRCS = minishell.c lexer.c heredoc.c parser.c parser_utils.c \
-		expander.c expander_utils.c expand_callers.c \
-		cleanup_utils.c signals.c putlogs.c prompt.c \
-		draw_ast.c exec.c exec_utils.c exec_pipes.c redirs.c \
-		builtins.c builtins_utils.c builtins_echo.c \
-		builtins_cd.c builtins_env.c builtins_exset.c shell_env.c \
-		shell_mode.c
+SRCS =	minishell.c prompt.c cleanup_utils.c \
+		parsing/parser.c \
+		parsing/expand_callers.c parsing/expander.c \
+		parsing/expander_utils.c parsing/heredoc.c\
+		parsing/lexer.c parsing/parser_utils.c \
+		exec/exec.c \
+		exec/exec_pipes.c exec/exec_utils.c exec/redirs.c \
+		built-ins/builtins.c \
+		built-ins/builtins_echo.c built-ins/builtins_exset.c \
+		built-ins/builtins.c built-ins/builtins_cd.c \
+		shell/shell_env.c \
+		shell/shell_env_interface.c shell/shell_env_utils.c \
+		shell/shell_mode.c shell/shell_var.c shell/signals.c \
+		debug/draw_ast.c debug/putlogs.c repl.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
-	$(CC) -c $(CFLAGS) $(ASAN) $(INCLUDES) $< -o $@
+	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 all: ftbranch libft $(OBJ_DIR) $(EXE)
 
 $(EXE) :
-	$(CC) $(CFLAGS) $(ASAN) $^ -o $@ $(LDLIBS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDLIBS)
 #$(ASAN) 
 
 minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
@@ -53,7 +60,7 @@ ftbranch:
 	@git -C libft checkout main
 
 .obj:
-	@mkdir -p .obj
+	@mkdir -p .obj/parsing .obj/exec .obj/built-ins .obj/shell .obj/debug
 
 clean:
 	@rm -f $(EXE)

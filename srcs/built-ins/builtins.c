@@ -74,6 +74,9 @@ int	builtin_env(void)
 	if (pid == 0)
 	{
 		put_recurse_dynarr(g_getset(NULL)->var_env);
+		//debug
+		printf("\n === VAR SHELL === \n");
+		put_recurse_dynarr(g_getset(NULL)->var_shell);
 		clean_shell();
 		exit(0);
 	}

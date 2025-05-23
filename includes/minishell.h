@@ -105,6 +105,7 @@ char		*get_envvar(char *pcdr);
 char		*get_path(char *pcdr);
 size_t		varsiz(const char *var);
 size_t		pathsiz(const char *path);
+void		repl_once(t_minishell *msh_g);
 
 //Helper Functions
 void		lst_put(t_token *lst);
@@ -118,7 +119,6 @@ void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
 void		exit_shell(bool exit_msg);
-char		**copy_env(char **env);
 
 //Exec
 int			execute_node(t_ast_node *node);
@@ -146,12 +146,19 @@ char	*get_val_env(char *var_name);
 char	*get_var_env(char *var_name);
 char	*get_new_entry(char *var_name, char *value);
 int		var_pos(char **env, const char *var_name);
-char	**write_new_env(char **env, char *new_entry);
+char	**add_new_entry(char **env, char *new_entry);
+char	**replace_new_entry(char **env, char *new_entry, int i);
 void	update_add_env(char *var_name, char *value);
 void	update_remove_env(char *var_name);
+char	*get_new_entry(char *var_name, char *value);
+
 
 //shell, env and shell VAR
-void	update_SHLVL();
+char	**init_var_shell(void);
+char	**copy_env(char **env);
+void	udapte_var_shell();
+void	update_var_exitcode(void);
+void	update_SHLVL(void);
 void	update_underscore(t_ast_node *node);
 int		script_args_routine(t_minishell *msh, int argc, char **argv);
 int		script_stdin_routine(t_minishell *msh);

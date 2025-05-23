@@ -12,22 +12,6 @@
 
 #include "minishell.h"
 
-int	var_pos(char **env, const char *var_name)
-{
-	int		i;
-	int		len;
-
-	len = ft_strlen(var_name);
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], var_name, len) == 0 && env[i][len] == '=')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
 char	*get_new_entry(char *var_name, char *value)
 {
 	char	*buffer;
@@ -80,7 +64,7 @@ char	**write_remmove_env(char **env, char *var_name)
 }
 
 //copies env to new buffer, adds new_entry, free old buffer, return new buffer
-char	**write_add_env(char **env, char *new_entry)
+char	**add_new_entry(char **env, char *new_entry)
 {
 	int		i;
 	char	**new_env;
@@ -101,5 +85,26 @@ char	**write_add_env(char **env, char *new_entry)
 	new_env[i + 1] = NULL;
 	return (new_env);
 }
+//copy ENV until entry found, copy new_entry (with new value)
+//copy rest of ENV, returns new_env 
+char	**replace_new_entry(char **env, char *new_entry, int i)
+{
+	int j;
+	char	**new_env;
 
+	j = 0;
+	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));	
+	if (!new_env)
+		return (NULL);
+	while (env[j])
+	{
+		if (j == i)
+			new_env[j] = new_entry;
+		else
+			new_env[j] = ft_strdup(env[j]);
+		j++;
+	}
+	new_env[j] = NULL;
+	return (new_env);
+}
 

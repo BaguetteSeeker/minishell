@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/20 12:57:21 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef enum s_msh_state
 {
 	MSH_PROMPTING,
 	MSH_TOKENIZING,
-	MSH_HRDC_PROMPTING,
+	MSH_BLOCKING_PROMPT,
 	MSH_EXPANDING,
 	MSH_PARSING,
 	MSH_EXECUTING,

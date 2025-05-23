@@ -22,7 +22,7 @@ char	*open_prompt(char *prompt, bool history)
 		if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)
 			return (NULL);
 		else
-			return (exit_shell(EXIT_MSG), NULL);
+			return (exit_shell(EXIT_MSG, 0), NULL);
 	}
 	else if (history == ADD_HISTORY && *input_line)
 		add_history(input_line);

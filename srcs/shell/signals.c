@@ -19,7 +19,7 @@ void	signals_handler(int sig, siginfo_t *siginfo, void *context)
 	if (sig == SIGINT)
 	{
 		if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)
-			exit_shell(NO_EXIT_MSG);
+			exit_shell(NO_EXIT_MSG, 0);
 		ft_putendl_fd("", STDOUT_FILENO);
 		rl_on_new_line();
 		rl_replace_line("", 0);

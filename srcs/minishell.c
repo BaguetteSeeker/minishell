@@ -29,12 +29,12 @@ void	put_err(char *msg)
 	exit(EXIT_FAILURE);
 }
 
-void	exit_shell(bool output_msg)
+void	exit_shell(bool output_msg, int exit_code)
 {
 	if (output_msg == EXIT_MSG)
 		ft_putendl_fd("exit", STDOUT_FILENO);
 	clean_shell();
-	exit(EXIT_SUCCESS);
+	exit(exit_code);
 }
 
 //Handles Minishell' routine

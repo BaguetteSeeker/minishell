@@ -30,7 +30,7 @@ int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
 	if (builtin_type == BUILTIN_ENV)
 		return (builtin_env());
 	if (builtin_type == BUILTIN_EXIT)
-		return (builtin_exit());
+		return (builtin_exit(node));
 	return (1);
 }
 
@@ -84,8 +84,18 @@ int	builtin_env(void)
 	return (0);
 }
 
-int	builtin_exit(void)
+int	builtin_exit(t_ast_node *node)
 {
-	exit_shell(EXIT_MSG);
+	int	exit_code;
+
+	if (!node->args)
+		exit_code = 0;
+	else if (ft_ptrlen((const void **)node->args) != 1)
+	{
+		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
+		return (1);
+	}
+	exit_code = ft_atoi(node->args[0]);
+	exit_shell(EXIT_MSG, exit_code);
 	return (1);
 }

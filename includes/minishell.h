@@ -118,7 +118,7 @@ void		draw_ast(t_ast_node *node, const char *prefix, int is_left);
 void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
-void		exit_shell(bool exit_msg);
+void		exit_shell(bool exit_msg, int exit_code);
 
 //Exec
 int			execute_node(t_ast_node *node);
@@ -133,7 +133,7 @@ t_builtin_type	is_builtin(const char *cmd);
 int		run_builtin(t_builtin_type	builtin_type, t_ast_node *node);
 int		builtin_pwd(void);
 int		builtin_env(void);
-int		builtin_exit(void);
+int		builtin_exit(t_ast_node *node);
 int		builtin_echo(t_ast_node *node);
 int		builtin_cd(t_ast_node *node);
 int		builtin_export(t_ast_node *node);

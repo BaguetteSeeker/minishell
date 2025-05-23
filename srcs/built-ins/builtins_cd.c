@@ -23,18 +23,18 @@ int	builtin_cd(t_ast_node *node)
 	target = node->args[0];
 	if (!getcwd(cwd, sizeof(cwd)))
 	{
-		perror("cd: getcwd (before)");
+		perror("cd: ");
 		return (1);
 	}
 	if (chdir(target) != 0)
 	{
-		perror("cd: getcwd (before)");
+		perror("cd: ");
 		return (1);
 	}
 	update_add_env("OLDPWD", cwd);
 	if (!getcwd(cwd, sizeof(cwd)))
 	{
-		perror("cd: getcwd (after)");
+		perror("cd: ");
 		return (1);
 	}	
 	update_add_env("PWD", cwd);

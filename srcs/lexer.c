@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/21 01:13:07 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static t_token	get_grammar_token(char *input)
 	return ((t_token){0});
 }
 
-size_t	create_token(char *input, t_token *token)
+static size_t	create_token(char *input, t_token *token)
 {
 	size_t	i;
 
@@ -60,9 +60,10 @@ size_t	create_token(char *input, t_token *token)
 	return (i);
 }
 
-//TODO: Craft a printf that returns a concatenated chain instead of printing it
-//In order to handle properly the syntax error
-t_token	*check_completion(t_token *token, t_token **head)
+//Keeps a count of parenthesis opened and prompts for completion
+//until their closing equivalent is fully registered
+//Throws a syntax error in the case of standalone CPAR `)`
+static t_token	*check_completion(t_token *token, t_token **head)
 {
 	static int	par_depth = 0;
 	char		*input_completion;
@@ -73,23 +74,23 @@ t_token	*check_completion(t_token *token, t_token **head)
 		par_depth--;
 	if (par_depth < 0)
 		return (g_getset(NULL)->state = MSH_FAILLURE,
-			ft_dprintf(STDERR_FILENO, "%s%s\'\n",
-				ERRMSG_SYNTAX, token->value), NULL);
-	if (token->type == DLESS)
-		handle_heredoc(token);
+			par_depth = 0, ft_dprintf(STDERR_FILENO, "%s%s\'\n",
+				ERRMSG_SYNTAX, token->next->value), NULL);
 	if (token->next->type == T_NEWLINE && (par_depth > 0
 			|| token->type == OR_IF || token->type == AND_IF
 			|| token->type == PIPE))
 	{
+		g_getset(NULL)->state = MSH_BLOCKING_PROMPT;
 		lstdelone_tokens(token->next, free_token_value);
 		token->next = NULL;
 		input_completion = open_prompt(PS2, NO_HISTORY);
 		tokenize(&input_completion, head);
+		par_depth = 0;
 	}
 	return ((t_token *)lstlast_tokens(*head));
 }
 
-t_token	*check_syntax(t_token *tok, t_token **head)
+static t_token	*check_syntax(t_token *tok, t_token **head)
 {
 	static int	optok[] = {PIPE, OR_IF, AND_IF};
 	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
@@ -102,10 +103,13 @@ t_token	*check_syntax(t_token *tok, t_token **head)
 			|| (in_array(tok->type, redirs, nb_elems(redirs, sizeof(redirs)))
 				&& tok->next->type != WORD)
 			|| (tok->type == DLESS && tok->next->type != WORD)
-			|| (tok->type == CPAR && tok->next->type == OPAR))
+			|| (tok->type == CPAR && tok->next->type == OPAR)
+			|| (tok->type == WORD && tok->next->type == OPAR))
 			return (g_getset(NULL)->state = MSH_FAILLURE,
 				ft_dprintf(STDERR_FILENO, "%s%s\'\n",
 					ERRMSG_SYNTAX, tok->next->value), NULL);
+		if (tok->type == DLESS)
+			handle_heredoc(tok);
 		return (check_completion(tok, head));
 	}
 	return (*head);

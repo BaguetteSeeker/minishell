@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/14 21:23:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 01:13:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,28 +37,30 @@ t_ast_node	*init_node(t_token **tokens)
 	return (node);
 }
 
-static char	**parse_args(t_token **tokens, size_t parse_type)
+//Work off of the node' args 
+static char	**parse_args(t_token **tokens, char ***list, size_t parse_type)
 {
-	char	**args;
 	int		arg_count;
 
-	args = NULL;
-	arg_count = 0;
+	if (*list == NULL)
+		arg_count = 0;
+	else
+		arg_count = ft_ptrlen((const void **)*list);
 	while (*tokens && (*tokens)->type == WORD && (
 			(parse_type == PARSE_SUBSQ_WORDS)
 			|| (parse_type == PARSE_SUBSQ_VARS
 				&& ft_strchr((*tokens)->value, '=')
 				&& check_varname((*tokens)->value))))
 	{
-		args = ft_realloc(args, sizeof(char *) * (arg_count + 2),
+		*list = ft_realloc(*list, sizeof(char *) * (arg_count + 2),
 				sizeof(char *) * (arg_count));
-		if (!args)
+		if (!*list)
 			put_err("Parsing : Malloc Faillure");
-		args[arg_count] = (*tokens)->value;
-		args[++arg_count] = NULL;
+		(*list)[arg_count] = (*tokens)->value;
+		(*list)[++arg_count] = NULL;
 		*tokens = (*tokens)->next;
 	}
-	return (args);
+	return (*list);
 }
 
 static t_redir	*parse_redir(t_token **tokens)
@@ -101,14 +103,14 @@ t_ast_node	*parse_command(t_token **tokens)
 	{
 		if (!node->value && (*tokens)->type == WORD
 			&& ft_strchr((*tokens)->value, '='))
-			node->vars = parse_args(tokens, PARSE_SUBSQ_VARS);
+			node->vars = parse_args(tokens, &node->vars, PARSE_SUBSQ_VARS);
 		if (!node->value && (*tokens)->type == WORD)
 			node->value = parse_pathname(tokens);
 		if (in_array((*tokens)->type, cmd_parts, REDIRS_TYPCOUNT)
 			&& (*tokens)->next->type == WORD)
 			lstadd_back_redirs(&node->io_streams, parse_redir(tokens));
 		else if ((*tokens)->type == WORD)
-			node->args = parse_args(tokens, PARSE_SUBSQ_WORDS);
+			node->args = parse_args(tokens, &node->args, PARSE_SUBSQ_WORDS);
 		else
 			return (node);
 	}

@@ -18,6 +18,7 @@ int	ft_isnum(char *s)
 	{
 		if (!ft_isdigit(*s))
 			return (0);
+	s++;
 	}
 	return (1);
 }
@@ -111,7 +112,8 @@ int	builtin_exit(t_ast_node *node)
 		return (2);
 	}
 	else
-		exit_code = ft_atoi(node->args[0]);
+		exit_code = atoi(node->args[0]);
+	printf("\n\t\t%d\n\n", exit_code);
 	exit_shell(EXIT_MSG, exit_code);
 	return (1);
 }

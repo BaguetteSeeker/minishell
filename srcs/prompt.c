@@ -19,7 +19,7 @@ char	*open_prompt(char *prompt, bool history)
 	input_line = readline(prompt);
 	if (input_line == NULL)
 	{
-		if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)
+		if (g_getset(NULL)->state == MSH_BLOCKING_PROMPT)
 			return (NULL);
 		else
 			return (exit_shell(EXIT_MSG, 0), NULL);
@@ -28,3 +28,5 @@ char	*open_prompt(char *prompt, bool history)
 		add_history(input_line);
 	return (input_line);
 }
+
+//if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)

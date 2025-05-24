@@ -18,7 +18,7 @@ void	signals_handler(int sig, siginfo_t *siginfo, void *context)
 	(void) siginfo;
 	if (sig == SIGINT)
 	{
-		if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)
+		if (g_getset(NULL)->state == MSH_BLOCKING_PROMPT)
 			exit_shell(NO_EXIT_MSG, 0);
 		ft_putendl_fd("", STDOUT_FILENO);
 		rl_on_new_line();
@@ -42,3 +42,4 @@ void	set_sigaction(void (sighandle)(int, siginfo_t *, void *))
 	if (sigaction(SIGQUIT, &act, NULL) < 0)
 		return ;
 }
+//if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)

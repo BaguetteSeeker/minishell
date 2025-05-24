@@ -43,11 +43,22 @@
 # define COLOR_WHITE_BOLD_U "\033[1;4;37m"
 # define COLOR_RESET "\033[0m"
 
+// typedef enum s_msh_state
+// {
+// 	MSH_PROMPTING,
+// 	MSH_TOKENIZING,
+// 	MSH_HRDC_PROMPTING,
+// 	MSH_EXPANDING,
+// 	MSH_PARSING,
+// 	MSH_EXECUTING,
+// 	MSH_FAILLURE
+// }	t_msh_state;
+
 typedef enum s_msh_state
 {
 	MSH_PROMPTING,
 	MSH_TOKENIZING,
-	MSH_HRDC_PROMPTING,
+	MSH_BLOCKING_PROMPT,
 	MSH_EXPANDING,
 	MSH_PARSING,
 	MSH_EXECUTING,

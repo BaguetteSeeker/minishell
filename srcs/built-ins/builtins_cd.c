@@ -18,25 +18,18 @@ int	builtin_cd(t_ast_node *node)
 	char	*target;
 	char	cwd[1024];
 
-	if (ft_ptrlen((const void **)node->args) != 1)
-		return (ft_putendl_fd("cd: expected one argument", STDERR_FILENO), 1);
+	if (!node->args || !node->args[0])
+		return (ft_putendl_fd("cd: expected an argument", STDERR_FILENO), 1);
+	if (ft_ptrlen((const void **)node->args) > 1)
+		return (ft_putendl_fd("cd: too many arguments", STDERR_FILENO), 1);
 	target = node->args[0];
 	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("cd: ");
-		return (1);
-	}
+		return (perror("cd: "), 1);
 	if (chdir(target) != 0)
-	{
-		perror("cd: ");
-		return (1);
-	}
+		return (perror("cd: "), 1);
 	update_add_env("OLDPWD", cwd);
 	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("cd: ");
-		return (1);
-	}	
+		return (perror("cd: "), 1);
 	update_add_env("PWD", cwd);
 	return (0);
 }

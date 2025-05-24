@@ -85,7 +85,7 @@ char	**get_cmdargv(char *cmd, char **args)
 		return (free(argv), NULL);
 	while (i < argc)
 	{
-		argv[i + 1] = strdup(args[i]);
+		argv[i + 1] = ft_strdup(args[i]);
 		if (!argv[i + 1])
 		{
 			while (i > 0)
@@ -99,8 +99,6 @@ char	**get_cmdargv(char *cmd, char **args)
 	return (argv);
 }
 
-//eventually should handle persmission error
-//error_exit("permission denied: ", arg, EXIT_NOEXEC, NULL);
 char	*get_cmdpath(char *cmd, char **envp)
 {
 	int		i;

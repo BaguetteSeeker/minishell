@@ -32,7 +32,7 @@ char	**init_var_shell(void)
 {
 	char	**var_shell;
 
-	var_shell = malloc(sizeof(char *) * 4);
+	var_shell = malloc(sizeof(char *) * 5);
 	if (!var_shell)
 		return (NULL);
 	var_shell[0] = ft_strdup("TEST=var_shell_test");

@@ -19,7 +19,7 @@ void repl_once(t_minishell *msh_g)
 {
 	t_token *tmp;
 
-	if (!msh_g->input)
+	if (!msh_g->input || *msh_g->input == '\0')
 		return ;
 	msh_g->state = MSH_TOKENIZING;
 	msh_g->tokens = tokenize(&msh_g->input, &msh_g->tokens);

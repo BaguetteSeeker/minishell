@@ -22,7 +22,9 @@ void	execute_node1(t_ast_node *node, int *pipe_fd)
 	dup2(pipe_fd[1], STDOUT_FILENO);
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
-	exit(execute_node(node->left));
+	execute_node(node->left);
+	clean_shell();
+	exit(0);
 }
 
 void	execute_node2(t_ast_node *node, int *pipe_fd)
@@ -31,7 +33,9 @@ void	execute_node2(t_ast_node *node, int *pipe_fd)
 	dup2(pipe_fd[0], STDIN_FILENO);
 	close(pipe_fd[1]);
 	close(pipe_fd[0]);
-	exit(execute_node(node->right));
+	execute_node(node->right);
+	clean_shell();
+	exit(0);
 }
 
 //creates a pipe and fork the two processes

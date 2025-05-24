@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+int	ft_isnum(char *s)
+{
+	while (s)
+	{
+		if (!ft_isdigit(*s))
+			return (0);
+	}
+	return (1);
+}
+
 //built-ins have persistant impact on msh should run in parent
 //(cd and ENV related built-ins like export and unset)
 //other built-ins should run in a child to mimick bash's behavior
@@ -88,14 +98,20 @@ int	builtin_exit(t_ast_node *node)
 {
 	int	exit_code;
 
-	if (!node->args)
+	if (!node->args || !node->args[0])
 		exit_code = 0;
 	else if (ft_ptrlen((const void **)node->args) != 1)
 	{
 		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
 		return (1);
 	}
-	exit_code = ft_atoi(node->args[0]);
+	else if (!ft_isnum(node->args[0]))
+	{
+		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
+		return (2);
+	}
+	else
+		exit_code = ft_atoi(node->args[0]);
 	exit_shell(EXIT_MSG, exit_code);
 	return (1);
 }

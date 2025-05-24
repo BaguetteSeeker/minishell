@@ -40,6 +40,7 @@ void	exit_shell(bool output_msg, int exit_code)
 //Handles Minishell' routine
 void	prompt_routine(t_minishell *msh_g)
 {
+	msh_g->mode = INTERACTIVE;
 	while (1)
 	{
 		msh_g->state = MSH_PROMPTING;
@@ -61,9 +62,9 @@ int	main(int argc, char *argv[], char *env[])
 	update_SHLVL();
 	set_sigaction(&signals_handler);
 	if (argc > 1)
-        return (script_args_routine(msh_g, argc, argv));
+        return (script_args_routine(msh_g, argc, argv), 0);
     else if (!isatty(STDIN_FILENO))
-		return (script_stdin_routine(msh_g));
+		return (script_stdin_routine(msh_g), 0);
 	else
 		prompt_routine(msh_g);
 	return (0);

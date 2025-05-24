@@ -31,6 +31,11 @@ int	ft_isnum(char *s)
 //other built-ins should run in a child to mimick bash's behavior
 int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
 {
+	int redirs;
+
+	redirs = redirections_handler(node);
+	if (redirs !=0)
+		return (clean_shell(), exit(redirs), exit(1), 1);
 	if (builtin_type == BUILTIN_ECHO)
 		return (builtin_echo(node));
 	if (builtin_type == BUILTIN_CD)

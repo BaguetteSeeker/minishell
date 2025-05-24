@@ -43,18 +43,7 @@
 # define COLOR_WHITE_BOLD_U "\033[1;4;37m"
 # define COLOR_RESET "\033[0m"
 
-// typedef enum s_msh_state
-// {
-// 	MSH_PROMPTING,
-// 	MSH_TOKENIZING,
-// 	MSH_HRDC_PROMPTING,
-// 	MSH_EXPANDING,
-// 	MSH_PARSING,
-// 	MSH_EXECUTING,
-// 	MSH_FAILLURE
-// }	t_msh_state;
-
-typedef enum s_msh_state
+typedef enum e_msh_state
 {
 	MSH_PROMPTING,
 	MSH_TOKENIZING,
@@ -65,9 +54,13 @@ typedef enum s_msh_state
 	MSH_FAILLURE
 }	t_msh_state;
 
-//should add a 
-//char *last_arg;
-//for $?
+typedef enum e_msh_mode
+{
+	INTERACTIVE,
+	SCRIPT_ARGV,
+	SCRIPT_STDIN
+}	t_msh_mode;
+
 typedef struct s_minishell
 {
 	t_msh_state	state;
@@ -77,6 +70,7 @@ typedef struct s_minishell
 	t_token		*tokens;
 	t_ast_node	*cmd_table;
 	int			last_exitcode;
+	t_msh_mode	mode;
 }	t_minishell;
 
 //Functions' Flags
@@ -171,6 +165,6 @@ void	udapte_var_shell();
 void	update_var_exitcode(void);
 void	update_SHLVL(void);
 void	update_underscore(t_ast_node *node);
-int		script_args_routine(t_minishell *msh, int argc, char **argv);
-int		script_stdin_routine(t_minishell *msh);
+void		script_args_routine(t_minishell *msh, int argc, char **argv);
+void	script_stdin_routine(t_minishell *msh);
 #endif

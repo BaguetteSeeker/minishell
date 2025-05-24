@@ -13,10 +13,11 @@
 #include "minishell.h"
 
 //joins every argument as a single line to simulate single prompt
-int script_args_routine(t_minishell *msh_g, int argc, char **argv)
+void script_args_routine(t_minishell *msh_g, int argc, char **argv)
 {
 	char	*input;
 
+	msh_g->mode = SCRIPT_ARGV;
 	input = ft_strdup(argv[1]);
 	if (!input)
 		put_err("strdup");
@@ -31,23 +32,28 @@ int script_args_routine(t_minishell *msh_g, int argc, char **argv)
 	}
 	msh_g->input = input;
 	repl_once(msh_g);
-	return (msh_g->last_exitcode);
+	exit_shell(NULL, msh_g->last_exitcode);
 }
 
 //extract lines from stdin line by line untile !line (EOF reached)
 //for each line, execute as a regular single prompt
-int script_stdin_routine(t_minishell *msh_g)
+void script_stdin_routine(t_minishell *msh_g)
 {
 	char	*line;
 	size_t	len;
 
-	len = ft_strlen(msh_g->input);
+	msh_g->mode = SCRIPT_STDIN;
+	if (!msh_g->input)
+		len = 0;
+	else
+		len = ft_strlen(msh_g->input);
 	line = get_next_line(0);
 	while (line)
 	{
 		if (!line || *line == '\0')
 		{
 			free(line);
+			line = get_next_line(0);
 			continue;
 		}
 		msh_g->input = ft_strdup(line);
@@ -60,5 +66,5 @@ int script_stdin_routine(t_minishell *msh_g)
 		repl_once(msh_g);
 		line = get_next_line(0);
 	}
-	return (msh_g->last_exitcode);
+	exit_shell(NULL, msh_g->last_exitcode);
 }

@@ -109,10 +109,12 @@ int	execute_node(t_ast_node *node)
 {
 	if (!node)
 		return (1);
-	if (!node->value || *node->value == '\0')
+	if ((!node->value || *node->value == '\0'))
 	{
-		ft_putendl_fd("msh: : command not found", STDERR_FILENO);
-		return (127);
+		if (g_getset(NULL)->mode == INTERACTIVE)
+			return (ft_putendl_fd("msh: : command not found", STDERR_FILENO), 127);
+		else
+			return (0);
 	}
 	if (node->type == NODE_COMMAND)
 		return (execute_command(node));

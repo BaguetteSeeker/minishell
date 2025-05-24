@@ -12,6 +12,19 @@
 
 #include "minishell.h"
 
+int	ft_isnum(char *s)
+{
+	if (!s || *s == '\0')
+		return (0);
+	while (*s)
+	{
+		if (!ft_isdigit(*s))
+			return (0);
+		s++;
+	}
+	return (1);
+}
+
 int	builtin_pwd(void)
 {
 	char	buffer[1024];

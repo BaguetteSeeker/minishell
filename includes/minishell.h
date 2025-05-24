@@ -61,6 +61,13 @@ typedef enum e_msh_mode
 	SCRIPT_STDIN
 }	t_msh_mode;
 
+//struct used to back stdin, stderr and stdout when redirecting in parent proc
+typedef struct s_stdio {
+	int stdin_fd;
+	int stdout_fd;
+	int stderr_fd;
+}	t_stdio;
+
 typedef struct s_minishell
 {
 	t_msh_state	state;
@@ -71,6 +78,7 @@ typedef struct s_minishell
 	t_ast_node	*cmd_table;
 	int			last_exitcode;
 	t_msh_mode	mode;
+	t_stdio		stdio;
 }	t_minishell;
 
 //Functions' Flags

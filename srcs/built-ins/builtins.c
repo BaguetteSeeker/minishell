@@ -12,30 +12,40 @@
 
 #include "minishell.h"
 
-int	ft_isnum(char *s)
+void restore_stdio_builtin(void)
 {
-	if (!s || *s == '\0')
-		return (0);
-	while (*s)
-	{
-		if (!ft_isdigit(*s))
-			return (0);
-		s++;
-	}
-	return (1);
+	t_minishell *msh;
+	
+	msh = g_getset(NULL);
+	dup2(msh->stdio.stdin_fd, STDIN_FILENO);
+	dup2(msh->stdio.stdout_fd, STDOUT_FILENO);
+	dup2(msh->stdio.stderr_fd, STDERR_FILENO);
+
+	close(msh->stdio.stdin_fd);
+	close(msh->stdio.stdout_fd);
+	close(msh->stdio.stderr_fd);
 }
 
-
-//built-ins have persistant impact on msh should run in parent
-//(cd and ENV related built-ins like export and unset)
-//other built-ins should run in a child to mimick bash's behavior
-int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
+int redir_stdio_builtin(t_ast_node *node)
 {
-	int redirs;
+	t_minishell *msh;
 
-	redirs = redirections_handler(node);
-	if (redirs !=0)
-		return (clean_shell(), exit(redirs), exit(1), 1);
+	msh = g_getset(NULL);
+	msh->stdio.stdin_fd = dup(STDIN_FILENO);
+	msh->stdio.stderr_fd = dup(STDOUT_FILENO);
+	msh->stdio.stdout_fd = dup(STDERR_FILENO);
+	if (msh->stdio.stdin_fd == -1 || msh->stdio.stderr_fd == -1 || msh->stdio.stdout_fd == -1)
+		return (-1);
+	if (redirections_handler(node) != 0)
+	{
+		restore_stdio_builtin();
+		return (-1);
+	}
+	return (0);
+}
+
+int	call_builtin(t_builtin_type	builtin_type, t_ast_node *node)
+{
 	if (builtin_type == BUILTIN_ECHO)
 		return (builtin_echo(node));
 	if (builtin_type == BUILTIN_CD)
@@ -52,6 +62,25 @@ int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
 		return (builtin_exit(node));
 	return (1);
 }
+
+
+//built-ins have persistant impact on msh should run in parent
+//(cd and ENV related built-ins like export and unset)
+//other built-ins should run in a child to mimick bash's behavior
+int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
+{
+	int redirs;
+	int	exit_status;
+
+	redirs = redirections_handler(node);
+	if (redirs !=0)
+		return (clean_shell(), exit(redirs), 1);
+	exit_status = redir_stdio_builtin(node);
+	call_builtin(builtin_type, node);
+	restore_stdio_builtin();
+	return (exit_status);
+}
+
 
 t_builtin_type	is_builtin(const char *cmd)
 {
@@ -70,64 +99,4 @@ t_builtin_type	is_builtin(const char *cmd)
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (BUILTIN_EXIT);
 	return (BUILTIN_NONE);
-}
-
-int	builtin_pwd(void)
-{
-	char	buffer[1024];
-
-	if (getcwd(buffer, sizeof(buffer)) == NULL)
-	{
-		perror("pwd");
-		return (1);
-	}
-	ft_putendl_fd(buffer, STDOUT_FILENO);
-	return (0);
-}
-
-int	builtin_env(void)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == 0)
-	{
-		put_recurse_dynarr(g_getset(NULL)->var_env);
-		//debug
-		printf("\n === VAR SHELL === \n");
-		put_recurse_dynarr(g_getset(NULL)->var_shell);
-		//to remove
-		clean_shell();
-		exit(0);
-	}
-	wait(NULL);
-	return (0);
-}
-
-int	builtin_exit(t_ast_node *node)
-{
-	int	exit_code;
-
-	if (!node->args || !node->args[0])
-		exit_code = 0;
-	else if (ft_ptrlen((const void **)node->args) != 1)
-	{
-		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
-		return (1);
-	}
-	else if (!ft_isnum(node->args[0]))
-	{
-		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
-		exit_shell(NULL, 2);
-	}
-	else
-		exit_code = atoi(node->args[0]);
-	//printf("\n\t\t%d\n\n", exit_code);
-	if (exit_code == -1)
-	{
-		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
-		exit_shell(NULL, 2);
-	}
-	exit_shell(EXIT_MSG, exit_code);
-	return (1);
 }

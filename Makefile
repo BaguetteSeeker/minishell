@@ -34,10 +34,11 @@ SRCS =	minishell.c prompt.c cleanup_utils.c \
 		built-ins/builtins.c \
 		built-ins/builtins_echo.c built-ins/builtins_exset.c \
 		built-ins/builtins.c built-ins/builtins_cd.c \
+		built-ins/builtins_misc.c \
 		shell/shell_env.c \
 		shell/shell_env_interface.c shell/shell_env_utils.c \
 		shell/shell_mode.c shell/shell_var.c shell/signals.c \
-		debug/draw_ast.c debug/putlogs.c repl.c
+		debug/draw_ast.c debug/putlogs.c repl.c 
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(ASAN) $(INCLUDES) $< -o $@

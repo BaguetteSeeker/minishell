@@ -22,13 +22,13 @@ void	exec_fork(t_ast_node *node)
 	char	*path;
 	char	**argv;
 	char	**envp;
-	int		redirs;
+	int		redir_status;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGPIPE, SIG_DFL);
-	redirs = redirections_handler(node);
-	if (redirs !=0)
-		return (clean_shell(), exit(redirs), exit(1));
+	redir_status = redirections_handler(node);
+	if (redir_status !=0)
+		return (clean_shell(), exit(redir_status));
 	envp = g_getset(NULL)->var_env;
 	path = get_cmdpath(node->value, envp);
 	if (!path)

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/14 19:30:38 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static char	*new_heredoc(char *delimiter, char *doc, bool apd_newline)
 	}
 }
 
-//Stamps a DEL (int 127) character right between the heredoc' end
+//Stamps a DEL (char 127) character right between the heredoc' end
 //and the EOF character to mark the heredoc as "expandable"
 static char	*stamp_xpd_proc(char *content, char *dltr)
 {
@@ -80,7 +80,7 @@ static char	*stamp_xpd_proc(char *content, char *dltr)
 		content_len = ft_strlen(content);
 		stamped_hdc = ft_realloc(content, content_len + 2, content_len);
 		if (!stamped_hdc)
-			put_err("Heredoc processing : realloc fail");
+			put_err("Heredoc processing : realloc faillure");
 		*(stamped_hdc + content_len) = EXPANDABLE_HEREDOC;
 		*(stamped_hdc + content_len + 1) = '\0';
 		content = stamped_hdc;
@@ -94,7 +94,7 @@ void	handle_heredoc(t_token *token)
 	char	*delimiter;
 	char	*delimiter_copy;
 
-	g_getset(NULL)->state = MSH_HRDC_PROMPTING;
+	g_getset(NULL)->state = MSH_BLOCKING_PROMPT;
 	doc = ft_strdup("");
 	delimiter = token->next->value;
 	delimiter_copy = chkalloc(ft_strdup(delimiter), "HRDC: dup fail");

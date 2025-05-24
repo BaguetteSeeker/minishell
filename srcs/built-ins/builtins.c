@@ -14,14 +14,17 @@
 
 int	ft_isnum(char *s)
 {
-	while (s)
+	if (!s || *s == '\0')
+		return (0);
+	while (*s)
 	{
 		if (!ft_isdigit(*s))
 			return (0);
-	s++;
+		s++;
 	}
 	return (1);
 }
+
 
 //built-ins have persistant impact on msh should run in parent
 //(cd and ENV related built-ins like export and unset)
@@ -88,6 +91,7 @@ int	builtin_env(void)
 		//debug
 		printf("\n === VAR SHELL === \n");
 		put_recurse_dynarr(g_getset(NULL)->var_shell);
+		//to remove
 		clean_shell();
 		exit(0);
 	}
@@ -109,11 +113,16 @@ int	builtin_exit(t_ast_node *node)
 	else if (!ft_isnum(node->args[0]))
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
-		return (2);
+		exit_shell(NULL, 2);
 	}
 	else
 		exit_code = atoi(node->args[0]);
-	printf("\n\t\t%d\n\n", exit_code);
+	//printf("\n\t\t%d\n\n", exit_code);
+	if (exit_code == -1)
+	{
+		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
+		exit_shell(NULL, 2);
+	}
 	exit_shell(EXIT_MSG, exit_code);
 	return (1);
 }

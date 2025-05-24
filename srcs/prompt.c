@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:06:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 13:07:32 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,3 @@ char	*open_prompt(char *prompt, bool history)
 		add_history(input_line);
 	return (input_line);
 }
-
-//if (g_getset(NULL)->state == MSH_HRDC_PROMPTING)

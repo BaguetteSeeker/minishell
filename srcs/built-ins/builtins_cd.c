@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-//gets cwd, move to target, update ENV accordingly
+//move the current working directory
 int	builtin_cd(t_ast_node *node)
 {
 	char	*target;

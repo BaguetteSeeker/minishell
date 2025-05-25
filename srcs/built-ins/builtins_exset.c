@@ -32,7 +32,7 @@ int	is_valid_export(char *name)
 	return (1);
 }
 
-//export VAR with no value
+//exports VAR with no value
 int	export_noval(char *name)
 {
 	if (is_valid_export(name))
@@ -66,7 +66,6 @@ int	export_val(char *arg, char *equal_sign)
 	return (0);
 }
 
-
 //export VAR		adds "VAR=" to ENV
 //export VAR=123	adds "VAR=123" to ENV
 //export on a var that alread exists should be benign and change its value
@@ -89,7 +88,6 @@ int	builtin_export(t_ast_node *node)
 	}
 	return (result);
 }
-
 
 //unset VAR	removes VAR from ENV
 //unset VAR	whereas VAR doesn't exist should be benign.

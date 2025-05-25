@@ -47,7 +47,7 @@ all: ftbranch libft $(OBJ_DIR) $(EXE)
 
 $(EXE) :
 	$(CC) $(CFLAGS) $(ASAN) $^ -o $@ $(LDLIBS)
-#$(ASAN) 
+# $(ASAN)
 
 minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 

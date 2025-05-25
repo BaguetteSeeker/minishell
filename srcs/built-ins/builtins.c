@@ -28,20 +28,19 @@ void restore_stdio_builtin(void)
 
 int redir_stdio_builtin(t_ast_node *node)
 {
+	int redirs;
 	t_minishell *msh;
 
 	msh = g_getset(NULL);
 	msh->stdio.stdin_fd = dup(STDIN_FILENO);
-	msh->stdio.stderr_fd = dup(STDOUT_FILENO);
-	msh->stdio.stdout_fd = dup(STDERR_FILENO);
+	msh->stdio.stdout_fd = dup(STDOUT_FILENO);
+	msh->stdio.stderr_fd = dup(STDERR_FILENO);
 	if (msh->stdio.stdin_fd == -1 || msh->stdio.stderr_fd == -1 || msh->stdio.stdout_fd == -1)
 		return (-1);
-	if (redirections_handler(node) != 0)
-	{
-		restore_stdio_builtin();
-		return (-1);
-	}
-	return (0);
+	redirs = redirections_handler(node);
+	if (redirs !=0)
+		return (clean_shell(), exit(redirs), 1);
+	return (redirs);
 }
 
 int	call_builtin(t_builtin_type	builtin_type, t_ast_node *node)
@@ -69,14 +68,10 @@ int	call_builtin(t_builtin_type	builtin_type, t_ast_node *node)
 //other built-ins should run in a child to mimick bash's behavior
 int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
 {
-	int redirs;
 	int	exit_status;
 
-	redirs = redirections_handler(node);
-	if (redirs !=0)
-		return (clean_shell(), exit(redirs), 1);
-	exit_status = redir_stdio_builtin(node);
-	call_builtin(builtin_type, node);
+	redir_stdio_builtin(node);
+	exit_status = call_builtin(builtin_type, node);
 	restore_stdio_builtin();
 	return (exit_status);
 }

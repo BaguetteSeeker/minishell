@@ -109,15 +109,17 @@ char	*get_cmdpath(char *cmd, char **envp)
 	if (!cmd)
 		return (NULL);
 	path = NULL;
-	if (*cmd == '/' || *cmd == '.')
+	if (ft_strchr(cmd, '/'))
 		return (cmd);
 	if (!envp || *envp == NULL || *cmd == '\0')
 		return (NULL);
 	envpaths = get_envpaths(envp);
+	if (!envpaths)
+		return(NULL);
 	while (envpaths[++i])
 	{
 		path = get_newpath(envpaths[i], cmd, i);
-		if (access(path, F_OK | X_OK) == 0)
+		if (access(path, F_OK) == 0)
 			return (free_tab((void **)envpaths), path);
 		free(path);
 	}

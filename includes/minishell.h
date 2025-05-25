@@ -26,6 +26,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 
 # define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
 # define PS2 "> "

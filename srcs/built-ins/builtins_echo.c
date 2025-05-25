@@ -39,10 +39,11 @@ void	echo_print(t_ast_node *node, int i, char *last_exit)
 		ft_dprintf(STDOUT_FILENO, " ");
 }
 
-//echo (some) (text)	outputs text on stdin
-//echo -n (some) (text)	outputs text on stdin without newline
-//echo -n -n (text)		is valid !!! only first concecutive -n count
-//echo -nnnn -coucou	outputs "-coucou" (wtf ??)
+//prints some text on stdout
+//	-echo (some) (text)	outputs text on stdin
+//	-echo -n (some) (text)	outputs text on stdin without newline
+//	-echo -n -n (text)		is valid !!! only first concecutive -n count
+//	-echo -nnnn -coucou	outputs "-coucou" (wtf ??)
 int	builtin_echo(t_ast_node *node)
 {
 	int		i = 0;

@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+//returns 1 is all char of C string are integers
 int	ft_isnum(char *s)
 {
 	if (!s || *s == '\0')
@@ -25,19 +26,22 @@ int	ft_isnum(char *s)
 	return (1);
 }
 
+//prints the current working directory to stdout
 int	builtin_pwd(void)
 {
 	char	buffer[1024];
 
 	if (getcwd(buffer, sizeof(buffer)) == NULL)
 	{
-		perror("pwd");
+		perror("getcwd");
 		return (1);
 	}
 	ft_putendl_fd(buffer, STDOUT_FILENO);
 	return (0);
 }
 
+//prints ENV to stdout
+//to mimick bash, runs command in a child-process
 int	builtin_env(void)
 {
 	pid_t	pid;
@@ -57,6 +61,10 @@ int	builtin_env(void)
 	return (0);
 }
 
+//exits the shell
+//	-exit (integer)		exits the shell with integer exit status
+//	-exit (non-integer)	exits the shell with exit code 2
+//	-exit arg arg		returns 1, doesnt exit the shell
 int	builtin_exit(t_ast_node *node)
 {
 	int	exit_code;

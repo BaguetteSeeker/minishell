@@ -28,8 +28,9 @@ void	check_path(t_ast_node *node, char *path)
 {
 	if (!path)
 		return (perror(node->value), clean_shell(), exit(EXITC_NOCMD));
+	//printf("path %s", path);
 	if (access(path, F_OK | X_OK) != 0)
-		return (printf("%s", path), perror(node->value), clean_shell(), exit(EXITC_NOEXEC));
+		return (perror(node->value), clean_shell(), exit(EXITC_NOEXEC));
 }
 
 //routine called inside the fork
@@ -130,7 +131,7 @@ int	execute_node(t_ast_node *node)
 	if ((!node->value || *node->value == '\0'))
 	{
 		if (g_getset(NULL)->mode == INTERACTIVE)
-			return (ft_putendl_fd("msh: : command not found", STDERR_FILENO), 127);
+			return (ft_putendl_fd("TESTTESTmsh: : command not found", STDERR_FILENO), 127);
 		else
 			return (0);
 	}

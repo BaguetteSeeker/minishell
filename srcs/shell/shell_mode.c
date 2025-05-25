@@ -21,6 +21,12 @@ void script_args_routine(t_minishell *msh_g, int argc, char **argv)
 	input = ft_strdup(argv[1]);
 	if (!input)
 		put_err("strdup");
+	if (!(*input))
+	{
+		ft_putendl_fd("msh: : command not found", STDERR_FILENO);
+		clean_shell();
+		exit(127);
+	}
 	for (int i = 2; i < argc; i++)
 	{
 		char *tmp = input;

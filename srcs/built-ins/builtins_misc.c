@@ -71,15 +71,15 @@ int	builtin_exit(t_ast_node *node)
 
 	if (!node->args || !node->args[0])
 		exit_code = 0;
-	else if (ft_ptrlen((const void **)node->args) != 1)
-	{
-		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
-		return (1);
-	}
 	else if (!ft_isnum(node->args[0]))
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
 		exit_shell(NULL, 2);
+	}
+	else if (ft_ptrlen((const void **)node->args) != 1)
+	{
+		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
+		return (1);
 	}
 	else
 		exit_code = atoi(node->args[0]);

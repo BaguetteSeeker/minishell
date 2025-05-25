@@ -99,6 +99,8 @@ char	**get_cmdargv(char *cmd, char **args)
 	return (argv);
 }
 
+//a reecrire
+//exemple erreur : minishell /etc/bin/invalid_prog
 char	*get_cmdpath(char *cmd, char **envp)
 {
 	int		i;
@@ -110,7 +112,12 @@ char	*get_cmdpath(char *cmd, char **envp)
 		return (NULL);
 	path = NULL;
 	if (ft_strchr(cmd, '/'))
-		return (cmd);
+	{
+		if (access(cmd, F_OK) != 0)
+			return (NULL);
+		else
+			return (cmd);
+	}
 	if (!envp || *envp == NULL || *cmd == '\0')
 		return (NULL);
 	envpaths = get_envpaths(envp);
@@ -119,6 +126,7 @@ char	*get_cmdpath(char *cmd, char **envp)
 	while (envpaths[++i])
 	{
 		path = get_newpath(envpaths[i], cmd, i);
+		//printf("testing path %s : %d", path, access(path, F_OK));
 		if (access(path, F_OK) == 0)
 			return (free_tab((void **)envpaths), path);
 		free(path);

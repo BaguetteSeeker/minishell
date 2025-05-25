@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 18:05:59 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static char	*stamp_xpd_proc(char *content, char *dltr)
 	char	*stamped_hdc;
 	size_t	content_len;
 
-	if (!ft_strchr(dltr, CHR_DQUOTE) && !ft_strchr(dltr, CHR_SQUOTE))
+	if (!ft_strchr(dltr, CHR_DQTE) && !ft_strchr(dltr, CHR_SQTE))
 	{
 		content_len = ft_strlen(content);
 		stamped_hdc = ft_realloc(content, content_len + 2, content_len);

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/20 12:57:03 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 19:07:06 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ t_minishell	*g_getset(void *g)
 
 void	put_err(char *msg)
 {
-	if (msg && *msg)
+	if (errno)
 		perror(msg);
+	else if (msg && *msg)
+		ft_putendl_fd(msg, 1);
 	clean_shell();
 	exit(EXIT_FAILURE);
 }
@@ -72,13 +74,6 @@ void	prompt_routine(t_minishell *msh_g)
 	}
 }
 
-//TODO: Load ENV and SHELL variables into the global struct
-/* Env tests :
-	put_recurse_dynarr(g_getset(NULL)->var_env);
-	ft_printf("Imported env has %u variables\n",
-		ft_ptrlen((const void **)g_getset(NULL)->var_env));
-				// parser(tokens);
-*/
 int	main(int argc, char *argv[], char *env[])
 {
 	t_minishell	*msh_g;
@@ -91,7 +86,7 @@ int	main(int argc, char *argv[], char *env[])
 	update_SHLVL();
 	set_sigaction(&signals_handler);
 	if (argc > 1)
-        return (script_args_routine(msh_g, argc, argv));
+		return (script_args_routine(msh_g, argc, argv));
     else if (!isatty(STDIN_FILENO))
 		return (script_stdin_routine(msh_g));
 	else

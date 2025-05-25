@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 18:46:24 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ typedef struct s_minishell
 # define TYPE_DLRS 1
 # define TYPE_WCRD 2
 # define TYPE_CODE 3
-# define CHR_SQUOTE '\''
-# define CHR_DQUOTE '\"'
+# define CHR_SQTE '\''
+# define CHR_DQTE '\"'
 # define XPD_ALL 0
-# define XPD_HDOC_VARS 1
-# define XPD_HDOC 2
+# define XPD_HDOC 1
+# define XPD_REDIR 2
 # define EXPANDABLE_HEREDOC 127
 # define LITTERAL_HEREDOC 0
 # define ADD_HISTORY 1

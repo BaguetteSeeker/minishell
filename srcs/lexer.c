@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 16:30:56 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ static t_token	*check_completion(t_token *token, t_token **head)
 	static int	par_depth = 0;
 	char		*input_completion;
 
+	if (token->type == DLESS)
+		handle_heredoc(token);
 	if (token->type == OPAR)
 		par_depth++;
 	else if (token->type == CPAR)
@@ -92,14 +94,14 @@ static t_token	*check_completion(t_token *token, t_token **head)
 
 static t_token	*check_syntax(t_token *tok, t_token **head)
 {
-	static int	optok[] = {PIPE, OR_IF, AND_IF};
+	static int	oper[] = {PIPE, OR_IF, AND_IF};
 	static int	redirs[] = {LESS, DLESS, GREAT, DGREAT};
 
 	if (tok && tok->next)
 	{
-		if ((in_array(tok->type, optok, nb_elems(optok, sizeof(optok)))
-				&& in_array(tok->next->type, optok,
-					nb_elems(optok, sizeof(optok))))
+		if ((in_array(tok->type, oper, nb_elems(oper, sizeof(oper)))
+				&& in_array(tok->next->type, oper,
+					nb_elems(oper, sizeof(oper))))
 			|| (in_array(tok->type, redirs, nb_elems(redirs, sizeof(redirs)))
 				&& tok->next->type != WORD)
 			|| (tok->type == DLESS && tok->next->type != WORD)
@@ -108,8 +110,11 @@ static t_token	*check_syntax(t_token *tok, t_token **head)
 			return (g_getset(NULL)->state = MSH_FAILLURE,
 				ft_dprintf(STDERR_FILENO, "%s%s\'\n",
 					ERRMSG_SYNTAX, tok->next->value), NULL);
-		if (tok->type == DLESS)
-			handle_heredoc(tok);
+		if (in_array(tok->type, oper, nb_elems(oper, sizeof(oper)))
+			&& *head == tok)
+			return (g_getset(NULL)->state = MSH_FAILLURE,
+				ft_dprintf(STDERR_FILENO, "%s%s\'\n",
+					ERRMSG_SYNTAX, tok->value), NULL);
 		return (check_completion(tok, head));
 	}
 	return (*head);

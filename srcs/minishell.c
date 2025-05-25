@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/20 12:57:03 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 17:43:37 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ t_minishell	*g_getset(void *g)
 
 void	put_err(char *msg)
 {
-	if (msg && *msg)
+	if (errno)
 		perror(msg);
+	else if (msg && *msg)
+		ft_putendl_fd(msg, 1);
 	clean_shell();
 	exit(EXIT_FAILURE);
 }
@@ -82,6 +84,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argv;
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
+	// msh_g->var_env = env;
 	set_sigaction(&signals_handler);
 	prompt_routine(msh_g);
 	return (0);

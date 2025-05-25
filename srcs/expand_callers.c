@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:53:00 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 12:39:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 17:45:13 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static bool	is_expandable(char *hdoc)
 static void	expand_redirs(t_redir *stream)
 {
 	if (stream->type == HEREDOC && is_expandable(stream->file))
-		stream->file = expand(stream->file, XPD_HDOC_VARS);
+		stream->file = expand(stream->file, XPD_HDOC);
 	else if (stream->type != HEREDOC)
-		stream->file = expand(stream->file, XPD_ALL);
+		stream->file = expand(stream->file, XPD_REDIR);
 }
 
 void	expand_node(t_ast_node *node)
@@ -52,16 +52,19 @@ void	expand_node(t_ast_node *node)
 
 void	expand_token(t_token *tokens)
 {
-	static size_t	found_heredoc = 0;
+	static int	last_token = -1;
 
-	if (tokens->type == DLESS)
-		found_heredoc = 1;
-	else if (tokens->type == WORD)
+	if (tokens->type == WORD)
 	{
-		if (found_heredoc && is_expandable(tokens->value))
-			tokens->value = expand(tokens->value, XPD_HDOC_VARS);
-		else if (!found_heredoc)
+		if (last_token == DLESS)
+		{
+			if (is_expandable(tokens->value))
+				tokens->value = expand(tokens->value, XPD_HDOC);
+		}
+		else if (in_array(last_token, (int []){LESS, GREAT, DGREAT}, 3))
+			tokens->value = expand(tokens->value, XPD_REDIR);
+		else
 			tokens->value = strip_outquotes(expand(tokens->value, XPD_ALL));
-		found_heredoc = 0;
 	}
+	last_token = tokens->type;
 }

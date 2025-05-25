@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 18:05:59 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 19:20:30 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# define PROMPT_NAME "msh:anto-enzo$ "
+# define SHELL_NAME "msh"
+# define PROMPT_NAME "$minishell: "
 # define PS2 "> "
-# define ERRMSG_SYNTAX "msh: syntax error near unexpected token `"
+# define ERRMSG_SYNTAX ": syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"

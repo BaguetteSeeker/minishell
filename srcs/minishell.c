@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/25 17:43:37 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 22:54:19 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	put_err(char *msg)
 	if (errno)
 		perror(msg);
 	else if (msg && *msg)
-		ft_putendl_fd(msg, 1);
+		ft_putendl_fd(msg, STDERR_FILENO);
 	clean_shell();
 	exit(EXIT_FAILURE);
 }
@@ -34,7 +34,7 @@ void	put_err(char *msg)
 void	exit_shell(bool output_msg)
 {
 	if (output_msg == EXIT_MSG)
-		ft_putendl_fd("exit", STDOUT_FILENO);
+		ft_putendl_fd("exit", STDERR_FILENO);
 	clean_shell();
 	exit(EXIT_SUCCESS);
 }
@@ -69,13 +69,6 @@ void	prompt_routine(t_minishell *msh_g)
 	}
 }
 
-//TODO: Load ENV and SHELL variables into the global struct
-/* Env tests :
-	put_recurse_dynarr(g_getset(NULL)->var_env);
-	ft_printf("Imported env has %u variables\n",
-		ft_ptrlen((const void **)g_getset(NULL)->var_env));
-				// parser(tokens);
-*/
 int	main(int argc, char *argv[], char *env[])
 {
 	t_minishell	*msh_g;
@@ -84,7 +77,6 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argv;
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
-	// msh_g->var_env = env;
 	set_sigaction(&signals_handler);
 	prompt_routine(msh_g);
 	return (0);

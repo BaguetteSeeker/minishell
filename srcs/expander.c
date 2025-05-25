@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/17 14:29:05 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 00:56:42 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,7 @@ static char	*eval_placeholder(char *str, char *pcdr_pos, size_t type)
 		values = get_path(pcdr);
 	free(pcdr);
 	if (!values)
-		values = ft_strdup("");
-	if (!values)
-		put_err("Expand : Failled to alloc memory for var content;");
+		values = chkalloc(ft_strdup(""), "Expander : Malloc Faillure");
 	return (concat_expansion(str, pcdr_pos, values, type));
 }
 
@@ -86,7 +84,6 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 	char	*qts_end;
 	char	*pcdr_pos;
 
-	(void)flag;
 	while (1)
 	{
 		qts_start = str + *i;
@@ -114,9 +111,9 @@ char	*expand(char *buff, size_t flag)
 	{
 		if (flag == XPD_ALL && (buff[i] == CHR_SQUOTE || buff[i] == CHR_DQUOTE))
 			buff = skip_quotes(buff, &i, TYPE_DLRS);
-		if (ft_strncmp(buff + i, "$?", 2) == 0 && flag != XPD_HDOC)
+		else if (ft_strncmp(buff + i, "$?", 2) == 0 && flag != XPD_HDOC)
 			buff = get_exitcode(buff, &i);
-		else if (buff[i] == '$' && flag != XPD_HDOC)
+		else if (buff[i] == '$' && varsiz(&buff[i + 1]) && flag != XPD_HDOC)
 			buff = eval_placeholder(buff, buff + i, TYPE_DLRS);
 		else if (buff[i] == '*' && flag == XPD_ALL)
 		{

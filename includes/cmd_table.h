@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/12 22:21:02 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 23:20:10 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct s_ast_node
 	t_node_type			type;	// Type of the node
 	char				*value;	// Value of the node (command name, operator)
 	char				**args;	// Command' arguments
-	char				**vars;	// Temporary command variables
+	char				**vars;	// Temporary command vars OR shell vars
 	t_redir				*io_streams; // Linked List of redirections
 	struct s_ast_node	*left;	// Left child (operator' left node)
 	struct s_ast_node	*right;	// Right child (operator' right node)

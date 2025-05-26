@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/25 19:07:06 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/26 18:33:47 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	put_err(char *msg)
 	if (errno)
 		perror(msg);
 	else if (msg && *msg)
-		ft_putendl_fd(msg, 1);
+		ft_putendl_fd(msg, STDERR_FILENO);
 	clean_shell();
 	exit(EXIT_FAILURE);
 }
@@ -34,7 +34,7 @@ void	put_err(char *msg)
 void	exit_shell(bool output_msg, int exit_code)
 {
 	if (output_msg == EXIT_MSG)
-		ft_putendl_fd("exit", STDOUT_FILENO);
+		ft_putendl_fd("exit", STDERR_FILENO);
 	clean_shell();
 	exit((unsigned char)exit_code);
 }

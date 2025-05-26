@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 18:46:24 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/26 18:33:12 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,10 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 
+# define SHELL_NAME "msh"
 # define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
 # define PS2 "> "
-# define ERRMSG_SYNTAX "msh: syntax error near unexpected token `"
+# define ERRMSG_SYNTAX ": syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"

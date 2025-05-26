@@ -6,12 +6,16 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:53:00 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 17:45:13 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/26 18:14:27 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//Looks for the DEL char previously inserted right before EOF
+//If found, heredoc is expandable, if not, it isn't
+//Only overwrites the DEL char once the content is re-expanded during execution,
+//otherwise, exit codes in heredoc would remain litteral 
 static bool	is_expandable(char *hdoc)
 {
 	bool	is_expandable;
@@ -20,7 +24,8 @@ static bool	is_expandable(char *hdoc)
 	hdoc_siz = ft_strlen(hdoc);
 	if (hdoc[hdoc_siz - 1] == EXPANDABLE_HEREDOC)
 	{
-		hdoc[hdoc_siz - 1] = '\0';
+		if (g_getset(NULL)->state == MSH_EXECUTING)
+			hdoc[hdoc_siz - 1] = '\0';
 		is_expandable = true;
 	}
 	else
@@ -28,12 +33,31 @@ static bool	is_expandable(char *hdoc)
 	return (is_expandable);
 }
 
+//Calls expand on *ptr and returns the resulting buffer
+//Also updates the associated *ptr in the token list
+static char	*expd_rplctok(char *ptr, size_t flag)
+{
+	t_token	*tokens;
+
+	tokens = g_getset(NULL)->tokens;
+	while (tokens)
+	{
+		if (tokens->value == ptr)
+		{
+			tokens->value = expand(ptr, flag);
+			break ;
+		}
+		tokens = tokens->next;
+	}
+	return (tokens->value);
+}
+
 static void	expand_redirs(t_redir *stream)
 {
 	if (stream->type == HEREDOC && is_expandable(stream->file))
-		stream->file = expand(stream->file, XPD_HDOC);
+		stream->file = expd_rplctok(stream->file, XPD_HDOC);
 	else if (stream->type != HEREDOC)
-		stream->file = expand(stream->file, XPD_REDIR);
+		stream->file = expd_rplctok(stream->file, XPD_REDIR);
 }
 
 void	expand_node(t_ast_node *node)
@@ -41,13 +65,15 @@ void	expand_node(t_ast_node *node)
 	int	i;
 
 	i = -1;
-	node->value = expand(node->value, XPD_ALL);
-	while (node->args[++i])
-		node->args[i] = expand(node->args[i], XPD_ALL);
+	if (node->value)
+		node->value = expd_rplctok(node->value, XPD_ALL);
+	while (node->args && node->args[++i])
+		node->args[i] = expd_rplctok(node->args[i], XPD_ALL);
 	i = -1;
-	while (node->vars[++i])
-		node->vars[i] = expand(node->vars[i], XPD_ALL);
-	msh_lstiter(node->io_streams, &expand_redirs);
+	while (node->vars && node->vars[++i])
+		node->vars[i] = expd_rplctok(node->vars[i], XPD_ALL);
+	if (node->io_streams)
+		msh_lstiter(node->io_streams, &expand_redirs);
 }
 
 void	expand_token(t_token *tokens)

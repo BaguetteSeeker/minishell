@@ -60,21 +60,21 @@ static char	*eval_placeholder(char *str, char *pcdr_pos, size_t type)
 	return (concat_expansion(str, pcdr_pos, values, type));
 }
 
-// static char	*get_exitcode(char *str, size_t *i)
-// {
-// 	char	*exitcode;
+static char	*get_exitcode(char *str, size_t *i)
+{
+	char	*exitcode;
 
-// 	if (g_getset(NULL)->state == MSH_EXECUTING)
-// 	{
-// 		exitcode = ft_itoa(g_getset(NULL)->last_exitcode);
-// 		if (!exitcode)
-// 			put_err("Expand : Failled to alloc memory for exitcode;");
-// 		str = concat_expansion(str, str + *i, exitcode, TYPE_CODE);
-// 	}
-// 	else
-// 		*i += 2;
-// 	return (str);
-// }
+	if (g_getset(NULL)->state == MSH_EXECUTING)
+	{
+		exitcode = ft_itoa(g_getset(NULL)->last_exitcode);
+		if (!exitcode)
+			put_err("Expand : Failled to alloc memory for exitcode;");
+		str = concat_expansion(str, str + *i, exitcode, TYPE_CODE);
+	}
+	else
+		*i += 2;
+	return (str);
+}
 
 //Skips quotes in original *str by modifying *i index
 //If $ found within dquotes, expand is called and *str is updated
@@ -114,6 +114,8 @@ char	*expand(char *buff, size_t flag)
 	{
 		if (flag != XPD_HDOC && (buff[i] == CHR_SQTE || buff[i] == CHR_DQTE))
 			buff = skip_quotes(buff, &i, TYPE_DLRS);
+		else if (ft_strncmp(buff + i, "$?", 2) == 0)
+			buff = get_exitcode(buff, &i);
 		else if (buff[i] == '$' && varsiz(&buff[i + 1]))
 			buff = eval_placeholder(buff, buff + i, TYPE_DLRS);
 		else if (buff[i] == '*' && flag != XPD_HDOC)

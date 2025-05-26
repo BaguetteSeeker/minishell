@@ -34,7 +34,7 @@ void	put_err(char *msg)
 void	exit_shell(bool output_msg, int exit_code)
 {
 	if (output_msg == EXIT_MSG)
-		ft_putendl_fd("exit", STDERR_FILENO);
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	clean_shell();
 	exit((unsigned char)exit_code);
 }

@@ -17,7 +17,7 @@ size_t	varsiz(const char *var)
 	size_t	i;
 
 	i = 0;
-	while (var[i] && (ft_isalnum(var[i]) || var[i] == '_' || var[i] == '?'))
+	while (var[i] && (ft_isalnum(var[i]) || var[i] == '_'))
 	{
 		if (i == 0 && ft_isdigit(var[i]))
 			break ;

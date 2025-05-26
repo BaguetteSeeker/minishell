@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 16:30:56 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 19:34:28 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ static t_token	*check_completion(t_token *token, t_token **head)
 		par_depth--;
 	if (par_depth < 0)
 		return (g_getset(NULL)->state = MSH_FAILLURE,
-			par_depth = 0, ft_dprintf(STDERR_FILENO, "%s%s\'\n",
-				ERRMSG_SYNTAX, token->next->value), NULL);
+			par_depth = 0, ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
+				SHELL_NAME, ERRMSG_SYNTAX, token->next->value), NULL);
 	if (token->next->type == T_NEWLINE && (par_depth > 0
 			|| token->type == OR_IF || token->type == AND_IF
 			|| token->type == PIPE))
@@ -108,12 +108,12 @@ static t_token	*check_syntax(t_token *tok, t_token **head)
 			|| (tok->type == CPAR && tok->next->type == OPAR)
 			|| (tok->type == WORD && tok->next->type == OPAR))
 			return (g_getset(NULL)->state = MSH_FAILLURE,
-				ft_dprintf(STDERR_FILENO, "%s%s\'\n",
+				ft_dprintf(STDERR_FILENO, "%s: %s%s\'\n", SHELL_NAME,
 					ERRMSG_SYNTAX, tok->next->value), NULL);
-		if (in_array(tok->type, oper, nb_elems(oper, sizeof(oper)))
+		else if (in_array(tok->type, oper, nb_elems(oper, sizeof(oper)))
 			&& *head == tok)
 			return (g_getset(NULL)->state = MSH_FAILLURE,
-				ft_dprintf(STDERR_FILENO, "%s%s\'\n",
+				ft_dprintf(STDERR_FILENO, "%s: %s%s\'\n", SHELL_NAME,
 					ERRMSG_SYNTAX, tok->value), NULL);
 		return (check_completion(tok, head));
 	}

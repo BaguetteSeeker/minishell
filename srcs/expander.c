@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 18:06:58 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/25 23:22:55 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 //- Upper caller will prevent calling expand() if heredoc' delimiter included 
 // one or more quote; therefore preserving the litteral value of its content
 //- Heredocs' quotes are always preserved
-//- Heredocs' never get globbing / file expansion (*)
+//- Heredocs never get globbing / file expansion (*)
 char	*expand(char *buff, size_t flag)
 {
 	size_t	i;
@@ -121,7 +121,7 @@ char	*expand(char *buff, size_t flag)
 		else if (buff[i] == '*' && flag != XPD_HDOC)
 		{
 			if (flag == XPD_REDIR)
-				return (ft_putstr_fd("bash: ", 1), ft_putstr_fd(buff, 1),
+				return (ft_dprintf(STDERR_FILENO, "%s: %s", SHELL_NAME, buff),
 					put_err(": ambiguous redirect"), NULL);
 			while (i > 0 && buff[i] != ' ')
 				i--;

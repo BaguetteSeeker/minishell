@@ -43,7 +43,7 @@ int redir_stdio_builtin(t_ast_node *node)
 	return (redirs);
 }
 
-int	call_builtin(t_builtin_type	builtin_type, t_ast_node *node)
+int	call_builtin(t_bi_type	builtin_type, t_ast_node *node)
 {
 	if (builtin_type == BUILTIN_ECHO)
 		return (builtin_echo(node));
@@ -66,18 +66,19 @@ int	call_builtin(t_builtin_type	builtin_type, t_ast_node *node)
 //built-ins have persistant impact on msh should run in parent
 //(cd and ENV related built-ins like export and unset)
 //other built-ins should run in a child to mimick bash's behavior
-int	run_builtin(t_builtin_type	builtin_type, t_ast_node *node)
+int	run_builtin(t_bi_type	builtin_type, t_ast_node *node)
 {
 	int	exit_status;
 
 	redir_stdio_builtin(node);
 	exit_status = call_builtin(builtin_type, node);
 	restore_stdio_builtin();
+	g_getset(NULL)->last_exitcode = exit_status;
 	return (exit_status);
 }
 
 
-t_builtin_type	is_builtin(const char *cmd)
+t_bi_type	is_builtin(const char *cmd)
 {
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (BUILTIN_ECHO);

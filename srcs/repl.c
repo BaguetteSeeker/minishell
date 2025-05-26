@@ -34,11 +34,12 @@ void repl_once(t_minishell *msh_g)
 	msh_g->state = MSH_PARSING;
 	tmp = msh_g->tokens;
 	msh_g->cmd_table = parse_tokens(&tmp, NULL);
+	//print_ast(msh_g->cmd_table);
 	//draw_ast(msh_g->cmd_table, "", 1);
 	msh_g->state = MSH_EXECUTING;
 	msh_g->last_exitcode = execute_node(msh_g->cmd_table);
 	if (msh_g->last_exitcode == 0)
 		update_underscore(msh_g->cmd_table);
-	udapte_var_shell();
+	udapte_shell_var();
 	clean_routine();
 }

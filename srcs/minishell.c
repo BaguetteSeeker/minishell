@@ -60,7 +60,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
 	msh_g->var_env = copy_env(env);
-	msh_g->var_shell = init_var_shell();
+	msh_g->var_shell = init_shell_var();
 	update_SHLVL();
 	set_sigaction(&signals_handler);
 	if (argc > 1)

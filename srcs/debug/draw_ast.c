@@ -29,6 +29,26 @@ void	draw_ast_node_label(t_ast_node *node, const char *prefix, const char *c)
 			prefix, c, COLOR_RED, COLOR_RESET);
 }
 
+void	draw_ast_node_var(t_ast_node *node, const char *prefix, int is_left)
+{
+	int	i;
+
+	i = 0;
+	if (node->type == NODE_COMMAND && node->vars)
+	{
+		if (is_left)
+			ft_printf("%s    var:", prefix);
+		else
+			ft_printf("%s│   var:", prefix);
+		while (node->vars[i])
+		{
+			ft_printf("(%d) %s    ", i + 1, node->vars[i]);
+			i++;
+		}
+		ft_printf("\n");
+	}
+}
+
 void	draw_ast_node_args(t_ast_node *node, const char *prefix, int is_left)
 {
 	int	i;
@@ -99,6 +119,7 @@ void	draw_ast(t_ast_node *node, const char *prefix, int is_left)
 		connector = "┌── ";
 	draw_ast_node_label(node, prefix, connector);
 	draw_ast_node_args(node, prefix, is_left);
+	draw_ast_node_var(node, prefix, is_left);
 	draw_ast_node_redirs(node, prefix, is_left);
 	if (is_left)
 		next_prefix = ft_strjoin(prefix, "    ");

@@ -38,6 +38,7 @@ SRCS =	minishell.c prompt.c cleanup_utils.c \
 		shell/shell_env.c \
 		shell/shell_env_interface.c shell/shell_env_utils.c \
 		shell/shell_mode.c shell/shell_var.c shell/signals.c \
+		shell/shell_assign.c \
 		debug/draw_ast.c debug/putlogs.c repl.c 
 
 $(OBJ_DIR)/%.o : srcs/%.c

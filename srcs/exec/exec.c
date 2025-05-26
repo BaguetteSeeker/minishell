@@ -72,9 +72,11 @@ void	exec_fork(t_ast_node *node)
 int	execute_command(t_ast_node *node)
 {
 	int		status;
+	int		exit_status;
 	pid_t	pid;
-	t_builtin_type type = is_builtin(node->value);
+	t_bi_type type = is_builtin(node->value);
 
+	expand_node(node);
 	if (type != BUILTIN_NONE)
 		return(run_builtin(type, node));
 	pid = fork();
@@ -82,8 +84,10 @@ int	execute_command(t_ast_node *node)
 		exec_fork(node);
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (WEXITSTATUS(status));
+		exit_status = 128 + WTERMSIG(status);
+	else
+		exit_status = WEXITSTATUS(status);
+	return (exit_status);
 }
 
 //implements the logical operators logic in the tree execution
@@ -124,14 +128,20 @@ int	execute_subshell(t_ast_node *node)
 
 //traverses the tree recursively, executes node functions when found
 //finally executes command when found, and go back up in the tree
+//	-if interactive and empty command, treated as a program
+//	-if non-interactive, treated as an empty line
+//	-if tree has var but no value, treated as a local variable declaration
+//		e.g. "var1=a var2=b"
 int	execute_node(t_ast_node *node)
 {
 	if (!node)
 		return (1);
 	if ((!node->value || *node->value == '\0'))
 	{
+		if (node->vars != NULL)
+			return (assign_shell_var(node));
 		if (g_getset(NULL)->mode == INTERACTIVE)
-			return (ft_putendl_fd("TESTTESTmsh: : command not found", STDERR_FILENO), 127);
+			return (ft_putendl_fd("msh: : command not found", STDERR_FILENO), 127);
 		else
 			return (0);
 	}

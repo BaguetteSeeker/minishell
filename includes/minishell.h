@@ -144,37 +144,39 @@ int			execute_pipe(t_ast_node *node);
 void		free_tab(void **tab);
 
 //built-ins
-t_builtin_type	is_builtin(const char *cmd);
-int		run_builtin(t_builtin_type	builtin_type, t_ast_node *node);
-int		builtin_pwd(void);
-int		builtin_env(void);
-int		builtin_exit(t_ast_node *node);
-int		builtin_echo(t_ast_node *node);
-int		builtin_cd(t_ast_node *node);
-int		builtin_export(t_ast_node *node);
-int		builtin_unset(t_ast_node *node);
+t_bi_type	is_builtin(const char *cmd);
+int			run_builtin(t_bi_type	builtin_type, t_ast_node *node);
+int			builtin_pwd(void);
+int			builtin_env(void);
+int			builtin_exit(t_ast_node *node);
+int			builtin_echo(t_ast_node *node);
+int			builtin_cd(t_ast_node *node);
+int			builtin_export(t_ast_node *node);
+int			builtin_unset(t_ast_node *node);
 
 //env interface
-char	**write_remmove_env(char **env, char *var_name);
-char	**write_add_env(char **env, char *new_entry);
-char	*get_val_env(char *var_name);
-char	*get_var_env(char *var_name);
-char	*get_new_entry(char *var_name, char *value);
-int		var_pos(char **env, const char *var_name);
-char	**add_new_entry(char **env, char *new_entry);
-char	**replace_new_entry(char **env, char *new_entry, int i);
-void	update_add_env(char *var_name, char *value);
-void	update_remove_env(char *var_name);
-char	*get_new_entry(char *var_name, char *value);
-
+char		**write_remmove_env(char **env, char *var_name);
+char		**write_add_env(char **env, char *new_entry);
+char		*get_val_env(char *var_name);
+char		*get_var_env(char *var_name);
+char		*get_new_entry(char *var_name, char *value);
+int			var_pos(char **env, const char *var_name);
+char		**add_new_entry(char **env, char *new_entry);
+char		**replace_new_entry(char **env, char *new_entry, int i);
+void		update_add_env(char *var_name, char *value);
+void		update_add_var(char *var_name, char *value);
+void		update_remove_env(char *var_name);
+char		*get_new_entry(char *var_name, char *value);
+int			is_valid_export(char *name);
 
 //shell, env and shell VAR
-char	**init_var_shell(void);
-char	**copy_env(char **env);
-void	udapte_var_shell();
-void	update_var_exitcode(void);
-void	update_SHLVL(void);
-void	update_underscore(t_ast_node *node);
-void	script_args_routine(t_minishell *msh, int argc, char **argv);
-void	script_stdin_routine(t_minishell *msh);
+char		**init_shell_var(void);
+char		**copy_env(char **env);
+void		udapte_shell_var();
+void		update_var_exitcode(void);
+void		update_SHLVL(void);
+void		update_underscore(t_ast_node *node);
+void		script_args_routine(t_minishell *msh, int argc, char **argv);
+void		script_stdin_routine(t_minishell *msh);
+int			assign_shell_var(t_ast_node *node);
 #endif

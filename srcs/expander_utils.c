@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/14 21:01:06 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/26 22:14:09 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ char	*get_envvar(char *varname)
 	return (match);
 }
 
+//Soon to be Forsaken util since it has arisen wildcard expansion 
+//requires tokenizing each file path as its own WORD token
 char	*get_path(char *pcdr)
 {
 	DIR				*dir;
@@ -106,12 +108,10 @@ char	*get_path(char *pcdr)
 	char			*paths;
 	char			*vnil_path;
 
-	paths = ft_strdup("");
-	if (!paths)
-		put_err("Expander : Failled to malloc for $path");
+	paths = chkalloc(ft_strdup(""), "Expander: Malloc Faillure");
 	dir = opendir(".");
 	if (!dir)
-		put_err("Expander: failled to open directory");
+		return (free(paths), put_err("Expander: Malloc Faillure"), NULL);
 	while (1)
 	{
 		entry = readdir(dir);
@@ -127,3 +127,33 @@ char	*get_path(char *pcdr)
 		}
 	}
 }
+
+/* void	get_path(char *pcdr)
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	t_token			*filename;
+	t_token			*start;
+	t_token			*end;
+
+	//Find starting next->token
+	//Remove next->token
+	dir = opendir(".");
+	if (!dir)
+		return (put_err("Expander: Malloc Faillure"), NULL);
+	while (1)
+	{
+		entry = readdir(dir);
+		if (!entry)
+			return (closedir(dir));
+		if (match_pattern(pcdr, entry->d_name))
+		{
+
+			chkalloc(malloc(sizeof(t_token)), "Expander: Malloc Faillure");
+			filename->value = entry->d_name;
+
+		}
+		//last filename .next = end
+	}
+}
+ */

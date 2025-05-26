@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 23:22:55 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/26 23:25:48 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,31 @@ static char	*eval_placeholder(char *str, char *pcdr_pos, size_t type)
 	return (concat_expansion(str, pcdr_pos, values, type));
 }
 
-static char	*get_exitcode(char *str, size_t *i)
+//Former get_exitcode function that preserved `$?` outside of execution
+// static char	*get_exitcode(char *str, size_t *i)
+// {
+// 	char	*exitcode;
+
+// 	if (g_getset(NULL)->state == MSH_EXECUTING)
+// 	{
+// 		exitcode = ft_itoa(g_getset(NULL)->last_exitcode);
+// 		if (!exitcode)
+// 			put_err("Expand : Failled to alloc memory for exitcode;");
+// 		str = concat_expansion(str, str + *i, exitcode, TYPE_CODE);
+// 	}
+// 	else
+// 		*i += 2;
+// 	return (str);
+// }
+
+static char	*get_exitcode(char *str, char *pcdr_pos)
 {
 	char	*exitcode;
 
-	if (g_getset(NULL)->state == MSH_EXECUTING)
-	{
-		exitcode = ft_itoa(g_getset(NULL)->last_exitcode);
-		if (!exitcode)
-			put_err("Expand : Failled to alloc memory for exitcode;");
-		str = concat_expansion(str, str + *i, exitcode, TYPE_CODE);
-	}
-	else
-		*i += 2;
+	exitcode = ft_itoa(g_getset(NULL)->last_exitcode);
+	if (!exitcode)
+		put_err("Expand : Failled to alloc memory for exitcode;");
+	str = concat_expansion(str, pcdr_pos, exitcode, TYPE_CODE);
 	return (str);
 }
 
@@ -91,10 +103,12 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 		if (!qts_end)
 			return (++*i, str);
 		pcdr_pos = ft_strnstr(qts_start, "$", qts_end - qts_start);
-		if (qts_start[0] == CHR_DQTE && pcdr_pos)
-			str = eval_placeholder(str, pcdr_pos, flag);
-		else
+		if (!pcdr_pos || qts_start[0] == CHR_SQTE)
 			break ;
+		else if (qts_start[0] == CHR_DQTE && ft_strncmp(pcdr_pos, "$?", 2) == 0)
+			str = get_exitcode(str, pcdr_pos);
+		else if (qts_start[0] == CHR_DQTE)
+			str = eval_placeholder(str, pcdr_pos, flag);
 	}
 	*i += qts_end - qts_start;
 	return (str);
@@ -115,8 +129,8 @@ char	*expand(char *buff, size_t flag)
 		if (flag != XPD_HDOC && (buff[i] == CHR_SQTE || buff[i] == CHR_DQTE))
 			buff = skip_quotes(buff, &i, TYPE_DLRS);
 		else if (ft_strncmp(buff + i, "$?", 2) == 0)
-			buff = get_exitcode(buff, &i);
-		else if (buff[i] == '$' && varsiz(&buff[i + 1]))
+			buff = get_exitcode(buff, buff + i);
+		else if (buff[i] == '$' && (varsiz(&buff[i + 1])))
 			buff = eval_placeholder(buff, buff + i, TYPE_DLRS);
 		else if (buff[i] == '*' && flag != XPD_HDOC)
 		{

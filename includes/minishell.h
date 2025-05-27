@@ -35,7 +35,7 @@
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
-#define ERRMSG_EXPORT "msh: export: %s is not a valid identifier"
+#define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126
 
@@ -102,6 +102,8 @@ typedef struct s_minishell
 # define NO_HISTORY 0
 # define NO_EXIT_MSG 0
 # define EXIT_MSG 1
+# define VAR_ENV 0
+# define VAR_SHELL 1
 
 //Core Prototypes
 t_minishell	*g_getset(void *g);
@@ -153,21 +155,25 @@ int			builtin_echo(t_ast_node *node);
 int			builtin_cd(t_ast_node *node);
 int			builtin_export(t_ast_node *node);
 int			builtin_unset(t_ast_node *node);
+void 		restore_stdio_builtin(void);
+int 		redir_stdio_builtin(t_ast_node *node);
+
 
 //env interface
 char		**write_remmove_env(char **env, char *var_name);
 char		**write_add_env(char **env, char *new_entry);
-char		*get_val_env(char *var_name);
-char		*get_var_env(char *var_name);
 char		*get_new_entry(char *var_name, char *value);
-int			var_pos(char **env, const char *var_name);
 char		**add_new_entry(char **env, char *new_entry);
 char		**replace_new_entry(char **env, char *new_entry, int i);
-void		update_add_env(char *var_name, char *value);
-void		update_add_var(char *var_name, char *value);
-void		update_remove_env(char *var_name);
 char		*get_new_entry(char *var_name, char *value);
 int			is_valid_export(char *name);
+
+void		update_add_var(int mode, char *var_name, char *value);
+void		update_remove_var(int mode, char *var_name);
+char		*get_var_value(int mode, char *var_name);
+char		*get_var_entry(int mode, char *var_name);
+int			var_pos(char **var_tab, const char *var_name);
+
 
 //shell, env and shell VAR
 char		**init_shell_var(void);

@@ -51,9 +51,10 @@ int	builtin_env(void)
 	{
 		put_recurse_dynarr(g_getset(NULL)->var_env);
 		//debug
-		printf("\n === VAR SHELL === \n");
-		put_recurse_dynarr(g_getset(NULL)->var_shell);
+		//printf("\n === VAR SHELL === \n");
+		//put_recurse_dynarr(g_getset(NULL)->var_shell);
 		//to remove
+		restore_stdio_builtin();
 		clean_shell();
 		exit(0);
 	}
@@ -74,21 +75,41 @@ int	builtin_exit(t_ast_node *node)
 	else if (!ft_isnum(node->args[0]))
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
+		restore_stdio_builtin();
 		exit_shell(NULL, 2);
 	}
 	else if (ft_ptrlen((const void **)node->args) != 1)
 	{
 		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
+		restore_stdio_builtin();
 		return (1);
 	}
 	else
 		exit_code = atoi(node->args[0]);
-	//printf("\n\t\t%d\n\n", exit_code);
 	if (exit_code == -1)
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
+		restore_stdio_builtin();
 		exit_shell(NULL, 2);
 	}
+	restore_stdio_builtin();
 	exit_shell(EXIT_MSG, exit_code);
 	return (1);
+}
+
+//removes an entry from var_env or var_shell
+//unset VAR	removes VAR from var_shell or var_env
+//unset VAR	whereas VAR doesn't exist should be benign.
+int	builtin_unset(t_ast_node *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->args && node->args[i])
+	{
+		update_remove_var(VAR_SHELL, node->args[i]);
+		update_remove_var(VAR_ENV, node->args[i]);
+		i++;
+	}
+	return (0);
 }

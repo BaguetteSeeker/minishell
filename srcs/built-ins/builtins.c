@@ -20,7 +20,6 @@ void restore_stdio_builtin(void)
 	dup2(msh->stdio.stdin_fd, STDIN_FILENO);
 	dup2(msh->stdio.stdout_fd, STDOUT_FILENO);
 	dup2(msh->stdio.stderr_fd, STDERR_FILENO);
-
 	close(msh->stdio.stdin_fd);
 	close(msh->stdio.stdout_fd);
 	close(msh->stdio.stderr_fd);
@@ -28,8 +27,8 @@ void restore_stdio_builtin(void)
 
 int redir_stdio_builtin(t_ast_node *node)
 {
-	int redirs;
 	t_minishell *msh;
+	int redirs;
 
 	msh = g_getset(NULL);
 	msh->stdio.stdin_fd = dup(STDIN_FILENO);
@@ -39,7 +38,7 @@ int redir_stdio_builtin(t_ast_node *node)
 		return (-1);
 	redirs = redirections_handler(node);
 	if (redirs !=0)
-		return (clean_shell(), exit(redirs), 1);
+		return (restore_stdio_builtin(), clean_shell(), redirs);
 	return (redirs);
 }
 
@@ -70,7 +69,9 @@ int	run_builtin(t_bi_type	builtin_type, t_ast_node *node)
 {
 	int	exit_status;
 
-	redir_stdio_builtin(node);
+	exit_status = redir_stdio_builtin(node);
+	if (exit_status)
+		return (exit_status);
 	exit_status = call_builtin(builtin_type, node);
 	restore_stdio_builtin();
 	g_getset(NULL)->last_exitcode = exit_status;

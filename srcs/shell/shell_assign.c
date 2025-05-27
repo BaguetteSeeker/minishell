@@ -12,29 +12,31 @@
 
 #include "minishell.h"
 
-void	update_add_var(char *var_name, char *value)
-{
-	int		i;
-	char	**var_shell;
-	char	*new_entry;
-	char	**new_var_shell;
 
-	var_shell = g_getset(NULL)->var_shell;
-	new_entry = get_new_entry(var_name, value);
-	new_var_shell = NULL;
-	i = var_pos(var_shell, var_name);
-	if (i == -1)
-		new_var_shell = add_new_entry(var_shell, new_entry);
-	else
-		new_var_shell = replace_new_entry(var_shell, new_entry, i);
-	ft_free_dynarr(var_shell);
-	g_getset(NULL)->var_shell = new_var_shell;
+//variable name should start with a letter
+//variable names can only contain letter, digits and underscore
+int	is_valid_export(char *name)
+{
+	int	i;
+
+	if (!name)
+		return (0);
+	if (!ft_isalpha(name[0]) && name[0] != '_')
+		return (0);
+	i = 1;
+	while (name[i])
+	{
+		if (!ft_isalnum(name[i]) && name[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int assign_noval(char *name)
 {
 	if (is_valid_export(name))
-		update_add_var(name, "");
+		update_add_var(VAR_SHELL, name, "");
 	else
 	{
 		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, name);
@@ -53,7 +55,7 @@ int	assign_val(char *arg, char *equal_sign)
 	var = arg;
 	val = equal_sign + 1;
 	if (is_valid_export(var))
-		update_add_var(var, val);
+		update_add_var(VAR_SHELL, var, val);
 	else
 	{
 		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, val);
@@ -64,16 +66,24 @@ int	assign_val(char *arg, char *equal_sign)
 	return (0);
 }
 
+//assigns a value in var_shell
+//	-if var exists in env, modifies it in var_env
 int	assign_shell_var(t_ast_node *node)
 {
 	int		i;
 	int		exit_code;
 	char	*equal_sign;
+	char	*test;
 
 	i = 0;
 	exit_code = 0;
 	while (node->vars && node->vars[i])
 	{
+		test = get_var_entry(VAR_ENV, node->vars[i]);
+		if (test)
+		{
+			return (builtin_export(node));
+		}
 		equal_sign = ft_strchr(node->vars[i], '=');
 		if (equal_sign)
 			exit_code |= assign_val(node->vars[i], equal_sign);

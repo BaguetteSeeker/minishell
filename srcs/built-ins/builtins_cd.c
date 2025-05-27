@@ -27,9 +27,9 @@ int	builtin_cd(t_ast_node *node)
 		return (perror("cd: "), 1);
 	if (chdir(target) != 0)
 		return (perror("cd: "), 1);
-	update_add_env("OLDPWD", cwd);
+	update_add_var(VAR_SHELL, "OLDPWD", cwd);
 	if (!getcwd(cwd, sizeof(cwd)))
 		return (perror("cd: "), 1);
-	update_add_env("PWD", cwd);
+	update_add_var(VAR_SHELL, "PWD", cwd);
 	return (0);
 }

@@ -24,7 +24,7 @@ LDLIBS = -Llibft -lft -L/usr/lib/x86_64-linux-gnu -lreadline
 
 OBJ_DIR = .obj
 
-SRCS =	minishell.c prompt.c cleanup_utils.c \
+SRCS =	minishell.c prompt.c cleanup_utils.c repl.c  \
 		parsing/parser.c \
 		parsing/expand_callers.c parsing/expander.c \
 		parsing/expander_utils.c parsing/heredoc.c\
@@ -32,14 +32,14 @@ SRCS =	minishell.c prompt.c cleanup_utils.c \
 		exec/exec.c \
 		exec/exec_pipes.c exec/exec_utils.c exec/redirs.c \
 		built-ins/builtins.c \
-		built-ins/builtins_echo.c built-ins/builtins_exset.c \
+		built-ins/builtins_echo.c built-ins/builtins_export.c \
 		built-ins/builtins.c built-ins/builtins_cd.c \
 		built-ins/builtins_misc.c \
 		shell/shell_env.c \
-		shell/shell_env_interface.c shell/shell_env_utils.c \
+		shell/shell_assign.c shell/shell_env_utils.c \
 		shell/shell_mode.c shell/shell_var.c shell/signals.c \
-		shell/shell_assign.c \
-		debug/draw_ast.c debug/putlogs.c repl.c 
+		shell/shell_variable_interface.c  \
+		debug/draw_ast.c debug/putlogs.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(ASAN) $(INCLUDES) $< -o $@

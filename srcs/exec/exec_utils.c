@@ -67,6 +67,7 @@ char	*get_newpath(char *path, char *cmd, int i)
 }
 
 //trop long
+//provisoire (?)
 char	**get_cmdargv(char *cmd, char **args)
 {
 	char	**argv;
@@ -99,24 +100,32 @@ char	**get_cmdargv(char *cmd, char **args)
 	return (argv);
 }
 
-//a reecrire
-//exemple erreur : minishell /etc/bin/invalid_prog
+//on dirait pas mais la logique est ok
 char	*get_cmdpath(char *cmd, char **envp)
 {
 	int		i;
 	char	*path;
 	char	**envpaths;
+	struct stat st;
 
 	i = -1;
 	if (!cmd)
 		return (NULL);
 	path = NULL;
+	fflush(stdout);
+	if (ft_strcmp(cmd, ".") == 0 || ft_strcmp(cmd, "..") == 0)
+		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, F_OK) != 0)
 			return (NULL);
-		else
-			return (cmd);
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+		{
+			ft_dprintf(STDERR_FILENO, "msh: %s: is a directory\n", cmd);
+			clean_shell();
+			exit(EXITC_NOEXEC);
+		}
+		return (cmd);
 	}
 	if (!envp || *envp == NULL || *cmd == '\0')
 		return (NULL);
@@ -126,7 +135,7 @@ char	*get_cmdpath(char *cmd, char **envp)
 	while (envpaths[++i])
 	{
 		path = get_newpath(envpaths[i], cmd, i);
-		//printf("testing path %s : %d", path, access(path, F_OK));
+		//printf("testing path %s : %d\n", path, access(path, F_OK));
 		if (access(path, F_OK) == 0)
 			return (free_tab((void **)envpaths), path);
 		free(path);

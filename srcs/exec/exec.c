@@ -12,27 +12,6 @@
 
 #include "minishell.h"
 
-void	check_dir(char *cmd)
-{
-	struct stat st;
-
-	if (lstat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
-	{
-		ft_dprintf(STDERR_FILENO, "msh: %s is a directory\n", cmd);  // optional
-		clean_shell();
-		exit(EXITC_NOEXEC);
-	}
-}
-
-void	check_path(t_ast_node *node, char *path)
-{
-	if (!path)
-		return (perror(node->value), clean_shell(), exit(EXITC_NOCMD));
-	//printf("path %s", path);
-	if (access(path, F_OK | X_OK) != 0)
-		return (perror(node->value), clean_shell(), exit(EXITC_NOEXEC));
-}
-
 //routine called inside the fork
 //if redirection failed, exit with adequate exit code
 //if command not found, exit with 127
@@ -47,19 +26,19 @@ void	exec_fork(t_ast_node *node)
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGPIPE, SIG_DFL);
-	check_dir(node->value);
 	redir_status = redirections_handler(node);
 	if (redir_status !=0)
 		return (clean_shell(), exit(redir_status));
 	envp = g_getset(NULL)->var_env;
 	path = get_cmdpath(node->value, envp);
-	check_path(node, path);
+	if (!path)
+		return (ft_dprintf(STDERR_FILENO, "msh: %s: Command not found\n", 
+			node->value), clean_shell(), exit(EXITC_NOCMD));
 	argv = get_cmdargv(node->value, node->args);
 	if (!argv)
 		return (perror(node->value), clean_shell(), free(path), exit(1));
 	execve(path, argv, envp);
 	perror("execve failed");
-	free(path);
 	free_tab((void **)argv);
 	clean_shell();
 	exit(1);
@@ -77,7 +56,7 @@ int	execute_command(t_ast_node *node)
 	t_bi_type type = is_builtin(node->value);
 
 	expand_node(node);
-	if (type != BUILTIN_NONE)
+	if (type != -1)
 		return(run_builtin(type, node));
 	pid = fork();
 	if (pid == 0)

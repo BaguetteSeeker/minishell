@@ -50,14 +50,15 @@ void	update_SHLVL(void)
 	char	*SHLVL;
 	char	*new_SHLVL;
 
-	SHLVL = get_val_env("SHLVL");
+	SHLVL = get_var_value(VAR_ENV, "SHLVL");
 	if (!SHLVL)
 		return ;
 	level = ft_atoi(SHLVL) + 1;
+	fflush(stdout);
 	new_SHLVL = ft_itoa(level);
 	if (!new_SHLVL)
 		put_err("strdup");
-	update_add_env("SHLVL", new_SHLVL);
+	update_add_var(VAR_ENV, "SHLVL", new_SHLVL);
 	free(new_SHLVL);
 }
 
@@ -78,6 +79,6 @@ void	update_underscore(t_ast_node *node)
 		last_arg = ft_strdup(node->value);
 	if (!last_arg)
 		put_err("strdup");
-	update_add_env("_", last_arg);
+	update_add_var(VAR_SHELL, "_", last_arg);
 	free(last_arg);
 }

@@ -50,6 +50,6 @@ void	update_var_exitcode(void)
 
 	exitcode = g_getset(NULL)->last_exitcode;
 	var_exitcode = ft_itoa(exitcode);
-	update_add_var("?", var_exitcode);
+	update_add_var(VAR_SHELL, "?", var_exitcode);
 	free(var_exitcode);
 }

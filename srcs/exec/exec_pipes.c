@@ -18,24 +18,30 @@
 //goes to the next node in tree
 void	execute_node1(t_ast_node *node, int *pipe_fd)
 {
+	int	exit_status;
+
+	exit_status = 0;
 	signal(SIGPIPE, SIG_DFL);
 	dup2(pipe_fd[1], STDOUT_FILENO);
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
-	execute_node(node->left);
+	exit_status = execute_node(node->left);
 	clean_shell();
-	exit(0);
+	exit(exit_status);
 }
 
 void	execute_node2(t_ast_node *node, int *pipe_fd)
 {
+	int	exit_status;
+
+	exit_status = 0;
 	signal(SIGPIPE, SIG_DFL);
 	dup2(pipe_fd[0], STDIN_FILENO);
 	close(pipe_fd[1]);
 	close(pipe_fd[0]);
-	execute_node(node->right);
+	exit_status = execute_node(node->right);
 	clean_shell();
-	exit(0);
+	exit(exit_status);
 }
 
 //creates a pipe and fork the two processes

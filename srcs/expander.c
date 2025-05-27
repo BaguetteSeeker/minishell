@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/26 23:25:48 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/27 15:59:26 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static char	*eval_placeholder(char *str, char *pcdr_pos, size_t type)
 	char	*values;
 	char	*pcdr;
 
+	values = NULL;
+	pcdr = NULL;
 	if (type == TYPE_DLRS)
 		pcdr = ft_substr(pcdr_pos, 1, varsiz(pcdr_pos + 1));
 	else if (type == TYPE_WCRD)
@@ -139,7 +141,8 @@ char	*expand(char *buff, size_t flag)
 					put_err(": ambiguous redirect"), NULL);
 			while (i > 0 && buff[i] != ' ')
 				i--;
-			buff = eval_placeholder(buff, buff + i, TYPE_WCRD);
+			get_path(buff);
+			break ;
 		}
 		else
 			i++;

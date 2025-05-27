@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/26 22:14:09 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/27 19:00:30 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ char	*get_envvar(char *varname)
 	mshell = g_getset(NULL);
 	if (!varname)
 		put_err("Expand : Failled to alloc memory for varname;");
-	match = ft_lststrn(mshell->var_env, varname, ft_strlen(varname));
+	match = ft_lststr(mshell->var_env, varname);
 	if (!match)
-		match = ft_lststrn(mshell->var_shell, varname, ft_strlen(varname));
+		match = ft_lststr(mshell->var_shell, varname);
 	if (match)
 	{
 		full_var = ft_split(match, '=');
@@ -101,43 +101,84 @@ char	*get_envvar(char *varname)
 
 //Soon to be Forsaken util since it has arisen wildcard expansion 
 //requires tokenizing each file path as its own WORD token
+// char	*get_path(char *pcdr)
+// {
+// 	DIR				*dir;
+// 	struct dirent	*entry;
+// 	char			*paths;
+// 	char			*vnil_path;
+
+// 	paths = chkalloc(ft_strdup(""), "Expander: Malloc Faillure");
+// 	dir = opendir(".");
+// 	if (!dir)
+// 		return (free(paths), put_err("Expander: Malloc Faillure"), NULL);
+// 	while (1)
+// 	{
+// 		entry = readdir(dir);
+// 		if (!entry)
+// 			return (closedir(dir), paths);
+// 		if (match_pattern(pcdr, entry->d_name))
+// 		{
+// 			vnil_path = paths;
+// 			paths = ft_strjoin2(paths, " ", entry->d_name);
+// 			free(vnil_path);
+// 			if (!paths)
+// 				put_err("Expander : Failled to malloc for $path");
+// 		}
+// 	}
+// }
+
+t_token	*find_lstval(t_token *lst, char *val)
+{
+	t_token *match;
+
+	match = NULL;
+	if (lst->value == val)
+		return (lst);
+	while (lst->next && lst->type != NEWLINE)
+	{
+		if (lst->next->value == val)
+		{
+			match = lst->next;
+			break ;
+		}
+		lst = lst->next;
+	}
+	return (match);
+}
+
+char	*lst_injectreplace(char *val_tofind, t_token *newlst)
+{
+	t_token	*start;
+	t_token	*end;
+
+	start = find_lstval(g_getset(NULL)->tokens, val_tofind);
+	if (!start)
+		put_err("Lst val not found");
+	if (start == g_getset(NULL)->tokens)
+	{
+		end = start->next;
+		lstdelone_tokens(start, free_token_value);
+		start = newlst;
+	}	
+	else
+	{
+		end = start->next->next;
+		lstdelone_tokens(start->next, free_token_value);
+		start->next = newlst;
+	}
+	lstlast_tokens(newlst)->next = (t_list *)end;
+	return (end->value);
+}
+
 char	*get_path(char *pcdr)
 {
 	DIR				*dir;
 	struct dirent	*entry;
-	char			*paths;
-	char			*vnil_path;
+	t_token			**paths;
+	t_token			*path;
 
-	paths = chkalloc(ft_strdup(""), "Expander: Malloc Faillure");
-	dir = opendir(".");
-	if (!dir)
-		return (free(paths), put_err("Expander: Malloc Faillure"), NULL);
-	while (1)
-	{
-		entry = readdir(dir);
-		if (!entry)
-			return (closedir(dir), paths);
-		if (match_pattern(pcdr, entry->d_name))
-		{
-			vnil_path = paths;
-			paths = ft_strjoin2(paths, " ", entry->d_name);
-			free(vnil_path);
-			if (!paths)
-				put_err("Expander : Failled to malloc for $path");
-		}
-	}
-}
-
-/* void	get_path(char *pcdr)
-{
-	DIR				*dir;
-	struct dirent	*entry;
-	t_token			*filename;
-	t_token			*start;
-	t_token			*end;
-
-	//Find starting next->token
-	//Remove next->token
+	paths = NULL;
 	dir = opendir(".");
 	if (!dir)
 		return (put_err("Expander: Malloc Faillure"), NULL);
@@ -145,15 +186,13 @@ char	*get_path(char *pcdr)
 	{
 		entry = readdir(dir);
 		if (!entry)
-			return (closedir(dir));
+			return (closedir(dir), lst_injectreplace(pcdr, paths));
 		if (match_pattern(pcdr, entry->d_name))
 		{
-
-			chkalloc(malloc(sizeof(t_token)), "Expander: Malloc Faillure");
-			filename->value = entry->d_name;
-
+			path = chkalloc(malloc(sizeof(t_token)), 
+				"Expander: Malloc Faillure");
+			path->value = entry->d_name;
+			lstadd_back_tokens(paths, path);
 		}
-		//last filename .next = end
 	}
 }
- */

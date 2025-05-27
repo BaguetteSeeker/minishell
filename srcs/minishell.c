@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/25 22:54:19 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 11:56:16 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,19 @@ void	prompt_routine(t_minishell *msh_g)
 			continue ;
 		}
 		msh_g->state = MSH_EXPANDING;
-		msh_lstiter(msh_g->tokens, &expand_token);
-		msh_lstiter(msh_g->tokens, &lst_put);
+		// msh_lstiter(msh_g->tokens, &expand_token);
+		// msh_lstiter(msh_g->tokens, &lst_put);
 		msh_g->state = MSH_PARSING;
 		tokens_tmp = msh_g->tokens;
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
 		print_ast(msh_g->cmd_table);
 		msh_g->state = MSH_EXECUTING;
+		expand_node(msh_g->cmd_table);
+		if (msh_g->cmd_table->left)
+			expand_node(msh_g->cmd_table->left);
+		if (msh_g->cmd_table->right)
+			expand_node(msh_g->cmd_table->right);
+		msh_lstiter(msh_g->tokens, &lst_put);
 		clean_routine();
 	}
 }
@@ -77,6 +83,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argv;
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
+	// msh_g->var_env = env;
 	set_sigaction(&signals_handler);
 	prompt_routine(msh_g);
 	return (0);

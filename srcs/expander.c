@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 13:18:18 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 18:28:43 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 		qts_start = str + *i;
 		qts_end = ft_strchr(qts_start + 1, qts_start[0]);
 		if (!qts_end)
-			return (++*i, str);
+			return (str);
 		pcdr_pos = ft_strnstr(qts_start, "$", qts_end - qts_start);
 		if (!pcdr_pos || qts_start[0] == CHR_SQTE)
 			break ;
@@ -112,7 +112,7 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 		else if (qts_start[0] == CHR_DQTE)
 			str = eval_placeholder(str, pcdr_pos, flag);
 	}
-	*i += qts_end - qts_start;
+	*i += qts_end - qts_start + 1;
 	return (str);
 }
 

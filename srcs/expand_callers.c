@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:53:00 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 13:00:25 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 18:30:08 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	expand_redirs(t_redir *stream)
 	if (stream->type == HEREDOC && is_expandable(stream->file))
 		stream->file = expd_rplctok(stream->file, XPD_HDOC);
 	else if (stream->type != HEREDOC)
-		stream->file = expd_rplctok(stream->file, XPD_REDIR);
+		stream->file = strip_outquotes(expd_rplctok(stream->file, XPD_REDIR));
 }
 
 void	expand_node(t_ast_node *node)
@@ -65,13 +65,11 @@ void	expand_node(t_ast_node *node)
 	int	i;
 
 	i = -1;
-	if (node->value)
-		node->value = expd_rplctok(node->value, XPD_ALL);
 	while (node->args && node->args[++i])
-		node->args[i] = expd_rplctok(node->args[i], XPD_ALL);
+		node->args[i] = strip_outquotes(expd_rplctok(node->args[i], XPD_ALL));
 	i = -1;
 	while (node->vars && node->vars[++i])
-		node->vars[i] = expd_rplctok(node->vars[i], XPD_ALL);
+		node->vars[i] = strip_outquotes(expd_rplctok(node->vars[i], XPD_ALL));
 	if (node->io_streams)
 		msh_lstiter(node->io_streams, &expand_redirs);
 }

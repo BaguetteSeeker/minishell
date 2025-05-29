@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/27 14:19:34 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 21:45:00 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@
 typedef enum s_msh_state
 {
 	MSH_PROMPTING,
+	MSH_PROMPTING_COMPLETION,
 	MSH_TOKENIZING,
-	MSH_BLOCKING_PROMPT,
 	MSH_EXPANDING,
 	MSH_PARSING,
 	MSH_EXECUTING,
@@ -47,13 +47,13 @@ typedef enum s_msh_state
 
 typedef struct s_minishell
 {
-	t_msh_state	state;
-	char		**var_env;
-	char		**var_shell;
-	char		*input;
-	t_token		*tokens;
-	t_ast_node	*cmd_table;
-	int			last_exitcode;
+	sig_atomic_t	state;
+	char			**var_env;
+	char			**var_shell;
+	char			*input;
+	t_token			*tokens;
+	t_ast_node		*cmd_table;
+	int				last_exitcode;
 }	t_minishell;
 
 //Functions' Flags

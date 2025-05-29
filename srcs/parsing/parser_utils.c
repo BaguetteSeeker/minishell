@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 19:06:04 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 13:32:47 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,21 @@ static t_redir	*parse_redir(t_token **tokens)
 	return (redir);
 }
 
-static char	*parse_pathname(t_token **tokens)
-{
-	char	*pathname;
+// static char	*parse_pathname(t_token **tokens)
+// {
+// 	char	*pathname;
 
-	pathname = (*tokens)->value;
-	*tokens = (*tokens)->next;
-	return (pathname);
-}
+// 	pathname = (*tokens)->value;
+// 	*tokens = (*tokens)->next;
+// 	return (pathname);
+// }
 
 #define REDIRS_TYPCOUNT 4
 //Handles parsing of Subshells and Commands' : path, args, redirs and vars
 t_ast_node	*parse_command(t_token **tokens)
 {
 	t_ast_node	*node;
-	static int	cmd_parts[] = {LESS, GREAT, DLESS, DGREAT};
+	static int	redirs[] = {LESS, GREAT, DLESS, DGREAT};
 
 	node = init_node(tokens);
 	if (node->type == NODE_SUBSHELL)
@@ -98,14 +98,23 @@ t_ast_node	*parse_command(t_token **tokens)
 		node->left = parse_tokens(tokens, parse_command(tokens));
 		*tokens = (*tokens)->next;
 	}
+	//WORD sans cmdpath = vars
+	//WORD
+
+	//REDIR or WORD
+	//WORD =? assignation
+	//WORD =? cmd path / args
+	//WORD
+
+	//ASSIGNATIONS are possible only as long as no arg as been parsed
 	while (1)
 	{
-		if (!node->value && (*tokens)->type == WORD
+		if (!node->args && (*tokens)->type == WORD
 			&& ft_strchr((*tokens)->value, '='))
 			node->vars = parse_args(tokens, &node->vars, PARSE_SUBSQ_VARS);
-		if (!node->value && (*tokens)->type == WORD)
-			node->value = parse_pathname(tokens);
-		if (in_array((*tokens)->type, cmd_parts, REDIRS_TYPCOUNT)
+		// if (!node->value && (*tokens)->type == WORD)
+		// 	node->value = parse_pathname(tokens);
+		if (in_array((*tokens)->type, redirs, REDIRS_TYPCOUNT)
 			&& (*tokens)->next->type == WORD)
 			lstadd_back_redirs(&node->io_streams, parse_redir(tokens));
 		else if ((*tokens)->type == WORD)

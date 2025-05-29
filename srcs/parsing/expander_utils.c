@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/14 21:01:06 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 00:03:23 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ char	*get_envvar(char *varname)
 	mshell = g_getset(NULL);
 	if (!varname)
 		put_err("Expand : Failled to alloc memory for varname;");
-	match = ft_lststrn(mshell->var_env, varname, ft_strlen(varname));
+	match = ft_lststr(mshell->var_env, varname);
 	if (!match)
-		match = ft_lststrn(mshell->var_shell, varname, ft_strlen(varname));
+		match = ft_lststr(mshell->var_shell, varname);
 	if (match)
 	{
 		full_var = ft_split(match, '=');
@@ -101,17 +101,15 @@ char	*get_envvar(char *varname)
 
 char	*get_path(char *pcdr)
 {
-	DIR				*dir;
+	DIR			 	*dir;
 	struct dirent	*entry;
 	char			*paths;
 	char			*vnil_path;
 
-	paths = ft_strdup("");
-	if (!paths)
-		put_err("Expander : Failled to malloc for $path");
+	paths = chkalloc(ft_strdup(""), "Expander: Malloc Faillure");
 	dir = opendir(".");
 	if (!dir)
-		put_err("Expander: failled to open directory");
+		return (free(paths), put_err("Expander: Malloc Faillure"), NULL);
 	while (1)
 	{
 		entry = readdir(dir);
@@ -127,3 +125,60 @@ char	*get_path(char *pcdr)
 		}
 	}
 }
+
+/* char	*lst_injectreplace(char *val_tofind, t_token *newlst)
+{
+	t_token	*prev;
+	t_token	*curr;
+	t_token	*next;
+
+	prev = NULL;
+	curr = g_getset(NULL)->tokens;
+	// Find the token to replace and its previous node
+	while (curr && curr->value != val_tofind)
+	{
+		prev = curr;
+		curr = curr->next;
+	}
+	if (!curr)
+		put_err("Lst val not found");
+	next = curr->next;
+	lstdelone_tokens(curr, free_token_value);
+	// Insert newlst at the position of curr or define new head
+	if (prev)
+		prev->next = newlst;
+	else
+		g_getset(NULL)->tokens = newlst;
+	lstlast_tokens(newlst)->next = (t_list *)next;
+	return (next ? newlst->value : NULL);
+}
+
+char	*get_path(char *pcdr)
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	t_token			*paths;
+	t_token			*path;
+
+	path = NULL;
+	paths = NULL;
+	dir = opendir(".");
+	if (!dir)
+		return (put_err("Expander: Malloc Faillure"), NULL);
+	while (1)
+	{
+		entry = readdir(dir);
+		if (!entry)
+			return (closedir(dir), lst_injectreplace(pcdr, path));
+		if (match_pattern(pcdr, entry->d_name))
+		{
+			path = chkalloc(malloc(sizeof(t_token)), 
+				"Expander: Malloc Faillure");
+			*path = (t_token){0};
+			path->value = ft_strdup(entry->d_name);
+			if (!path->value)
+				put_err("Expander: Malloc Faillure");
+			lstadd_back_tokens(&paths, path);
+		}
+	}
+} */

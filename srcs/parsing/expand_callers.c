@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:53:00 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/26 18:14:27 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 13:00:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	expand_token(t_token *tokens)
 				tokens->value = expand(tokens->value, XPD_HDOC);
 		}
 		else if (in_array(last_token, (int []){LESS, GREAT, DGREAT}, 3))
-			tokens->value = expand(tokens->value, XPD_REDIR);
+			tokens->value = strip_outquotes(expand(tokens->value, XPD_REDIR));
 		else
 			tokens->value = strip_outquotes(expand(tokens->value, XPD_ALL));
 	}

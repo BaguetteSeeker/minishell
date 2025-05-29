@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/27 15:59:26 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 13:18:18 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,8 @@ char	*expand(char *buff, size_t flag)
 					put_err(": ambiguous redirect"), NULL);
 			while (i > 0 && buff[i] != ' ')
 				i--;
-			get_path(buff);
-			break ;
+			buff = eval_placeholder(buff, buff + i, TYPE_WCRD);
+			// break ;
 		}
 		else
 			i++;

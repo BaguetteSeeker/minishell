@@ -70,7 +70,8 @@ int	execute_node(t_ast_node *node)
 	node->is_foreground = 1;
 	if (!node)
 		return (1);
-	if ((!node->args[0] || *node->args[0] == '\0'))
+	if (node->type == NODE_COMMAND && 
+		(!node->args || !node->args[0] || *node->args[0] == '\0'))
 	{
 		if (node->vars != NULL)
 			return (assign_shell_var(node));

@@ -12,19 +12,6 @@
 
 #include "minishell.h"
 
-//exports VAR with no value
-int	export_noval(char *name)
-{
-	if (is_valid_export(name))
-		update_add_var(VAR_ENV, name, "");
-	else
-	{
-		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, name);
-		return (1);
-	}
-	return (0);
-}
-
 //exports VAR in var_env, and assignes it a value
 int	export_val(char *arg, char *equal_sign)
 {
@@ -94,13 +81,11 @@ int	export_loop(char *arg)
 	equal_sign = ft_strchr(arg, '=');
 	if (equal_sign)
 		exit_code = export_val(arg, equal_sign);
-	else
-		exit_code = export_noval(arg);
 	return (free(new_entry), exit_code);
 }
 
 //exports a variable into shell_env
-//	-export VAR		adds "VAR=" to shell_env
+//	-export VAR		does nothing
 //	-export VAR=123	adds "VAR=123" to shell_env
 int	builtin_export(t_ast_node *node)
 {
@@ -108,10 +93,10 @@ int	builtin_export(t_ast_node *node)
 	int		exit_code;
 	char	**args;
 
-	i = 0;
+	i = 1;
 	exit_code = 0;
 	args = node->args;
-	if (!node->value)
+	if (!node->args || !node->args[0])
 		args = node->vars;
 	while (args && args[i])
 	{

@@ -51,8 +51,8 @@ int	builtin_env(void)
 	{
 		put_recurse_dynarr(g_getset(NULL)->var_env);
 		//debug
-		//printf("\n === VAR SHELL === \n");
-		//put_recurse_dynarr(g_getset(NULL)->var_shell);
+		printf("\n === VAR SHELL === \n");
+		put_recurse_dynarr(g_getset(NULL)->var_shell);
 		//to remove
 		restore_stdio_builtin();
 		clean_shell();
@@ -70,22 +70,22 @@ int	builtin_exit(t_ast_node *node)
 {
 	int	exit_code;
 
-	if (!node->args || !node->args[0])
+	if (!node->args || !node->args[1])
 		exit_code = 0;
-	else if (!ft_isnum(node->args[0]))
+	else if (!ft_isnum(node->args[1]))
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
 		restore_stdio_builtin();
 		exit_shell(NULL, 2);
 	}
-	else if (ft_ptrlen((const void **)node->args) != 1)
+	else if (ft_ptrlen((const void **)node->args) != 2)
 	{
 		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
 		restore_stdio_builtin();
 		return (1);
 	}
 	else
-		exit_code = atoi(node->args[0]);
+		exit_code = atoi(node->args[1]);
 	if (exit_code == -1)
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
@@ -104,7 +104,7 @@ int	builtin_unset(t_ast_node *node)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	while (node->args && node->args[i])
 	{
 		update_remove_var(VAR_SHELL, node->args[i]);

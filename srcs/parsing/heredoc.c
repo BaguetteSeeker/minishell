@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 18:05:59 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 20:21:29 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	handle_heredoc(t_token *token)
 	char	*delimiter;
 	char	*delimiter_copy;
 
-	g_getset(NULL)->state = MSH_BLOCKING_PROMPT;
+	g_getset(NULL)->state = MSH_PROMPTING_COMPLETION;
 	doc = ft_strdup("");
 	delimiter = token->next->value;
 	delimiter_copy = chkalloc(ft_strdup(delimiter), "HRDC: dup fail");

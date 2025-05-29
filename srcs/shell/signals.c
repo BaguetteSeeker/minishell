@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 11:11:04 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 22:18:58 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,22 @@
 
 void	signals_handler(int sig, siginfo_t *siginfo, void *context)
 {
+	t_msh_state	msh_state;
+
 	(void) context;
 	(void) siginfo;
+	msh_state = g_getset(NULL)->state;
 	if (sig == SIGINT)
 	{
-		if (g_getset(NULL)->state == MSH_BLOCKING_PROMPT)
+		ft_putendl_fd("", STDERR_FILENO);
+		if (msh_state == MSH_PROMPTING)
+		{
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+		else
 			exit_shell(NO_EXIT_MSG, 0);
-		ft_putendl_fd("", STDOUT_FILENO);
-		if (g_getset(NULL)->state == MSH_BLOCKING_PROMPT)
-			exit_shell(NO_EXIT_MSG, 0);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
 	}
 	return ;
 }

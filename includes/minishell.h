@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 13:31:26 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 22:16:04 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@
 typedef enum e_msh_state
 {
 	MSH_PROMPTING,
+	MSH_PROMPTING_COMPLETION,
 	MSH_TOKENIZING,
-	MSH_BLOCKING_PROMPT,
 	MSH_EXPANDING,
 	MSH_PARSING,
 	MSH_EXECUTING,
@@ -73,15 +73,15 @@ typedef struct s_stdio {
 
 typedef struct s_minishell
 {
-	t_msh_state	state;
-	char		**var_env;
-	char		**var_shell;
-	char		*input;
-	t_token		*tokens;
-	t_ast_node	*cmd_table;
-	int			last_exitcode;
-	t_msh_mode	mode;
-	t_stdio		stdio;
+	sig_atomic_t	state;
+	t_msh_mode		mode;
+	t_stdio			stdio;
+	char			**var_env;
+	char			**var_shell;
+	char			*input;
+	t_token			*tokens;
+	t_ast_node		*cmd_table;
+	int				last_exitcode;
 }	t_minishell;
 
 //Functions' Flags
@@ -97,8 +97,8 @@ typedef struct s_minishell
 # define XPD_ALL 0
 # define XPD_HDOC 1
 # define XPD_REDIR 2
-# define EXPANDABLE_HEREDOC 127
 # define LITTERAL_HEREDOC 0
+# define EXPANDABLE_HEREDOC 127
 # define ADD_HISTORY 1
 # define NO_HISTORY 0
 # define NO_EXIT_MSG 0

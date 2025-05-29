@@ -70,12 +70,12 @@ int	execute_node(t_ast_node *node)
 	node->is_foreground = 1;
 	if (!node)
 		return (1);
-	if ((!node->value || *node->value == '\0'))
+	if ((!node->args[0] || *node->args[0] == '\0'))
 	{
 		if (node->vars != NULL)
 			return (assign_shell_var(node));
 		if (g_getset(NULL)->mode == INTERACTIVE)
-			return (ft_putendl_fd("msh: : command not found", STDERR_FILENO), 127);
+			return (ft_putendl_fd("msh: (null) : command not found", STDERR_FILENO), 127);
 		else
 			return (0);
 	}

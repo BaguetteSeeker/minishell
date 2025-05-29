@@ -51,8 +51,8 @@ int	builtin_env(void)
 	{
 		put_recurse_dynarr(g_getset(NULL)->var_env);
 		//debug
-		printf("\n === VAR SHELL === \n");
-		put_recurse_dynarr(g_getset(NULL)->var_shell);
+		//printf("\n === VAR SHELL === \n");
+		//put_recurse_dynarr(g_getset(NULL)->var_shell);
 		//to remove
 		restore_stdio_builtin();
 		clean_shell();

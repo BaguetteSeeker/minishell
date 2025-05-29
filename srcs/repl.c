@@ -30,7 +30,7 @@ void repl_once(t_minishell *msh_g)
 		return ;
 	}
 	msh_g->state = MSH_EXPANDING;
-	msh_lstiter(msh_g->tokens, &expand_token);
+	//msh_lstiter(msh_g->tokens, &expand_token);
 	msh_g->state = MSH_PARSING;
 	tmp = msh_g->tokens;
 	msh_g->cmd_table = parse_tokens(&tmp, NULL);

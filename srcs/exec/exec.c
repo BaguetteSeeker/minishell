@@ -59,6 +59,26 @@ int	execute_subshell(t_ast_node *node)
 	return (WEXITSTATUS(status));
 }
 
+int	command_no_command(t_ast_node *node)
+{
+	int	exit_code;
+
+	exit_code = 0;
+	if (node->vars != NULL)
+		exit_code = assign_shell_var(node);
+	if (node->io_streams != NULL)
+	{
+		exit_code = redir_stdio_builtin(node);
+		if (exit_code)
+			return (exit_code);
+		restore_stdio_builtin();
+	}
+	else if (g_getset(NULL)->mode == INTERACTIVE 
+		&& !node->io_streams && !node->vars)
+			return (ft_putendl_fd(ERRMSG_NOCMD, STDERR_FILENO), 127);
+	return (exit_code);
+}
+
 //traverses the tree recursively, executes node functions when found
 //finally executes command when found, and go back up in the tree
 //	-if interactive and empty command, treated as a program
@@ -72,14 +92,7 @@ int	execute_node(t_ast_node *node)
 		return (1);
 	if (node->type == NODE_COMMAND && 
 		(!node->args || !node->args[0] || *node->args[0] == '\0'))
-	{
-		if (node->vars != NULL)
-			return (assign_shell_var(node));
-		if (g_getset(NULL)->mode == INTERACTIVE)
-			return (ft_putendl_fd("msh: (null) : command not found", STDERR_FILENO), 127);
-		else
-			return (0);
-	}
+			return (command_no_command(node));
 	if (node->type == NODE_COMMAND)
 		return (execute_command(node));
 	if (node->type == NODE_OPERATOR)

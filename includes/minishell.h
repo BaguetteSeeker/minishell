@@ -35,7 +35,8 @@
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
-#define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
+# define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
+# define ERRMSG_NOCMD "msh: : command not found\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126
 

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 00:03:23 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 20:30:48 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,37 +44,6 @@ size_t	pathsiz(const char *path)
 	return (i);
 }
 
-#define NO_MATCH 0
-#define MATCH 1
-
-int	match_pattern(const char *pattern, const char *filename)
-{
-	while (*pattern && *filename)
-	{
-		if (*pattern == '*')
-		{
-			while (*pattern == '*')
-				pattern++;
-			if (!*pattern)
-				return (MATCH);
-			while (*filename)
-				if (match_pattern(pattern, filename++))
-					return (MATCH);
-			return (NO_MATCH);
-		}
-		else if (*pattern == *filename)
-		{
-			pattern++;
-			filename++;
-		}
-		else
-			return (NO_MATCH);
-	}
-	while (*pattern == '*')
-		pattern++;
-	return (!*pattern && !*filename);
-}
-
 char	*get_envvar(char *varname)
 {
 	char		*match;
@@ -101,7 +70,7 @@ char	*get_envvar(char *varname)
 
 char	*get_path(char *pcdr)
 {
-	DIR			 	*dir;
+	DIR				*dir;
 	struct dirent	*entry;
 	char			*paths;
 	char			*vnil_path;

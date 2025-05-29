@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/25 19:34:28 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 20:21:29 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static t_token	*check_completion(t_token *token, t_token **head)
 			|| token->type == OR_IF || token->type == AND_IF
 			|| token->type == PIPE))
 	{
-		g_getset(NULL)->state = MSH_BLOCKING_PROMPT;
+		g_getset(NULL)->state = MSH_PROMPTING_COMPLETION;
 		lstdelone_tokens(token->next, free_token_value);
 		token->next = NULL;
 		input_completion = open_prompt(PS2, NO_HISTORY);

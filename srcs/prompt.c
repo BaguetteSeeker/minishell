@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:06:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/23 20:20:11 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 20:21:29 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*open_prompt(char *prompt, bool history)
 	input_line = readline(prompt);
 	if (input_line == NULL)
 	{
-		if (g_getset(NULL)->state == MSH_BLOCKING_PROMPT)
+		if (g_getset(NULL)->state == MSH_PROMPTING_COMPLETION)
 			return (NULL);
 		else
 			return (exit_shell(EXIT_MSG), NULL);

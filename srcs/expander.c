@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 18:28:43 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/29 21:28:26 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 		qts_start = str + *i;
 		qts_end = ft_strchr(qts_start + 1, qts_start[0]);
 		if (!qts_end)
-			return (str);
+			return (++*i, str);
 		pcdr_pos = ft_strnstr(qts_start, "$", qts_end - qts_start);
 		if (!pcdr_pos || qts_start[0] == CHR_SQTE)
 			break ;
@@ -115,6 +115,16 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 	*i += qts_end - qts_start + 1;
 	return (str);
 }
+
+
+/* 
+
+-Crash en cas de * après une redir (sauf heredoc où elles sont simplement préservées littéralement),
+-Dans une assignation, la wildcard est "enrobée" de simple quotes et sa valeur originelle est préservée, 
+de sorte à reporter son expand lors de l'appel à la variable la contenant,
+-Dans les args, elle est expand et chaque nom de fichier est devient un pointeur sur chaine
+
+*/
 
 //	——— HEREDOC EXPANSION SPECIFICS ———
 //- Upper caller will prevent calling expand() if heredoc' delimiter included 
@@ -139,10 +149,13 @@ char	*expand(char *buff, size_t flag)
 			if (flag == XPD_REDIR)
 				return (ft_dprintf(STDERR_FILENO, "%s: %s", SHELL_NAME, buff),
 					put_err(": ambiguous redirect"), NULL);
+			// else if (flag == XPD_ASSIGN)
+			// 	//enrober;
+			// else if (flag == XPD_ARGS)
+			
 			while (i > 0 && buff[i] != ' ')
 				i--;
 			buff = eval_placeholder(buff, buff + i, TYPE_WCRD);
-			// break ;
 		}
 		else
 			i++;

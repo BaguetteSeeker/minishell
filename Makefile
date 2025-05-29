@@ -31,6 +31,7 @@ SRCS =	minishell.c prompt.c cleanup_utils.c repl.c  \
 		parsing/lexer.c parsing/parser_utils.c \
 		exec/exec.c \
 		exec/exec_pipes.c exec/exec_utils.c exec/redirs.c \
+		exec/exec_command.c \
 		built-ins/builtins.c \
 		built-ins/builtins_echo.c built-ins/builtins_export.c \
 		built-ins/builtins.c built-ins/builtins_cd.c \

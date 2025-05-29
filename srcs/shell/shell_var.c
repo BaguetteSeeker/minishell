@@ -22,9 +22,10 @@ var stored in var_shell :
 	- ~
 */
 
-void	udapte_shell_var(void)
+void	update_shell_var(t_ast_node *node)
 {
-	update_var_exitcode();
+	//update_underscore(node);
+	(void)node;
 	//add other variables like PS1, PS2 for custom pompt
 }
 

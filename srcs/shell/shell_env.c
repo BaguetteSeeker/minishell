@@ -65,20 +65,25 @@ void	update_SHLVL(void)
 //returns last argument of given node
 void	update_underscore(t_ast_node *node)
 {
-	int		i;
 	char	*last_arg;
+	int		i;
 
-	if (!node || node->type != NODE_COMMAND || !node->args)
-		return ;
-	i = 0;
-	while (node->args[i])
-		i++;
-	if (i > 0)
-		last_arg = ft_strdup(node->args[i - 1]);
-	else
+	if (!node || node->type != NODE_COMMAND)
+		return;
+	if (node->args && node->args[0])
+	{
+		i = ft_ptrlen((const void **)node->args) - 1;
+		last_arg = ft_strdup(node->args[i]);
+	}
+	else if (node->value)
 		last_arg = ft_strdup(node->value);
+	else
+	{
+		update_add_var(VAR_ENV, "_", "");
+		return;
+	}
 	if (!last_arg)
 		put_err("strdup");
-	update_add_var(VAR_SHELL, "_", last_arg);
+	update_add_var(VAR_ENV, "_", last_arg);
 	free(last_arg);
 }

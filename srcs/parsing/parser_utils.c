@@ -33,6 +33,7 @@ t_ast_node	*init_node(t_token **tokens)
 		return (node);
 	}
 	node->value = (*tokens)->value;
+	node->is_foreground = 1;
 	*tokens = (*tokens)->next;
 	return (node);
 }

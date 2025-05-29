@@ -54,6 +54,7 @@ int	execute_pipe(t_ast_node *node)
 	int		pipe_fd[2];
 	int		status;
 
+	set_foreground_flag(node);
 	if (pipe(pipe_fd) < 0)
 		return (perror("pipe"), 1);
 	pid_left = fork();

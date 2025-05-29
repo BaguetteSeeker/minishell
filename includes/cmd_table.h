@@ -54,6 +54,7 @@ typedef struct s_redir
 typedef struct s_ast_node
 {
 	t_node_type			type;	// Type of the node
+	int					is_foreground; // Flag
 	char				*value;	// Value of the node (command name, operator)
 	char				**args;	// Command' arguments
 	char				**vars;	// Temporary command vars OR shell vars

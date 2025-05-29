@@ -62,6 +62,7 @@ int	main(int argc, char *argv[], char *env[])
 	msh_g->var_env = copy_env(env);
 	msh_g->var_shell = init_shell_var();
 	update_SHLVL();
+	update_add_var(VAR_ENV, "_", argv[0]);
 	set_sigaction(&signals_handler);
 	if (argc > 1)
         return (script_args_routine(msh_g, argc, argv), 1);

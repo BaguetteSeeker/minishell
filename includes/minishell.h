@@ -143,7 +143,11 @@ char		*get_cmdpath(char *cmd, char **envp);
 char		**get_cmdargv(char *cmd, char **args);
 int			redirections_handler(t_ast_node *node);
 int			execute_pipe(t_ast_node *node);
+int			execute_command(t_ast_node *node);
 void		free_tab(void **tab);
+char		**build_new_env(t_ast_node *node);
+void		set_foreground_flag(t_ast_node *node);
+
 
 //built-ins
 t_bi_type	is_builtin(const char *cmd);

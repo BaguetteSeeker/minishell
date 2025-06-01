@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:53:00 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 18:30:08 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/01 15:44:32 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,21 @@ static bool	is_expandable(char *hdoc)
 	return (is_expandable);
 }
 
+#define XPD_DFL_STATUS 0
 //Calls expand on *ptr and returns the resulting buffer
 //Also updates the associated *ptr in the token list
 static char	*expd_rplctok(char *ptr, size_t flag)
 {
 	t_token	*tokens;
+	size_t	void_status;
 
+	void_status = XPD_DFL_STATUS;
 	tokens = g_getset(NULL)->tokens;
 	while (tokens)
 	{
 		if (tokens->value == ptr)
 		{
-			tokens->value = expand(ptr, flag);
+			tokens->value = expand(ptr, flag, &void_status);
 			break ;
 		}
 		tokens = tokens->next;
@@ -57,38 +60,44 @@ static void	expand_redirs(t_redir *stream)
 	if (stream->type == HEREDOC && is_expandable(stream->file))
 		stream->file = expd_rplctok(stream->file, XPD_HDOC);
 	else if (stream->type != HEREDOC)
-		stream->file = strip_outquotes(expd_rplctok(stream->file, XPD_REDIR));
+		stream->file = strip_outquotes(
+				expd_rplctok(stream->file, XPD_REDIR));
+}
+
+static char	**extend_args(char **args, char *target, char **wcrdarr)
+{
+	char	**newargs;
+
+	strarr_iter(wcrdarr, (void *)&strip_outquotes);
+	newargs = strarr_insert(args, target, wcrdarr);
+	put_recurse_dynarr(newargs);
+	free(args);
+	free(target);
+	free(wcrdarr);
+	return (newargs);
 }
 
 void	expand_node(t_ast_node *node)
 {
-	int	i;
+	size_t	xpd_status;
+	char	*new_buff;
+	int		i;
 
+	xpd_status = 0;
 	i = -1;
 	while (node->args && node->args[++i])
-		node->args[i] = strip_outquotes(expd_rplctok(node->args[i], XPD_ALL));
+	{
+		new_buff = expand(node->args[i], XPD_ARGS, &xpd_status);
+		if (xpd_status == 0)
+			node->args[i] = strip_outquotes(new_buff);
+		else
+			node->args = extend_args(node->args,
+					node->args[i], (char **)new_buff);
+	}
 	i = -1;
 	while (node->vars && node->vars[++i])
-		node->vars[i] = strip_outquotes(expd_rplctok(node->vars[i], XPD_ALL));
+		node->vars[i] = strip_outquotes(
+				expand(node->vars[i], XPD_ASSIGN, &xpd_status));
 	if (node->io_streams)
 		msh_lstiter(node->io_streams, &expand_redirs);
-}
-
-void	expand_token(t_token *tokens)
-{
-	static int	last_token = -1;
-
-	if (tokens->type == WORD)
-	{
-		if (last_token == DLESS)
-		{
-			if (is_expandable(tokens->value))
-				tokens->value = expand(tokens->value, XPD_HDOC);
-		}
-		else if (in_array(last_token, (int []){LESS, GREAT, DGREAT}, 3))
-			tokens->value = strip_outquotes(expand(tokens->value, XPD_REDIR));
-		else
-			tokens->value = strip_outquotes(expand(tokens->value, XPD_ALL));
-	}
-	last_token = tokens->type;
 }

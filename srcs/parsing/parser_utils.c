@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 22:16:47 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/01 15:57:31 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ static char	**parse_args(t_token **tokens, char ***list, size_t parse_type)
 				sizeof(char *) * (arg_count));
 		if (!*list)
 			put_err("Parsing : Malloc Faillure");
-		(*list)[arg_count] = (*tokens)->value;
+		(*list)[arg_count] = ft_strdup((*tokens)->value);
+		if (!(*list)[arg_count])
+			put_err("Parsing : Malloc Faillure");
 		(*list)[++arg_count] = NULL;
 		*tokens = (*tokens)->next;
 	}

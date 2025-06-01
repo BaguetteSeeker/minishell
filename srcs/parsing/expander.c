@@ -6,35 +6,11 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 21:28:26 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/01 15:36:52 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//Replaces *pcdr based on type with provided *val within *str
-static char	*concat_expansion(char *str, char *pcdr, char *val, size_t type)
-{
-	char	*str_head;
-	char	*vnil_str;
-
-	str_head = ft_substr(str, 0, pcdr - str);
-	if (!str_head)
-		put_err("Expand : Failled to alloc memory for str_head;");
-	vnil_str = str;
-	if (type == TYPE_DLRS)
-		str = ft_strjoin2(str_head, val, pcdr + varsiz(pcdr + 1) + 1);
-	else if (type == TYPE_WCRD)
-		str = ft_strjoin2(str_head, val, pcdr + pathsiz(pcdr));
-	else if (type == TYPE_CODE)
-		str = ft_strjoin2(str_head, val, pcdr + 2);
-	free(str_head);
-	free(val);
-	free(vnil_str);
-	if (!str)
-		put_err("Expand : Failled to alloc memory for expanded str;");
-	return (str);
-}
 
 //Extract the placeholder depending on its type
 //Fetches the corresponding value(s)
@@ -55,29 +31,12 @@ static char	*eval_placeholder(char *str, char *pcdr_pos, size_t type)
 	if (type == TYPE_DLRS)
 		values = get_envvar(pcdr);
 	else if (type == TYPE_WCRD)
-		values = get_path(pcdr);
+		return ((char *)get_path(pcdr));
 	free(pcdr);
 	if (!values)
 		values = chkalloc(ft_strdup(""), "Expander : Malloc Faillure");
 	return (concat_expansion(str, pcdr_pos, values, type));
 }
-
-//Former get_exitcode function that preserved `$?` outside of execution
-// static char	*get_exitcode(char *str, size_t *i)
-// {
-// 	char	*exitcode;
-
-// 	if (g_getset(NULL)->state == MSH_EXECUTING)
-// 	{
-// 		exitcode = ft_itoa(g_getset(NULL)->last_exitcode);
-// 		if (!exitcode)
-// 			put_err("Expand : Failled to alloc memory for exitcode;");
-// 		str = concat_expansion(str, str + *i, exitcode, TYPE_CODE);
-// 	}
-// 	else
-// 		*i += 2;
-// 	return (str);
-// }
 
 static char	*get_exitcode(char *str, char *pcdr_pos)
 {
@@ -116,22 +75,35 @@ static char	*skip_quotes(char *str, size_t *i, size_t flag)
 	return (str);
 }
 
-
-/* 
-
--Crash en cas de * après une redir (sauf heredoc où elles sont simplement préservées littéralement),
--Dans une assignation, la wildcard est "enrobée" de simple quotes et sa valeur originelle est préservée, 
-de sorte à reporter son expand lors de l'appel à la variable la contenant,
--Dans les args, elle est expand et chaque nom de fichier est devient un pointeur sur chaine
-
-*/
+//	——— Wildcards EXPANSION SPECIFICS ———
+//Wildcards in redirs will generate an error and exit the shell
+//Wildcards in var' values will be skipped
+//Wildcards in args will generate a new char **args 
+//	from the obtained paths and the old args 
+static char	*root_wcrd_xpd(char *buff, size_t *i, size_t flag, size_t *status)
+{
+	if (flag == XPD_REDIR)
+		return (ft_dprintf(STDERR_FILENO, "%s: %s", SHELL_NAME, buff),
+			put_err(": ambiguous redirect"), NULL);
+	else if (flag == XPD_ASSIGN)
+		return ((*i)++, *status = XPD_STAT_DFL, buff);
+	else if (flag == XPD_ARGS)
+	{
+		while (*i > 0 && buff[*i] != ' ')
+			(*i)--;
+		return (*status = XPD_STAT_WCRD,
+			eval_placeholder(buff, buff + *i, TYPE_WCRD));
+	}
+	else
+		return (put_err("Expand err: Unknown expand context"), NULL);
+}
 
 //	——— HEREDOC EXPANSION SPECIFICS ———
 //- Upper caller will prevent calling expand() if heredoc' delimiter included 
 // one or more quote; therefore preserving the litteral value of its content
 //- Heredocs' quotes are always preserved
 //- Heredocs never get globbing / file expansion (*)
-char	*expand(char *buff, size_t flag)
+char	*expand(char *buff, size_t flag, size_t *status)
 {
 	size_t	i;
 
@@ -146,19 +118,13 @@ char	*expand(char *buff, size_t flag)
 			buff = eval_placeholder(buff, buff + i, TYPE_DLRS);
 		else if (buff[i] == '*' && flag != XPD_HDOC)
 		{
-			if (flag == XPD_REDIR)
-				return (ft_dprintf(STDERR_FILENO, "%s: %s", SHELL_NAME, buff),
-					put_err(": ambiguous redirect"), NULL);
-			// else if (flag == XPD_ASSIGN)
-			// 	//enrober;
-			// else if (flag == XPD_ARGS)
-			
-			while (i > 0 && buff[i] != ' ')
-				i--;
-			buff = eval_placeholder(buff, buff + i, TYPE_WCRD);
+			if (flag == XPD_ASSIGN)
+				buff = root_wcrd_xpd(buff, &i, flag, status);
+			else
+				return (*status = XPD_STAT_WCRD, root_wcrd_xpd(buff, &i, flag, status));
 		}
 		else
 			i++;
 	}
-	return (buff);
+	return (*status = XPD_STAT_DFL, buff);
 }

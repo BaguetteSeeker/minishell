@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 22:16:04 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/01 15:54:05 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,10 @@ typedef struct s_minishell
 # define XPD_ALL 0
 # define XPD_HDOC 1
 # define XPD_REDIR 2
-# define LITTERAL_HEREDOC 0
+# define XPD_ASSIGN 3
+# define XPD_ARGS 4
+# define XPD_STAT_DFL 0
+# define XPD_STAT_WCRD 1
 # define EXPANDABLE_HEREDOC 127
 # define ADD_HISTORY 1
 # define NO_HISTORY 0
@@ -116,11 +119,12 @@ t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
 t_ast_node	*parse_command(t_token **tokens);
 t_ast_node	*init_node(t_token **tokens);
 bool		check_varname(char *str);
-char		*expand(char *buff, size_t flag);
+char		*expand(char *buff, size_t flag, size_t *status);
 void		expand_token(t_token *tokens);
 void		expand_node(t_ast_node *node);
+char		*concat_expansion(char *str, char *pcdr, char *val, size_t type);
 char		*get_envvar(char *pcdr);
-char		*get_path(char *pcdr);
+char		**get_path(char *pcdr);
 size_t		varsiz(const char *var);
 size_t		pathsiz(const char *path);
 void		repl_once(t_minishell *msh_g);

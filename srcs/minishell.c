@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/29 11:56:16 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/01 11:45:05 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,14 @@ void	prompt_routine(t_minishell *msh_g)
 		msh_g->state = MSH_PARSING;
 		tokens_tmp = msh_g->tokens;
 		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
-		print_ast(msh_g->cmd_table);
 		msh_g->state = MSH_EXECUTING;
 		expand_node(msh_g->cmd_table);
 		if (msh_g->cmd_table->left)
 			expand_node(msh_g->cmd_table->left);
 		if (msh_g->cmd_table->right)
 			expand_node(msh_g->cmd_table->right);
-		msh_lstiter(msh_g->tokens, &lst_put);
+		print_ast(msh_g->cmd_table);
+		// msh_lstiter(msh_g->tokens, &lst_put);
 		clean_routine();
 	}
 }

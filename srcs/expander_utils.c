@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 23:12:29 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 20:30:48 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/01 15:52:22 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,30 @@ size_t	pathsiz(const char *path)
 	return (i);
 }
 
+//Replaces *pcdr based on type with provided *val within *str
+char	*concat_expansion(char *str, char *pcdr, char *val, size_t type)
+{
+	char	*str_head;
+	char	*vnil_str;
+
+	str_head = ft_substr(str, 0, pcdr - str);
+	if (!str_head)
+		put_err("Expand : Failled to alloc memory for str_head;");
+	vnil_str = str;
+	if (type == TYPE_DLRS)
+		str = ft_strjoin2(str_head, val, pcdr + varsiz(pcdr + 1) + 1);
+	else if (type == TYPE_WCRD)
+		str = ft_strjoin2(str_head, val, pcdr + pathsiz(pcdr));
+	else if (type == TYPE_CODE)
+		str = ft_strjoin2(str_head, val, pcdr + 2);
+	free(str_head);
+	free(val);
+	free(vnil_str);
+	if (!str)
+		put_err("Expand : Failled to alloc memory for expanded str;");
+	return (str);
+}
+
 char	*get_envvar(char *varname)
 {
 	char		*match;
@@ -68,69 +92,16 @@ char	*get_envvar(char *varname)
 	return (match);
 }
 
-char	*get_path(char *pcdr)
+//add entry module
+char	**get_path(char *pcdr)
 {
 	DIR				*dir;
 	struct dirent	*entry;
-	char			*paths;
-	char			*vnil_path;
+	char			**paths;
+	size_t			str_count;
 
-	paths = chkalloc(ft_strdup(""), "Expander: Malloc Faillure");
-	dir = opendir(".");
-	if (!dir)
-		return (free(paths), put_err("Expander: Malloc Faillure"), NULL);
-	while (1)
-	{
-		entry = readdir(dir);
-		if (!entry)
-			return (closedir(dir), paths);
-		if (match_pattern(pcdr, entry->d_name))
-		{
-			vnil_path = paths;
-			paths = ft_strjoin2(paths, " ", entry->d_name);
-			free(vnil_path);
-			if (!paths)
-				put_err("Expander : Failled to malloc for $path");
-		}
-	}
-}
-
-/* char	*lst_injectreplace(char *val_tofind, t_token *newlst)
-{
-	t_token	*prev;
-	t_token	*curr;
-	t_token	*next;
-
-	prev = NULL;
-	curr = g_getset(NULL)->tokens;
-	// Find the token to replace and its previous node
-	while (curr && curr->value != val_tofind)
-	{
-		prev = curr;
-		curr = curr->next;
-	}
-	if (!curr)
-		put_err("Lst val not found");
-	next = curr->next;
-	lstdelone_tokens(curr, free_token_value);
-	// Insert newlst at the position of curr or define new head
-	if (prev)
-		prev->next = newlst;
-	else
-		g_getset(NULL)->tokens = newlst;
-	lstlast_tokens(newlst)->next = (t_list *)next;
-	return (next ? newlst->value : NULL);
-}
-
-char	*get_path(char *pcdr)
-{
-	DIR				*dir;
-	struct dirent	*entry;
-	t_token			*paths;
-	t_token			*path;
-
-	path = NULL;
 	paths = NULL;
+	str_count = 0;
 	dir = opendir(".");
 	if (!dir)
 		return (put_err("Expander: Malloc Faillure"), NULL);
@@ -138,16 +109,15 @@ char	*get_path(char *pcdr)
 	{
 		entry = readdir(dir);
 		if (!entry)
-			return (closedir(dir), lst_injectreplace(pcdr, path));
+			return (free(pcdr), closedir(dir), paths);
 		if (match_pattern(pcdr, entry->d_name))
 		{
-			path = chkalloc(malloc(sizeof(t_token)), 
-				"Expander: Malloc Faillure");
-			*path = (t_token){0};
-			path->value = ft_strdup(entry->d_name);
-			if (!path->value)
-				put_err("Expander: Malloc Faillure");
-			lstadd_back_tokens(&paths, path);
+			paths = chkalloc(ft_realloc(paths, sizeof(char *) * (str_count + 2),
+						sizeof(char *) * (str_count)),
+					"Expander : Malloc Faillure");
+			paths[str_count] = chkalloc(ft_strdup(entry->d_name),
+					"Expander : Malloc Faillure");
+			paths[++str_count] = NULL;
 		}
 	}
-} */
+}

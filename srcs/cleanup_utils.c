@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/13 20:21:39 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/05/30 23:09:52 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ static void	clean_ast(t_ast_node *node)
 	if (node->type == NODE_COMMAND)
 	{
 		if (node->args)
-			free(node->args);
+			ft_free_dynarr(node->args);
 		if (node->vars)
-			free(node->vars);
+			ft_free_dynarr(node->vars);
 		if (node->io_streams)
 			msh_lstclear(&node->io_streams, NULL);
 	}

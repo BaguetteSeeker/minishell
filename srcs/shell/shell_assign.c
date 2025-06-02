@@ -50,19 +50,26 @@ int	assign_val(char *arg, char *equal_sign)
 {
 	char	*var;
 	char	*val;
+	char	*clean_val;
 
 	*equal_sign = '\0';
 	var = arg;
 	val = equal_sign + 1;
+	clean_val = ft_strdup(val);
+	if (!clean_val)
+		return (put_err("strdup"), 1);
+	strip_outquotes(clean_val);
 	if (is_valid_export(var))
-		update_add_var(VAR_SHELL, var, val);
+		update_add_var(VAR_SHELL, var, clean_val);
 	else
 	{
-		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, val);
+		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, var);
 		*equal_sign = '=';
+		free(clean_val);
 		return (1);
 	}
 	*equal_sign = '=';
+	free(clean_val);
 	return (0);
 }
 

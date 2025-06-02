@@ -43,6 +43,8 @@ static void	clean_ast(t_ast_node *node)
 		return ;
 	if (node->type == NODE_COMMAND)
 	{
+		if (node->new_args)
+			free_tab((void **)node->new_args);
 		if (node->args)
 			free(node->args);
 		if (node->vars)

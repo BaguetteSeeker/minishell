@@ -58,4 +58,36 @@ typedef struct s_token
 	size_t			type;
 }	t_token;
 
+typedef enum { 
+	QUOTE_NONE, 
+	QUOTE_SINGLE, 
+	QUOTE_DOUBLE 
+}	quote_t;
+
+//example were from_variable is useful
+//VAR=*
+//echo $VAR
+//file1 file2
+//echo "$VAR"
+//*
+//(only relevant for wildcard in minishell)
+typedef struct s_word
+{
+	char	*text;			// raw text (partial word)
+	int		index;			// index in list (for debugging)
+	int		should_split;	// "$VAR $VAR" shouldn't be split, even though it's two words, but $ARG as $ARG="oui oui" should
+	int		from_variable;	// indicate if value was from variable
+	struct	s_word *previous;
+	struct	s_word *next;
+}	t_word;
+
+//smaller struct used in an array to analyse each word
+//only used in exp_varexp.c and its helper
+typedef struct s_segment
+{
+	char	*text;
+	quote_t	quote;
+	int		from_var;
+}	t_segment;
+
 #endif

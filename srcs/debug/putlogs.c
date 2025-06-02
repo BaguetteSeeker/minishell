@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+void	print_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab && tab[i])
+	{
+		printf("%d\t%s\n",i, tab[i]);
+		i++;
+	}
+}
+
 void	lst_put(t_token *lst)
 {
 	if (!lst)

@@ -112,4 +112,3 @@ char	*get_var_value(int mode, char *var_name)
 	value = ft_strchr(entry, '=') + 1;
 	return (value);
 }
-

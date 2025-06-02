@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_cd.c                                      :+:      :+:    :+:   */
+/*   exp_list_insert.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,24 +12,42 @@
 
 #include "minishell.h"
 
-//move the current working directory
-int	builtin_cd(t_ast_node *node)
+static const char	*quote_str(quote_t q)
 {
-	char	*target;
-	char	cwd[1024];
+	if (q == QUOTE_NONE)
+		return ("NONE");
+	if (q == QUOTE_SINGLE)
+		return ("SINGLE");
+	if (q == QUOTE_DOUBLE)
+		return ("DOUBLE");
+	return ("INVALID");
+}
 
-	if (!node->new_args[1] || !*node->new_args[1])
-		return (ft_putendl_fd("cd: expected an argument", STDERR_FILENO), 1);
-	if (ft_ptrlen((const void **)node->new_args) > 2)
-		return (ft_putendl_fd("cd: too many arguments", STDERR_FILENO), 1);
-	target = node->new_args[1];
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (perror("cd: "), 1);
-	if (chdir(target) != 0)
-		return (perror("cd: "), 1);
-	update_add_var(VAR_ENV, "OLDPWD", cwd);
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (perror("cd: "), 1);
-	update_add_var(VAR_ENV, "PWD", cwd);
-	return (0);
+void	print_word_list(t_word *list)
+{
+	printf("\n === expansion debug ===\n");
+	while (list)
+	{
+		printf("word : \t>%s< (ID %i)\n\tsplit: %i,\n\n\tfrom_var: %d\n",
+			list->text,
+			list->index,
+			list->should_split,
+			list->from_variable);
+		list = list->next;
+	}
+}
+
+void	print_segments(t_segment **seg)
+{
+	int	i;
+
+	i = 0;
+	printf("\n === === === seg debug ===\n");
+	while (seg[i])
+	{
+		printf("\t|| segment %d:\t>%s<\n", i, seg[i]->text);
+		printf("\t||\tquote: %s\n", quote_str(seg[i]->quote));
+		printf("\t||\tfrom_var: %d\n", seg[i]->from_var);
+		i++;
+	}
 }

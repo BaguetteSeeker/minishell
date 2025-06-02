@@ -64,6 +64,8 @@ int	command_no_command(t_ast_node *node)
 	int	exit_code;
 
 	exit_code = 0;
+	//expand_node(node);
+	print_tab(node->vars);
 	if (node->vars != NULL)
 		exit_code = assign_shell_var(node);
 	if (node->io_streams != NULL)

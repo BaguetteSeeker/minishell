@@ -118,7 +118,6 @@ t_ast_node	*init_node(t_token **tokens);
 bool		check_varname(char *str);
 char		*expand(char *buff, size_t flag);
 void		expand_token(t_token *tokens);
-void		expand_node(t_ast_node *node);
 char		*get_envvar(char *pcdr);
 char		*get_path(char *pcdr);
 size_t		varsiz(const char *var);
@@ -137,6 +136,7 @@ void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
 void		exit_shell(bool exit_msg, int exit_code);
+void		print_tab(char **tab);
 
 //Exec
 int			execute_node(t_ast_node *node);
@@ -190,4 +190,39 @@ void		update_underscore(t_ast_node *node);
 void		script_args_routine(t_minishell *msh, int argc, char **argv);
 void		script_stdin_routine(t_minishell *msh);
 int			assign_shell_var(t_ast_node *node);
+
+
+// === new expansion ===
+int			expand_node(t_ast_node *node);
+//list functions
+t_word		*word_list_from_argv(char **argv);
+char		**word_list_to_argv(t_word *list);
+t_word		*insert_split_words(char **split, t_word *after);
+t_word		*create_new_word(char *text);
+void		remove_word(t_word *node);
+void		print_word_list(t_word *list);
+int			update_node_index(t_word *lst);
+void		free_word_list(t_word *list);
+int			count_non_null_words(t_word *list);
+
+//segment functions
+t_segment	*create_new_segment(char *text, quote_t quote, int from_var);
+int			extract_segment(const char *s, int start, quote_t *q, t_segment **seg_out);
+int			is_var_start(const char *s, quote_t q);
+int			update_quote(char c, quote_t *q);
+int			is_var_char(char c);
+int			update_quote(char c, quote_t *q);
+t_segment	*create_new_segment(char *text, quote_t quote, int from_var);
+void		skip_standalone_quotes(const char *str, int *i, quote_t *q);
+int			var_len(const char *s);
+
+//var expansion functions
+char		*get_value(char *s);
+void		var_exp(t_word *list);
+void		free_segments(t_segment	**seg);
+void		print_segments(t_segment **seg);
+t_segment	**parse_segments(const char *str);
+void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
+int			contains_unquoted_space(t_segment *s);
+
 #endif

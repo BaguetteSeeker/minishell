@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_cd.c                                      :+:      :+:    :+:   */
+/*   exp_wildcard.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,25 +11,3 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//move the current working directory
-int	builtin_cd(t_ast_node *node)
-{
-	char	*target;
-	char	cwd[1024];
-
-	if (!node->new_args[1] || !*node->new_args[1])
-		return (ft_putendl_fd("cd: expected an argument", STDERR_FILENO), 1);
-	if (ft_ptrlen((const void **)node->new_args) > 2)
-		return (ft_putendl_fd("cd: too many arguments", STDERR_FILENO), 1);
-	target = node->new_args[1];
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (perror("cd: "), 1);
-	if (chdir(target) != 0)
-		return (perror("cd: "), 1);
-	update_add_var(VAR_ENV, "OLDPWD", cwd);
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (perror("cd: "), 1);
-	update_add_var(VAR_ENV, "PWD", cwd);
-	return (0);
-}

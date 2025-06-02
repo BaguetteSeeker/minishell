@@ -13,23 +13,32 @@
 #include "minishell.h"
 
 //exports VAR in var_env, and assignes it a value
+//temp split using equal_sign
+//bash-like quote handling on assign thanks to strip_outquotes
 int	export_val(char *arg, char *equal_sign)
 {
 	char	*var;
 	char	*val;
+	char	*clean_val;
 
 	*equal_sign = '\0';
 	var = arg;
 	val = equal_sign + 1;
+	clean_val = ft_strdup(val);
+	strip_outquotes(clean_val);
+	if (!clean_val)
+		return (put_err("strdup"), 1);
 	if (is_valid_export(var))
-		update_add_var(VAR_ENV, var, val);
+		update_add_var(VAR_ENV, var, clean_val);
 	else
 	{
-		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, val);
+		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, var);
 		*equal_sign = '=';
+		free(clean_val);
 		return (1);
 	}
 	*equal_sign = '=';
+	free(clean_val);
 	return (0);
 }
 
@@ -95,8 +104,8 @@ int	builtin_export(t_ast_node *node)
 
 	i = 1;
 	exit_code = 0;
-	args = node->args;
-	if (!node->args || !node->args[0])
+	args = node->new_args;
+	if (!node->new_args || !node->new_args[0])
 		args = node->vars;
 	while (args && args[i])
 	{

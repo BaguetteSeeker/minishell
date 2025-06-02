@@ -57,6 +57,7 @@ typedef struct s_ast_node
 	int					is_foreground; // Flag
 	char				*value;	// Value of the node (command name, operator)
 	char				**args;	// Command' arguments
+	char				**new_args;	// Command' new arguments because i can't understand how to free pre-expand args (lol)
 	char				**vars;	// Temporary command vars OR shell vars
 	t_redir				*io_streams; // Linked List of redirections
 	struct s_ast_node	*left;	// Left child (operator' left node)

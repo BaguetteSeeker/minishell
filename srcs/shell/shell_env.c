@@ -70,10 +70,10 @@ void	update_underscore(t_ast_node *node)
 
 	if (!node || node->type != NODE_COMMAND)
 		return;
-	if (node->args && node->args[0])
+	if (node->new_args && node->new_args[0])
 	{
-		i = ft_ptrlen((const void **)node->args) - 1;
-		last_arg = ft_strdup(node->args[i]);
+		i = ft_ptrlen((const void **)node->new_args) - 1;
+		last_arg = ft_strdup(node->new_args[i]);
 	}
 	else if (node->value)
 		last_arg = ft_strdup(node->value);

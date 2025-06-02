@@ -42,6 +42,16 @@ void	exec_fork(t_ast_node *node)
 	exit(1);
 }
 
+int	exec_builtins(t_ast_node *node, t_bi_type type)
+{
+	int	exit_status;
+
+	exit_status = run_builtin(type, node);
+	g_getset(NULL)->last_exitcode = exit_status;
+	update_var_exitcode();
+	return (exit_status);
+}
+
 //forks and calls the execution routine
 //waits for process to exit
 //catches exit signal if any
@@ -56,7 +66,7 @@ int	execute_command(t_ast_node *node)
 	expand_node(node);
 	type = is_builtin(node->new_args[0]);
 	if (type != -1)
-		return(run_builtin(type, node));
+		return(exec_builtins(node, type));
 	pid = fork();
 	if (pid == 0)
 		exec_fork(node);
@@ -67,5 +77,7 @@ int	execute_command(t_ast_node *node)
 		exit_status = WEXITSTATUS(status);
 	if (node->is_foreground == 1)
 		update_underscore(node);
+	g_getset(NULL)->last_exitcode = exit_status;
+	update_var_exitcode();
 	return (exit_status);
 }

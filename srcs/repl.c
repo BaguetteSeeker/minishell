@@ -37,7 +37,6 @@ void repl_once(t_minishell *msh_g)
 	// print_ast(msh_g->cmd_table);
 	// draw_ast(msh_g->cmd_table, "", 1);
 	msh_g->state = MSH_EXECUTING;
-	msh_g->last_exitcode = execute_node(msh_g->cmd_table);
-	update_var_exitcode();
+	execute_node(msh_g->cmd_table);
 	clean_routine();
 }

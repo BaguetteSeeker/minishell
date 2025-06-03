@@ -148,6 +148,7 @@ int			execute_command(t_ast_node *node);
 void		free_tab(void **tab);
 char		**build_new_env(t_ast_node *node);
 void		set_foreground_flag(t_ast_node *node);
+void		set_exitcode(int exitcode);
 
 
 //built-ins
@@ -227,6 +228,7 @@ void		print_segments(t_segment **seg);
 t_segment	**parse_segments(const char *str);
 void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
 int			contains_unquoted_space(t_segment *s);
+int	expand_redirs(t_ast_node *node);
 
 //specific expansion function
 int			expand_vars(t_ast_node *node);

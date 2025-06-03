@@ -12,16 +12,16 @@
 
 #include "minishell.h"
 
-// on this function, the shell should handle a missing file
+// on this function, the shell should handle a missing exp_file
 int	redir_in(t_redir	*redir)
 {
 	int		fd;
 
-	if (access(redir->file, F_OK) != 0 || access(redir->file, R_OK) != 0)
-		return (perror(redir->file), 1);
-	fd = open(redir->file, O_RDONLY);
+	if (access(redir->exp_file, F_OK) != 0 || access(redir->exp_file, R_OK) != 0)
+		return (perror(redir->exp_file), 1);
+	fd = open(redir->exp_file, O_RDONLY);
 	if (fd < 0)
-		return (perror(redir->file), 1);
+		return (perror(redir->exp_file), 1);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	return (0);
@@ -31,9 +31,9 @@ int	redir_out(t_redir	*redir)
 {
 	int		fd;
 
-	fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(redir->exp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
-		return (perror(redir->file), 1);
+		return (perror(redir->exp_file), 1);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 	return (0);
@@ -45,7 +45,7 @@ int	heredoc(t_redir	*redir)
 
 	if (pipe(fds) < 0)
 		return (perror("heredoc pipe"), 1);
-	write(fds[1], redir->file, ft_strlen(redir->file));
+	write(fds[1], redir->exp_file, ft_strlen(redir->exp_file));
 	close(fds[1]);
 	dup2(fds[0], STDIN_FILENO);
 	close(fds[0]);
@@ -56,9 +56,9 @@ int	redir_append(t_redir	*redir)
 {
 	int		fd;
 
-	fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd = open(redir->exp_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
-		return (perror(redir->file), 1);
+		return (perror(redir->exp_file), 1);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 	return (0);

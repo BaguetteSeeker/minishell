@@ -31,15 +31,20 @@ void	exec_fork(t_ast_node *node)
 	envp = g_getset(NULL)->var_env;
 	path = get_cmdpath(node->exp_args[0], envp);
 	if (!path)
-		return (ft_dprintf(STDERR_FILENO, "msh: %s: Command not found\n", 
+		return (ft_dprintf(STDERR_FILENO, "yes msh: %s: Command not found\n", 
 			node->exp_args[0]), clean_shell(), exit(EXITC_NOCMD));
 	update_add_var(VAR_ENV, "_", node->exp_args[0]);
 	envp = g_getset(NULL)->var_env;
-	fflush(stdout);
 	execve(path, node->exp_args, envp);
 	perror("execve failed");
 	clean_shell();
 	exit(1);
+}
+
+void	set_exitcode(int exitcode)
+{
+	g_getset(NULL)->last_exitcode = exitcode;
+	update_var_exitcode();
 }
 
 //forks and calls the execution routine
@@ -54,6 +59,13 @@ int	execute_command(t_ast_node *node)
 	t_bi_type type;
 
 	expand_node(node);
+	printf("AAAAAAAAAAAAHHHH H AHL HL \n\n\npath : %s \nexp_args: \n", "path");
+	print_tab(node->exp_args);
+	if (node->io_streams)
+		printf("\n old %s new %s", node->io_streams->file, node->io_streams->exp_file);
+	fflush(stdout);
+	if (!node->exp_args[0])
+		return (set_exitcode(0), 0);
 	type = is_builtin(node->exp_args[0]);
 	if (type != -1)
 		return(run_builtin(type, node));
@@ -67,5 +79,5 @@ int	execute_command(t_ast_node *node)
 		exit_status = WEXITSTATUS(status);
 	if (node->is_foreground == 1)
 		update_underscore(node);
-	return (exit_status);
+	return (set_exitcode(exit_status), exit_status);
 }

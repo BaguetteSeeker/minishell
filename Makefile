@@ -32,8 +32,8 @@ SRCS =	minishell.c prompt.c cleanup_utils.c repl.c  \
 		expansion/exp_list.c expansion/exp_list_utils.c \
 		expansion/exp_varexp.c expansion/exp_varexp_utils.c\
 		expansion/exp_segment.c expansion/exp_segment_utils.c\
-		expansion/exp_assign.c expansion/exp_assign.c \
-		expansion/exp_wildcard.c expansion/exp_debugger.c \
+		expansion/exp_assign.c expansion/exp_redirection.c \
+		expansion/exp_wildcard.c \
 		exec/exec.c \
 		exec/exec_pipes.c exec/exec_utils.c exec/redirs.c \
 		exec/exec_command.c \
@@ -45,7 +45,7 @@ SRCS =	minishell.c prompt.c cleanup_utils.c repl.c  \
 		shell/shell_assign.c shell/shell_env_utils.c \
 		shell/shell_mode.c shell/shell_var.c shell/signals.c \
 		shell/shell_variable_interface.c  \
-		debug/draw_ast.c debug/putlogs.c
+		debug/draw_ast.c debug/putlogs.c debug/exp_debugger.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
 	$(CC) -c $(CFLAGS) $(ASAN) $(INCLUDES) $< -o $@

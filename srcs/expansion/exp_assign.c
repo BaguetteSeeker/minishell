@@ -12,103 +12,100 @@
 
 #include "minishell.h"
 
-//checks if any LHS in var=val assignments contains a variable reference
-//returns 1 if at least one is expandable (e.g. "VAR1=2 $VAR2=oui"), 0 otherwise
-static int	has_expandable_lhs(char **vars)
+void	replace_rhs(char *entry, char *new_rhs)
 {
-	int		i;
-	char	*eq;
+	char	*eq = ft_strchr(entry, '=');
+
+	if (!eq)
+		return ;
+	eq[1] = '\0';
+	ft_strlcat(entry, new_rhs, ft_strlen(entry) + ft_strlen(new_rhs) + 1);
+	free(new_rhs);
+}
+
+//expands RHS using segment expansion logic
+static int	expand_rhs(char **vars)
+{
+	t_segment	**seg;
+	char		*new;
+	int			i;
 
 	i = 0;
 	while (vars[i])
 	{
-		eq = ft_strchr(vars[i], '=');
-		if (!eq)
-			return (0);
-		*eq = '\0';
-		if (ft_strchr(vars[i], '$'))
-		{
-			*eq = '=';
+		seg = parse_segments(ft_strchr(vars[i], '=') + 1);
+		if (!seg)
 			return (1);
-		}
-		*eq = '=';
+		expand_segments(seg);
+		new = concat_segments(seg);
+		if (!new)
+			return (free_segments(seg), 1);
+		replace_rhs(vars[i], new);
+		free_segments(seg);
 		i++;
 	}
 	return (0);
 }
 
-//expands the RHS of an assignment using segment parsing and concatenation
-//returns the expanded string, or NULL on error or empty variable
-static char	*expand_side(char *rhs)
+//returns 1 if LHS is expandable
+static int	lhs_is_expandable(char *var)
 {
 	t_segment	**seg;
-	char		*result;
+	int			is_expandable;
+	char	 	*lhs;
+	char	 	*eq;
 
-	seg = parse_segments(rhs);
+	eq = ft_strchr(var, '=');
+	if (!eq || eq == var)
+		return (0);
+	lhs = ft_substr(var, 0, eq - var);
+	if (!lhs)
+		return (0);
+	seg = parse_segments(lhs);
+	free(lhs);
 	if (!seg)
-		return (NULL);
-	expand_segments(seg);
-	result = concat_segments(seg);
-	if (!result)
-		result = ft_strdup("");
+		return (0);
+	if (seg[0] && seg[0]->from_var)
+		is_expandable = 1;
 	free_segments(seg);
-	return (result);
+	return (is_expandable);
 }
 
-//expands all RHS values in a var=val list and rebuilds each assignment
-//returns a new array of assignments or NULL on allocation failure
-static char	**expand_assignments(char **vars)
+//puts formed "entry" into argv to be treated as a command
+static int	handle_expandable_lhs(char **vars, t_ast_node *node)
 {
-	char	**new;
-	char	*eq;
-	char	*rhs;
-	char	*lhs;
 	int		i;
 
-	new = malloc(sizeof(char *) * (ft_ptrlen((const void **)vars) + 1));
-	if (!new)
-		return (NULL);
-	i = -1;
-	while (vars[++i])
+	i = 0;
+	while (vars[i])
 	{
-		eq = ft_strchr(vars[i], '=');
-		if (!eq)
-			return (free_tab((void **)new), NULL);
-		*eq = '\0';
-		rhs = expand_side(eq + 1);
-		lhs = ft_substr(vars[i], 0, eq - vars[i]);
-		new[i] = ft_strjoin2(lhs, "=", rhs);
-		*eq = '=';
-		if (!new[i])
-			return (free_tab((void **)new), NULL);
+		if (lhs_is_expandable(vars[i]))
+		{
+			node->exp_args = malloc(sizeof(char *) * 2);
+			if (!node->exp_args)
+				return (1);
+			node->exp_args[0] = ft_strdup(vars[i]);
+			node->exp_args[1] = NULL;
+			return (1);
+		}
+		i++;
 	}
-	new[i] = NULL;
-	return (new);
+	return (0);
 }
 
-// === cursed segfaulter do not call ===
-//
+//first expand every RHS that can be expanded
 //if none of the LHS is expandable
-// 	- expand every RHS that can be expanded
 // 	- return ;
 //if at least one of the LHS is expandable : 
-// 	- expand too
 // 	- expand other side if expandable
-// 	- finally build new_argv with said assignement
+// 	- build new_argv with said assignement
 int	expand_vars(t_ast_node *node)
 {
-	char	**expanded;
-
-	if (!node || !node->vars || !node->vars[0])
+	if (!node->vars)
 		return (0);
-	expanded = expand_assignments(node->vars);
-	if (!expanded)
+	if (expand_rhs(node->vars))
 		return (1);
-	if (!has_expandable_lhs(node->vars))
-	{
-		node->exp_vars = expanded;
-		return (0);
-	}
-	node->exp_args = expanded;
-	return (1);
+	if (handle_expandable_lhs(node->vars, node))
+		return (1);
+	return (0);
 }

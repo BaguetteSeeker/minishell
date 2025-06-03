@@ -66,23 +66,32 @@ int	expand_node(t_ast_node *node)
 {
 	t_word	*word_lst;
 
-	if (!node->args || !node->args[0])
-		return(expand_vars(node));
-	word_lst = word_list_from_argv(node->args);
-	if (!word_lst)
-		return (1);
-	print_word_list(word_lst);
+	if (node->io_streams)
+		expand_redirs(node);
+	if (node->vars)
+		expand_vars(node);
+	if (node->args)
+	{
+		word_lst = word_list_from_argv(node->args);
+		if (!word_lst)
+			return (1);
+		// print_word_list(word_lst);
 
-	var_exp(word_lst);
+		var_exp(word_lst);
 
-	printf("after var exp :\n");	
-	print_word_list(word_lst);
-	word_split(word_lst);
-
-	print_word_list(word_lst);
-	printf("\n=== EXP end ===\n");
-	node->exp_args = word_list_to_argv(word_lst);
+		// printf("after var exp :\n");	
+		// print_word_list(word_lst);
+		word_split(word_lst);
+	
+		// print_word_list(word_lst);
+		// printf("\n=== EXP end ===\n");
+		node->exp_args = word_list_to_argv(word_lst);
+		// print_tab(node->exp_args);
+	}
+	printf("\nexp args :\n");
 	print_tab(node->exp_args);
+	printf("\nexp vars :\n");
+	print_tab(node->exp_vars);
 	return (0);
 }
 

@@ -17,9 +17,11 @@ void	print_tab(char **tab)
 	int	i;
 
 	i = 0;
+	if (!tab)
+		printf("Tab NULL\n");
 	while (tab && tab[i])
 	{
-		printf("%d\t%s\n",i, tab[i]);
+		printf("%d\t>%s<\n",i, tab[i]);
 		i++;
 	}
 }

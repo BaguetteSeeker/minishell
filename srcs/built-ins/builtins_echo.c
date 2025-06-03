@@ -31,11 +31,11 @@ int	has_echo_n(char *arg)
 
 void	echo_print(t_ast_node *node, int i, char *last_exit)
 {
-	if (!ft_strcmp(node->new_args[i], "$?"))
+	if (!ft_strcmp(node->exp_args[i], "$?"))
 		ft_dprintf(STDOUT_FILENO, last_exit);
 	else
-		ft_dprintf(STDOUT_FILENO, node->new_args[i]);
-	if (node->new_args[i + 1])
+		ft_dprintf(STDOUT_FILENO, node->exp_args[i]);
+	if (node->exp_args[i + 1])
 		ft_dprintf(STDOUT_FILENO, " ");
 }
 
@@ -50,18 +50,18 @@ int	builtin_echo(t_ast_node *node)
 	int		newline = 1;
 	char	*last_exit;
 
-	if (!node->new_args[1])
+	if (!node->exp_args[1])
 	{	
 		write(STDOUT_FILENO, "\n", 1);
 		return (0);
 	}
 	last_exit = ft_itoa(g_getset(NULL)->last_exitcode);
-	while (node->new_args[i] && has_echo_n(node->new_args[i]))
+	while (node->exp_args[i] && has_echo_n(node->exp_args[i]))
 	{
 		newline = 0;
 		i++;
 	}
-	while (node->new_args[i])
+	while (node->exp_args[i])
 	{
 		echo_print(node, i, last_exit);
 		i++;

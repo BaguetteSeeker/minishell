@@ -104,8 +104,8 @@ int	builtin_export(t_ast_node *node)
 
 	i = 1;
 	exit_code = 0;
-	args = node->new_args;
-	if (!node->new_args || !node->new_args[0])
+	args = node->exp_args;
+	if (!node->exp_args || !node->exp_args[0])
 		args = node->vars;
 	while (args && args[i])
 	{

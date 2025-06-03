@@ -215,6 +215,9 @@ int			update_quote(char c, quote_t *q);
 t_segment	*create_new_segment(char *text, quote_t quote, int from_var);
 void		skip_standalone_quotes(const char *str, int *i, quote_t *q);
 int			var_len(const char *s);
+void		expand_segments(t_segment **seg);
+char		*concat_segments(t_segment **seg);
+
 
 //var expansion functions
 char		*get_value(char *s);
@@ -224,5 +227,8 @@ void		print_segments(t_segment **seg);
 t_segment	**parse_segments(const char *str);
 void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
 int			contains_unquoted_space(t_segment *s);
+
+//specific expansion function
+int			expand_vars(t_ast_node *node);
 
 #endif

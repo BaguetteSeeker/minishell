@@ -59,13 +59,15 @@ void	word_split(t_word *head)
 //	-for each word, expands text using segmentation logic
 //	-if marked for splitting, split it into multiple argv
 
-//	-similar process for node->vars
+//	-similar although simpler process for node->var (STILL NOT STABLE)
 //	-expands redirections
 //	-(wildcard globbing ?)
 int	expand_node(t_ast_node *node)
 {
 	t_word	*word_lst;
 
+	if (!node->args || !node->args[0])
+		return(expand_vars(node));
 	word_lst = word_list_from_argv(node->args);
 	if (!word_lst)
 		return (1);
@@ -79,7 +81,10 @@ int	expand_node(t_ast_node *node)
 
 	print_word_list(word_lst);
 	printf("\n=== EXP end ===\n");
-	node->new_args = word_list_to_argv(word_lst);
-	print_tab(node->new_args);
+	node->exp_args = word_list_to_argv(word_lst);
+	print_tab(node->exp_args);
 	return (0);
 }
+
+//node->new_var full assignement still not clear
+//

@@ -58,12 +58,13 @@ int	execute_command(t_ast_node *node)
 	pid_t	pid;
 	t_bi_type type;
 
-	expand_node(node);
-	printf("AAAAAAAAAAAAHHHH H AHL HL \n\n\npath : %s \nexp_args: \n", "path");
-	print_tab(node->exp_args);
-	if (node->io_streams)
-		printf("\n old %s new %s", node->io_streams->file, node->io_streams->exp_file);
-	fflush(stdout);
+	exit_status = expand_node(node);
+	if (exit_status)
+		return (set_exitcode(2), 2);
+	// print_tab(node->exp_args);
+	// if (node->io_streams)
+	// 	printf("\n old %s new %s", node->io_streams->file, node->io_streams->exp_file);
+	//fflush(stdout);
 	if (!node->exp_args[0])
 		return (set_exitcode(0), 0);
 	type = is_builtin(node->exp_args[0]);

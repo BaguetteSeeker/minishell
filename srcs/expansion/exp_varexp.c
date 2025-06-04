@@ -127,11 +127,11 @@ void	var_exp(t_word *list)
 		seg = parse_segments(list->text);
 		if (!seg)
 			return ;
-		printf("\nbedore exp :");
-		print_segments(seg);
+		// printf("\nbedore exp :");
+		// print_segments(seg);
 		expand_segments(seg);
-		printf("after exp :");
-		print_segments(seg);
+		// printf("after exp :");
+		// print_segments(seg);
 		new = concat_segments(seg);
 		if (!new)
 		{

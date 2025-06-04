@@ -29,7 +29,9 @@
 # include <sys/stat.h>
 
 # define SHELL_NAME "msh"
-# define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
+ 
+//# define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
+# define PROMPT_NAME "\033[35;1m$minishell: \033[0m"
 # define PS2 "> "
 # define ERRMSG_SYNTAX ": syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
@@ -137,6 +139,7 @@ void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
 void		signals_handler(int sig, siginfo_t *siginfo, void *context);
 void		exit_shell(bool exit_msg, int exit_code);
 void		print_tab(char **tab);
+void		print_redir_list(t_redir *redir);
 
 //Exec
 int			execute_node(t_ast_node *node);

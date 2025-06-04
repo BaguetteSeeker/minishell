@@ -22,16 +22,13 @@ static int	is_ambiguous(char **files)
 	return (0);
 }
 
-static int	redir_exp(t_redir *redir)
+int	redir_exp(t_redir *redir)
 {
 	t_segment	**seg;
 	char		*joined;
 	char		**files;
 
-	seg = NULL;
-	printf("\rfile : %s\n\n", redir->file);
-	if (redir->file) //here
-		seg = parse_segments(redir->file);
+	seg = parse_segments(redir->file);
 	if (!seg)
 		return (1);
 	expand_segments(seg);
@@ -42,43 +39,30 @@ static int	redir_exp(t_redir *redir)
 	free(joined);
 	if (is_ambiguous(files))
 	{
-		ft_dprintf(2, "minishell: %s: ambiguous redirect\n", redir->file);
+		ft_dprintf(2, "msh: %s: ambiguous redirect\n", redir->file);
 		free_segments(seg);
 		free_tab((void **)files);
-		return (clean_shell(), 1);
+		return (2);
 	}
 	redir->exp_file = ft_strdup(files[0]);
 	free_segments(seg);
 	free_tab((void **)files);
+	fflush(stdout);
 	return (redir->exp_file == NULL);
 }
-
-void	print_redir_list(t_redir *redir)
-{
-	int	i = 0;
-	while (redir)
-	{
-		printf("redir #%d -> file: [%s], type: %d\n", i, redir->file, redir->type);
-		redir = redir->next;
-		i++;
-	}
-}
-
 
 int	expand_redirs(t_ast_node *node)
 {
 	t_redir	*redir;
+	int		ret;
 
 	redir = node->io_streams;
-	print_redir_list(redir);
-	fflush(stdout);
+	//printf(expanding redir file=%s\n", redir->file);
 	while (redir)
 	{
-		printf("iterating\n");
-		fflush(stdout);
-
-		if (redir_exp(redir))
-			return (1);
+		ret = redir_exp(redir);
+		if (ret)
+			return (ret);
 		redir = redir->next;
 	}
 	print_redir_list(redir);

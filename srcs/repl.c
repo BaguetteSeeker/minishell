@@ -26,6 +26,7 @@ void repl_once(t_minishell *msh_g)
 	if (msh_g->state == MSH_FAILLURE)
 	{
 		msh_g->last_exitcode = 2;
+		set_exitcode(2);
 		clean_routine();
 		return ;
 	}

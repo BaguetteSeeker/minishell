@@ -65,9 +65,13 @@ void	word_split(t_word *head)
 int	expand_node(t_ast_node *node)
 {
 	t_word	*word_lst;
+	int		ret;
 
+	ret = 0;
 	if (node->io_streams)
-		expand_redirs(node);
+		ret = expand_redirs(node);
+	if (ret)
+		return (1);
 	if (node->vars)
 		expand_vars(node);
 	if (node->args)
@@ -88,10 +92,13 @@ int	expand_node(t_ast_node *node)
 		node->exp_args = word_list_to_argv(word_lst);
 		// print_tab(node->exp_args);
 	}
-	printf("\nexp args :\n");
-	print_tab(node->exp_args);
-	printf("\nexp vars :\n");
-	print_tab(node->exp_vars);
+	// printf("\nexp args :\n");
+	// print_tab(node->exp_args);
+	// printf("\nexp vars :\n");
+	// print_tab(node->exp_vars);
+	// printf("\n\n%p is NULL ???\n\n", node->io_streams);
+	// if (node->io_streams)
+		// printf("old file %s, new %s\n", node->io_streams->file, node->io_streams->exp_file);
 	return (0);
 }
 

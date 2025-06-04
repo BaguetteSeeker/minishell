@@ -34,6 +34,30 @@ void	free_token_value(t_token *token)
 	}
 }
 
+static void free_exp(t_ast_node *node)
+{
+	t_redir *redir;
+
+	redir = node->io_streams;
+	if (node->exp_args)
+		free_tab((void **)node->exp_args);
+	// else
+	// 	printf("couldnt free exp-args\n");
+	if (node->exp_vars)
+		free_tab((void **)node->exp_vars);
+	// else
+	// 	printf("couldnt free exp-vars\n");
+	while (redir)
+	{
+		if (redir->exp_file)
+		{
+			free(redir->exp_file);
+			redir->exp_file = NULL;
+		}
+		redir = redir->next;
+	}
+}
+
 //Recursively cleans the entire tree from bottom to top
 //Double ptrs are freed right away,
 //its subptrs pointing on already cleared token_lst
@@ -43,10 +67,7 @@ static void	clean_ast(t_ast_node *node)
 		return ;
 	if (node->type == NODE_COMMAND)
 	{
-		if (node->exp_args)
-			free_tab((void **)node->exp_args);		
-		if (node->exp_vars)
-			free_tab((void **)node->exp_vars);
+		free_exp(node);
 		if (node->args)
 			free(node->args);
 		if (node->vars)

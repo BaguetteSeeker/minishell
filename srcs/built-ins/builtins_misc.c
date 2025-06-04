@@ -44,21 +44,11 @@ int	builtin_pwd(void)
 //to mimick bash, runs command in a child-process
 int	builtin_env(void)
 {
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == 0)
-	{
-		put_recurse_dynarr(g_getset(NULL)->var_env);
-		//debug
-		printf("\n === VAR SHELL === \n");
-		put_recurse_dynarr(g_getset(NULL)->var_shell);
-		//to remove
-		restore_stdio_builtin();
-		clean_shell();
-		exit(0);
-	}
-	wait(NULL);
+	put_recurse_dynarr(g_getset(NULL)->var_env);
+	//debug
+	printf("\n === VAR SHELL === \n");
+	put_recurse_dynarr(g_getset(NULL)->var_shell);
+	//to remove
 	return (0);
 }
 

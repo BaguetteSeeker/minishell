@@ -96,7 +96,7 @@ static char	**fill_argv_array(char **argv, t_word *list)
 	{
 		if (list->text)
 		{
-			argv[i] = strdup(list->text);
+			argv[i] = strdup(list->text); //leak
 			if (!argv[i])
 			{
 				while (i > 0)
@@ -121,7 +121,7 @@ char	**word_list_to_argv(t_word *list)
 
 	tmp = list;
 	count = count_non_null_words(list);
-	argv = malloc(sizeof(char *) * (count + 1));
+	argv = malloc(sizeof(char *) * (count + 1)); //DEFF lost (wtf)
 	if (!argv)
 		return (free_word_list(list), NULL);
 	argv = fill_argv_array(argv, list);

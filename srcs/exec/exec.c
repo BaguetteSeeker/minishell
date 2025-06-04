@@ -64,9 +64,9 @@ int	command_no_command(t_ast_node *node)
 	int	exit_code;
 
 	exit_code = 0;
-	printf("\nBEFORE\nAAAajofafapjfpaofHH\n\n");
-	expand_node(node);
-	printf("\nAFTER\nAAAajofafapjfpaofHH\n\n");
+	exit_code = expand_node(node);
+	if (exit_code)
+		return (set_exitcode(1), 1);
 	//print_tab(node->vars_exp);
 	if (node->vars != NULL)
 		exit_code = assign_shell_var(node);

@@ -31,13 +31,13 @@
 # define SHELL_NAME "msh"
  
 //# define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
-# define PROMPT_NAME "\033[35;1m$minishell: \033[0m"
+# define PROMPT_NAME "\033[33;1m$minishell: \033[0m"
 # define PS2 "> "
 # define ERRMSG_SYNTAX ": syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
-# define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
+# define ERRMSG_EXPORT "msh: export: %s=%s is not a valid identifier\n"
 # define ERRMSG_NOCMD "msh: : command not found\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126
@@ -175,7 +175,7 @@ char		*get_new_entry(char *var_name, char *value);
 char		**add_new_entry(char **env, char *new_entry);
 char		**replace_new_entry(char **env, char *new_entry, int i);
 char		*get_new_entry(char *var_name, char *value);
-int			is_valid_export(char *name);
+int			is_valid_var_name(char *name);
 
 void		update_add_var(int mode, char *var_name, char *value);
 void		update_remove_var(int mode, char *var_name);

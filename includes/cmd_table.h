@@ -47,8 +47,8 @@ typedef enum e_redir_type
 typedef struct s_redir
 {
 	char			*file;
-	char			*exp_file;
 	struct s_redir	*next;
+	char			*exp_file;
 	t_redir_type	type;
 }	t_redir;
 

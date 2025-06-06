@@ -73,6 +73,7 @@ int	redirections_handler(t_ast_node *node)
 
 	exit_code = 0;
 	redir = node->io_streams;
+	// print_redir_list(redir);
 	while (redir)
 	{
 		if (redir->type == REDIR_IN)

@@ -17,7 +17,7 @@ void	print_redir_list(t_redir *redir)
 	int	i = 0;
 	while (redir)
 	{
-		printf("redir #%d -> file: [%s], type: %d\n", i, redir->file, redir->type);
+		printf("\t\tredir #%d -> file: [%s], type: %d\n", i, redir->file, redir->type);
 		redir = redir->next;
 		i++;
 	}

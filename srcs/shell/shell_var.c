@@ -22,13 +22,6 @@ var stored in var_shell :
 	- ~
 */
 
-void	update_shell_var(t_ast_node *node)
-{
-	//update_underscore(node);
-	(void)node;
-	//add other variables like PS1, PS2 for custom pompt
-}
-
 char	**init_shell_var(void)
 {
 	char	**var_shell;

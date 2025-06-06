@@ -13,18 +13,21 @@
 #include "minishell.h"
 
 //return 1 on variable start
+//variable start defined as allowed variable char positionned after $ 
 int	is_var_start(const char *s, quote_t q)
 {
 	if (!s || *s != '$')
 		return (0);
 	if (q == QUOTE_SINGLE)
 		return (0);
+	if (*(s + 1) == '?')
+		return (1);
 	if (!is_var_char(*(s + 1)))
 		return (0);
 	return (1);
 }
 
-//from start of var to change in 
+//from start of var to change in quote OR unallowed char
 int	scan_segment_len(const char *s, int start, quote_t *q)
 {
 	int	len;
@@ -57,10 +60,19 @@ int	extract_segment(const char *s, int start, quote_t *q, t_segment **seg_out)
 	if (is_var_start(&s[start], *q))
 	{
 		start++;
-		len = var_len(&s[start]);
-		text = ft_substr(s, start, len);
+		if (s[start] == '?')
+		{
+			text = ft_strdup("?");
+			len = 1;
+		}
+		else
+		{
+			len = var_len(&s[start]);
+			text = ft_substr(s, start, len);
+		}
 		from_var = 1;
 	}
+
 	else
 	{
 		len = scan_segment_len(s, start, q);

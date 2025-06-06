@@ -65,6 +65,6 @@ int	expand_redirs(t_ast_node *node)
 			return (ret);
 		redir = redir->next;
 	}
-	print_redir_list(redir);
+	// print_redir_list(redir);
 	return (0);
 }

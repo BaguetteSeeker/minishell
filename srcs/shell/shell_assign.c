@@ -15,7 +15,7 @@
 
 //variable name should start with a letter
 //variable names can only contain letter, digits and underscore
-int	is_valid_export(char *name)
+int	is_valid_var_name(char *name)
 {
 	int	i;
 
@@ -35,11 +35,10 @@ int	is_valid_export(char *name)
 
 int assign_noval(char *name)
 {
-	if (is_valid_export(name))
+	if (is_valid_var_name(name))
 		update_add_var(VAR_SHELL, name, "");
 	else
 	{
-		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, name);
 		return (1);
 	}
 	return (0);
@@ -59,11 +58,10 @@ int	assign_val(char *arg, char *equal_sign)
 	if (!clean_val)
 		return (put_err("strdup"), 1);
 	strip_outquotes(clean_val);
-	if (is_valid_export(var))
+	if (is_valid_var_name(var))
 		update_add_var(VAR_SHELL, var, clean_val);
 	else
 	{
-		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, var);
 		*equal_sign = '=';
 		free(clean_val);
 		return (1);
@@ -80,17 +78,15 @@ int	assign_shell_var(t_ast_node *node)
 	int		i;
 	int		exit_code;
 	char	*equal_sign;
-	char	*test;
+	char	*is_env;
 
 	i = 0;
 	exit_code = 0;
 	while (node->vars && node->vars[i])
 	{
-		test = get_var_entry(VAR_ENV, node->vars[i]);
-		if (test)
-		{
+		is_env = get_var_entry(VAR_ENV, node->vars[i]);
+		if (is_env)
 			return (builtin_export(node));
-		}
 		equal_sign = ft_strchr(node->vars[i], '=');
 		if (equal_sign)
 			exit_code |= assign_val(node->vars[i], equal_sign);

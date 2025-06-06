@@ -28,11 +28,11 @@ int	export_val(char *arg, char *equal_sign)
 	strip_outquotes(clean_val);
 	if (!clean_val)
 		return (put_err("strdup"), 1);
-	if (is_valid_export(var))
+	if (is_valid_var_name(var))
 		update_add_var(VAR_ENV, var, clean_val);
 	else
 	{
-		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, var);
+		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, var, val);
 		*equal_sign = '=';
 		free(clean_val);
 		return (1);
@@ -51,6 +51,9 @@ void	move_entry(char *entry)
 	char	*var_name;
 
 	equal_sign = ft_strchr(entry, '=');
+	
+	printf(" \n \nVAR NAME %s<\n\n", entry);
+	fflush(stdout);
 	shell_entry = get_var_entry(VAR_SHELL, entry);
 	len = ft_strlen(entry);
 	if (equal_sign)
@@ -74,6 +77,8 @@ int	export_loop(char *arg)
 
 	exit_code = 0;
 	new_entry = NULL;
+	printf("\n \nVAR NAME %s<\n\n", arg);
+	fflush(stdout);
 	if (get_var_entry(VAR_SHELL, arg))
 	{
 		equal_sign = ft_strchr(arg, '=');

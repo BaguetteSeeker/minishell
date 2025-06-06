@@ -46,11 +46,44 @@ int	builtin_env(void)
 {
 	put_recurse_dynarr(g_getset(NULL)->var_env);
 	//debug
-	printf("\n === VAR SHELL === \n");
-	put_recurse_dynarr(g_getset(NULL)->var_shell);
+	// printf("\n === VAR SHELL === \n");
+	// put_recurse_dynarr(g_getset(NULL)->var_shell);
 	//to remove
 	return (0);
 }
+
+
+//helper to validate and parse an optional signed integer
+//last line is casting code into an int
+//bitwise operator & effectively gives the result modulo 256
+static int	parse_exit_code(const char *str, int *code_out)
+{
+	long	sign;
+	long	res;
+	int		i;
+
+	sign = 1;
+	res = 0;
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	if (str[i] == '-' || str[i] == '+')
+		return (1); // invalid double sign
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (1);
+		res = res * 10 + (str[i] - '0');
+		i++;
+	}
+	*code_out = (int)((sign * res) & 255);
+	return (0);
+}
+
 
 //exits the shell
 //	-exit (integer)		exits the shell with integer exit status
@@ -59,33 +92,27 @@ int	builtin_env(void)
 int	builtin_exit(t_ast_node *node)
 {
 	int	exit_code;
+	char **args = node->exp_args;
 
-	if (!node->exp_args || !node->exp_args[1])
+	if (!args || !args[1])
 		exit_code = 0;
-	else if (!ft_isnum(node->exp_args[1]))
+	else if (parse_exit_code(args[1], &exit_code))
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
 		restore_stdio_builtin();
 		exit_shell(NULL, 2);
 	}
-	else if (ft_ptrlen((const void **)node->exp_args) != 2)
+	else if (ft_ptrlen((const void **)args) > 2)
 	{
 		ft_putendl_fd("exit\nexit : too many arguments", STDERR_FILENO);
 		restore_stdio_builtin();
 		return (1);
 	}
-	else
-		exit_code = atoi(node->exp_args[1]);
-	if (exit_code == -1)
-	{
-		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
-		restore_stdio_builtin();
-		exit_shell(NULL, 2);
-	}
 	restore_stdio_builtin();
-	exit_shell(EXIT_MSG, exit_code);
-	return (1);
+	exit_shell("exit", exit_code);
+	return (0); // unreachable, but norm-friendly
 }
+
 
 //removes an entry from var_env or var_shell
 //unset VAR	removes VAR from var_shell or var_env

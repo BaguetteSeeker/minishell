@@ -126,7 +126,7 @@ t_segment	**parse_segments(const char *str)
 	max = ft_strlen(str) + 1;
 	seg = malloc(sizeof(t_segment *) * max);
 	if (!seg)
-		return (NULL);
+		return (printf("\nCONNARD\n"), NULL);
 	if (parse_loop(str, seg) == -1)
 		return (free_segments(seg), NULL);
 	return (seg);

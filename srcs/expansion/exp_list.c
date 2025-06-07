@@ -53,6 +53,7 @@ t_word	*create_new_word(char *text)
 	node->from_variable = 0;
 	node->previous = NULL;
 	node->next = NULL;
+	node->seg = NULL;
 	return (node);
 }
 

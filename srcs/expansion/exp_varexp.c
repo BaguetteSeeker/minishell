@@ -85,32 +85,6 @@ void	expand_segments(t_segment **seg)
 	}
 }
 
-//word is only splitable if there's at least on segment unquoted AND 
-//contains a space (tough one)
-//example :
-//VAR1="oui non"
-//VAR2="123"
-//$VAR1$VAR2 expands to : oui non123 (should split to "oui" and "non123")
-//VAR3="oui non"
-//$VAR3 expands to : oui non SHOULD split
-//"$VAR3" expands to : "oui non", shouldn't split
-//OUI"non oui" expands to : OUInon oui, one word, shouldn't split either
-int	should_word_split(t_segment **seg)
-{
-	int	i;
-
-	i = 0;
-	while (seg[i])
-	{
-		if (seg[i]->quote == QUOTE_NONE
-			&& contains_unquoted_space(seg[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-
 //Main function of actual variable expansion
 //for each word on the list, creates an array of sub-segments describing
 //sections of the word that may need to be expanded
@@ -119,20 +93,20 @@ int	should_word_split(t_segment **seg)
 //said new word is marked for splitting or not in next stage of global exp
 void	var_exp(t_word *list)
 {
-	t_segment	**seg;
+	//t_segment	**seg;
 	char		*new;
 
 	while (list)
 	{
-		seg = parse_segments(list->text);
-		if (!seg)
+		list->seg = parse_segments(list->text);
+		if (!list->seg)
 			return ;
 		// printf("\nbedore exp :");
-		// print_segments(seg);
-		expand_segments(seg);
+		// print_segments(list->seg);
+		expand_segments(list->seg);
 		// printf("after exp :");
-		// print_segments(seg);
-		new = concat_segments(seg);
+		// print_segments(list->seg);
+		new = concat_segments(list->seg);
 		if (!new)
 		{
 			free(list->text);
@@ -143,8 +117,6 @@ void	var_exp(t_word *list)
 			free(list->text);
 			list->text = new;
 		}
-		list->should_split = should_word_split(seg);
-		free_segments(seg);
 		list = list->next;
 	}
 }

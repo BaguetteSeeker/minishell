@@ -23,6 +23,8 @@ void	free_word_list(t_word *list)
 		tmp = list->next;
 		if (list->text)
 			free(list->text);
+		if (list->seg)
+			free_segments(list->seg);
 		free(list);
 		list = tmp;
 	}
@@ -58,7 +60,15 @@ void	remove_word(t_word *node)
 	else if (node->previous)
 		update_node_index(node->previous);
 	if (node->text)
+	{
 		free(node->text);
+		node->text = NULL;
+	}
+	if (node->seg)
+	{
+		free_segments(node->seg);
+		node->seg = NULL;
+	}
 	free(node);
 }
 

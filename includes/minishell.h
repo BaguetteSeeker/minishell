@@ -121,7 +121,6 @@ bool		check_varname(char *str);
 char		*expand(char *buff, size_t flag);
 void		expand_token(t_token *tokens);
 char		*get_envvar(char *pcdr);
-char		*get_path(char *pcdr);
 size_t		varsiz(const char *var);
 size_t		pathsiz(const char *path);
 void		repl_once(t_minishell *msh_g);
@@ -176,7 +175,6 @@ char		**add_new_entry(char **env, char *new_entry);
 char		**replace_new_entry(char **env, char *new_entry, int i);
 char		*get_new_entry(char *var_name, char *value);
 int			is_valid_var_name(char *name);
-
 void		update_add_var(int mode, char *var_name, char *value);
 void		update_remove_var(int mode, char *var_name);
 char		*get_var_value(int mode, char *var_name);
@@ -232,8 +230,10 @@ t_segment	**parse_segments(const char *str);
 void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
 int			contains_unquoted_space(t_segment *s);
 int			expand_redirs(t_ast_node *node);
-
-//specific expansion function
 int			expand_vars(t_ast_node *node);
+
+//wildcards expansion functions
+char		**get_path(char *pcdr);
+int			is_wildcard_expandable(t_segment **seg);
 
 #endif

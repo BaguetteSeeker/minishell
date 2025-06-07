@@ -97,7 +97,7 @@ int	run_builtin(t_bi_type	builtin_type, t_ast_node *node)
 		return (exit_status);
 	exit_status = call_builtin(builtin_type, node);
 	restore_stdio_builtin();
-	g_getset(NULL)->last_exitcode = exit_status;
+	set_exitcode(exit_status);
 	return (exit_status);
 }
 

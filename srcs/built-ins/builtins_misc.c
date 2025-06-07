@@ -112,21 +112,3 @@ int	builtin_exit(t_ast_node *node)
 	exit_shell("exit", exit_code);
 	return (0); // unreachable, but norm-friendly
 }
-
-
-//removes an entry from var_env or var_shell
-//unset VAR	removes VAR from var_shell or var_env
-//unset VAR	whereas VAR doesn't exist should be benign.
-int	builtin_unset(t_ast_node *node)
-{
-	int	i;
-
-	i = 1;
-	while (node->exp_args && node->exp_args[i])
-	{
-		update_remove_var(VAR_SHELL, node->exp_args[i]);
-		update_remove_var(VAR_ENV, node->exp_args[i]);
-		i++;
-	}
-	return (0);
-}

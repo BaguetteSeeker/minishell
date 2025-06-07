@@ -37,7 +37,7 @@
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
-# define ERRMSG_EXPORT "msh: export: %s=%s is not a valid identifier\n"
+# define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
 # define ERRMSG_NOCMD "msh: : command not found\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126
@@ -231,7 +231,7 @@ void		print_segments(t_segment **seg);
 t_segment	**parse_segments(const char *str);
 void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
 int			contains_unquoted_space(t_segment *s);
-int	expand_redirs(t_ast_node *node);
+int			expand_redirs(t_ast_node *node);
 
 //specific expansion function
 int			expand_vars(t_ast_node *node);

@@ -24,7 +24,7 @@ int	is_valid_var_name(char *name)
 	if (!ft_isalpha(name[0]) && name[0] != '_')
 		return (0);
 	i = 1;
-	while (name[i])
+	while (name[i] && name[i] != '=')
 	{
 		if (!ft_isalnum(name[i]) && name[i] != '_')
 			return (0);

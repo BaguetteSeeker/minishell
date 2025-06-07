@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_pipes.c                                       :+:      :+:    :+:   */
+/*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -44,7 +44,7 @@ void	exec_fork(t_ast_node *node)
 void	set_exitcode(int exitcode)
 {
 	g_getset(NULL)->last_exitcode = exitcode;
-	//update_var_exitcode();
+	update_var_exitcode();
 }
 
 //forks and calls the execution routine

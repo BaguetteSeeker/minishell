@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_exset.c                                   :+:      :+:    :+:   */
+/*   builtins_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -25,18 +25,10 @@ int	export_val(char *arg, char *equal_sign)
 	var = arg;
 	val = equal_sign + 1;
 	clean_val = ft_strdup(val);
-	strip_outquotes(clean_val);
 	if (!clean_val)
 		return (put_err("strdup"), 1);
-	if (is_valid_var_name(var))
-		update_add_var(VAR_ENV, var, clean_val);
-	else
-	{
-		ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, var, val);
-		*equal_sign = '=';
-		free(clean_val);
-		return (1);
-	}
+	strip_outquotes(clean_val);
+	update_add_var(VAR_ENV, var, clean_val);
 	*equal_sign = '=';
 	free(clean_val);
 	return (0);
@@ -52,8 +44,6 @@ void	move_entry(char *entry)
 
 	equal_sign = ft_strchr(entry, '=');
 	
-	printf(" \n \nVAR NAME %s<\n\n", entry);
-	fflush(stdout);
 	shell_entry = get_var_entry(VAR_SHELL, entry);
 	len = ft_strlen(entry);
 	if (equal_sign)
@@ -77,12 +67,10 @@ int	export_loop(char *arg)
 
 	exit_code = 0;
 	new_entry = NULL;
-	printf("\n \nVAR NAME %s<\n\n", arg);
-	fflush(stdout);
 	if (get_var_entry(VAR_SHELL, arg))
 	{
 		equal_sign = ft_strchr(arg, '=');
-		if (equal_sign && *(equal_sign + 1) != '\0')
+		if (equal_sign)
 		{
 			new_entry = ft_strdup(arg);
 			update_remove_var(VAR_SHELL, arg);
@@ -101,6 +89,7 @@ int	export_loop(char *arg)
 //exports a variable into shell_env
 //	-export VAR		does nothing
 //	-export VAR=123	adds "VAR=123" to shell_env
+//	-export VAR whereas VAR exists in shell_var moves it to shell_env
 int	builtin_export(t_ast_node *node)
 {
 	int		i;
@@ -114,9 +103,34 @@ int	builtin_export(t_ast_node *node)
 		args = node->vars;
 	while (args && args[i])
 	{
-		exit_code = export_loop(args[i]);
+		if (is_valid_var_name(args[i]))
+		{
+			if (export_loop(args[i]) != 0)
+				exit_code = 1;
+		}
+		else
+		{
+			ft_dprintf(STDERR_FILENO, ERRMSG_EXPORT, args[i]);
+			exit_code = 1;
+		}
 		i++;
 	}
 	return (exit_code);
 }
 
+//removes an entry from var_env or var_shell
+//unset VAR	removes VAR from var_shell or var_env
+//unset VAR	whereas VAR doesn't exist should be benign.
+int	builtin_unset(t_ast_node *node)
+{
+	int	i;
+
+	i = 1;
+	while (node->exp_args && node->exp_args[i])
+	{
+		update_remove_var(VAR_SHELL, node->exp_args[i]);
+		update_remove_var(VAR_ENV, node->exp_args[i]);
+		i++;
+	}
+	return (0);
+}

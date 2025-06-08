@@ -64,19 +64,23 @@ int	command_no_command(t_ast_node *node)
 	int	exit_code;
 
 	exit_code = 0;
+	exit_code = expand_node(node);
+	if (exit_code)
+		return (set_exitcode(1), 1);
+	//print_tab(node->vars_exp);
 	if (node->vars != NULL)
 		exit_code = assign_shell_var(node);
 	if (node->io_streams != NULL)
 	{
 		exit_code = redir_stdio_builtin(node);
 		if (exit_code)
-			return (exit_code);
+			return (set_exitcode(exit_code), exit_code);
 		restore_stdio_builtin();
 	}
 	else if (g_getset(NULL)->mode == INTERACTIVE 
 		&& !node->io_streams && !node->vars)
-			return (ft_putendl_fd(ERRMSG_NOCMD, STDERR_FILENO), 127);
-	return (exit_code);
+			return (ft_putendl_fd(ERRMSG_NOCMD, 2), set_exitcode(127), 127);
+	return (set_exitcode(exit_code), exit_code);
 }
 
 //traverses the tree recursively, executes node functions when found

@@ -48,6 +48,7 @@ typedef struct s_redir
 {
 	char			*file;
 	struct s_redir	*next;
+	char			*exp_file;
 	t_redir_type	type;
 }	t_redir;
 
@@ -56,8 +57,10 @@ typedef struct s_ast_node
 	t_node_type			type;	// Type of the node
 	int					is_foreground; // Flag
 	char				*value;	// Value of the node (command name, operator)
-	char				**args;	// Command' arguments
-	char				**vars;	// Temporary command vars OR shell vars
+	char				**args;	// cmd args, comes from lexer DO NOT FREE
+	char				**exp_args;	// cmd args post expansion
+	char				**vars;	// Temporary cmd vars OR shell vars
+	char				**exp_vars;	// same thing as exp_args
 	t_redir				*io_streams; // Linked List of redirections
 	struct s_ast_node	*left;	// Left child (operator' left node)
 	struct s_ast_node	*right;	// Right child (operator' right node)

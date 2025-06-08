@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_env.c                                     :+:      :+:    :+:   */
+/*   shell_variable_interface.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -76,8 +76,9 @@ int	var_pos(char **var_tab, const char *var_name)
 		return (-1);
 	while (var_tab[i])
 	{	
-		if (ft_strncmp(var_tab[i], var_name, len) == 0 && var_tab[i][len] == '=')
-			return (i);
+		if (ft_strncmp(var_tab[i], var_name, len) == 0 
+			&& var_tab[i][len] == '=')
+				return (i);
 		i++;
 	}
 	return (-1);
@@ -112,4 +113,3 @@ char	*get_var_value(int mode, char *var_name)
 	value = ft_strchr(entry, '=') + 1;
 	return (value);
 }
-

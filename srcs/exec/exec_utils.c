@@ -66,19 +66,45 @@ char	*get_newpath(char *path, char *cmd, int i)
 	return (newpath);
 }
 
-//on dirait pas mais la logique est ok
+//searches for executable in $PATH
+static char	*search_path_dirs(char *cmd, char **envp)
+{
+	int			i;
+	char		*path;
+	char		**envpaths;
+	struct stat	st;
+
+	i = 0;
+	path = NULL;
+	if (!envp || *envp == NULL || *cmd == '\0')
+		return (NULL);
+	envpaths = get_envpaths(envp);
+	if (!envpaths)
+		return (NULL);
+	while (envpaths[i])
+	{
+		path = get_newpath(envpaths[i], cmd, i);
+		if (access(path, F_OK) == 0 && stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
+		{
+			free_tab((void **)envpaths);
+			return (path);
+		}
+		free(path);
+		i++;
+	}
+	free_tab((void **)envpaths);
+	return (NULL);
+}
+
+//returns path to command
+//	-if command not found : return NULL
+//	-if file found but not accessible
 char	*get_cmdpath(char *cmd, char **envp)
 {
-	int		i;
-	char	*path;
-	char	**envpaths;
 	struct stat st;
 
-	i = -1;
-	if (!cmd)
+	if (!cmd || *cmd == '\0')
 		return (NULL);
-	path = NULL;
-	fflush(stdout);
 	if (ft_strcmp(cmd, ".") == 0 || ft_strcmp(cmd, "..") == 0)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
@@ -93,19 +119,5 @@ char	*get_cmdpath(char *cmd, char **envp)
 		}
 		return (cmd);
 	}
-	if (!envp || *envp == NULL || *cmd == '\0')
-		return (NULL);
-	envpaths = get_envpaths(envp);
-	if (!envpaths)
-		return(NULL);
-	while (envpaths[++i])
-	{
-		path = get_newpath(envpaths[i], cmd, i);
-		//printf("testing path %s : %d\n", path, access(path, F_OK));
-		if (access(path, F_OK) == 0)
-			return (free_tab((void **)envpaths), path);
-		free(path);
-	}
-	free_tab((void **)envpaths);
-	return (NULL);
+	return search_path_dirs(cmd, envp);
 }

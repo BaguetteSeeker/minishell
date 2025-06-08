@@ -73,7 +73,13 @@ static t_redir	*parse_redir(t_token **tokens)
 	redir = malloc(sizeof(t_redir));
 	if (!redir)
 		put_err("Parser Utils : Malloc faillure");
-	*redir = (t_redir){(*tokens)->next->value, NULL, (*tokens)->type};
+	*redir = (t_redir)
+	{
+		.file = (*tokens)->next->value,
+		.exp_file = NULL,
+		.next = NULL,
+		.type = (*tokens)->type
+	};
 	*tokens = (*tokens)->next->next;
 	return (redir);
 }

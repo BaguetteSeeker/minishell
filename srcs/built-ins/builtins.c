@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+//resors stdio file descriptors in parent process
 void restore_stdio_builtin(void)
 {
 	t_minishell *msh;
@@ -25,6 +26,8 @@ void restore_stdio_builtin(void)
 	close(msh->stdio.stderr_fd);
 }
 
+//copies (dup) each stdio file descriptor for each built-ins
+//in order to not loose the stdio on parent proc
 int redir_stdio_builtin(t_ast_node *node)
 {
 	t_minishell *msh;
@@ -42,6 +45,7 @@ int redir_stdio_builtin(t_ast_node *node)
 	return (redirs);
 }
 
+//calls the adequate built-in function
 int	call_builtin(t_bi_type	builtin_type, t_ast_node *node)
 {
 	if (builtin_type == BUILTIN_ECHO)
@@ -61,24 +65,7 @@ int	call_builtin(t_bi_type	builtin_type, t_ast_node *node)
 	return (1);
 }
 
-
-//built-ins have persistant impact on msh should run in parent
-//(cd and ENV related built-ins like export and unset)
-//other built-ins should run in a child to mimick bash's behavior
-int	run_builtin(t_bi_type	builtin_type, t_ast_node *node)
-{
-	int	exit_status;
-
-	exit_status = redir_stdio_builtin(node);
-	if (exit_status)
-		return (exit_status);
-	exit_status = call_builtin(builtin_type, node);
-	restore_stdio_builtin();
-	g_getset(NULL)->last_exitcode = exit_status;
-	return (exit_status);
-}
-
-
+//return a built-in type from the name of exec cmd
 t_bi_type	is_builtin(const char *cmd)
 {
 	if (ft_strcmp(cmd, "echo") == 0)
@@ -97,3 +84,20 @@ t_bi_type	is_builtin(const char *cmd)
 		return (BUILTIN_EXIT);
 	return (BUILTIN_NONE);
 }
+
+//built-ins have persistant impact on msh should run in parent
+//(cd and ENV related built-ins like export and unset)
+//other built-ins should run in a child to mimick bash's behavior (env)
+int	run_builtin(t_bi_type	builtin_type, t_ast_node *node)
+{
+	int	exit_status;
+
+	exit_status = redir_stdio_builtin(node);
+	if (exit_status)
+		return (exit_status);
+	exit_status = call_builtin(builtin_type, node);
+	restore_stdio_builtin();
+	set_exitcode(exit_status);
+	return (exit_status);
+}
+

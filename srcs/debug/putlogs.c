@@ -12,6 +12,32 @@
 
 #include "minishell.h"
 
+void	print_redir_list(t_redir *redir)
+{
+	int	i = 0;
+	while (redir)
+	{
+		printf("\t\tredir #%d -> file: [%s], type: %d\n", 
+			i, redir->file, redir->type);
+		redir = redir->next;
+		i++;
+	}
+}
+
+void	print_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	if (!tab)
+		printf("Tab NULL\n");
+	while (tab && tab[i])
+	{
+		printf("%d\t>%s<\n", i, tab[i]);
+		i++;
+	}
+}
+
 void	lst_put(t_token *lst)
 {
 	if (!lst)

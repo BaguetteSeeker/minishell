@@ -44,7 +44,7 @@ char	**copy_env(char **env)
 }
 
 //increment SHLVL and overwrites it in ENV
-void	update_SHLVL(void)
+void	update_SHLVL()
 {
 	int		level;
 	char	*SHLVL;
@@ -70,10 +70,10 @@ void	update_underscore(t_ast_node *node)
 
 	if (!node || node->type != NODE_COMMAND)
 		return;
-	if (node->args && node->args[0])
+	if (node->exp_args && node->exp_args[0])
 	{
-		i = ft_ptrlen((const void **)node->args) - 1;
-		last_arg = ft_strdup(node->args[i]);
+		i = ft_ptrlen((const void **)node->exp_args) - 1;
+		last_arg = ft_strdup(node->exp_args[i]);
 	}
 	else if (node->value)
 		last_arg = ft_strdup(node->value);

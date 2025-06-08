@@ -63,6 +63,7 @@ int	main(int argc, char *argv[], char *env[])
 	msh_g->var_shell = init_shell_var();
 	update_SHLVL();
 	update_add_var(VAR_ENV, "_", argv[0]);
+	update_add_var(VAR_SHELL, "?", "0");
 	set_sigaction(&signals_handler);
 	if (argc > 1)
         return (script_args_routine(msh_g, argc, argv), 1);
@@ -72,39 +73,3 @@ int	main(int argc, char *argv[], char *env[])
 		prompt_routine(msh_g);
 	return (0);
 }
-
-/*
-	parsing errors
-	- redirections should be parsed wherever they are inside the chain of arguments
-		examples :
-		ls > file1 -la
-		(works as "ls -la > file1")
-		< Makefile cat | head -n > file1 1
-		(works as "cat < Makefile  | head -n 1 > file1")
-	basically, parsing logic is :
-		-everything counts as a program argument, until a redirection character is found
-		-if token <, >, << or >> is found, next token is the file (or delimiter) of the redirection
-
-	- on Uncatched error the parsing still quits
-		example prompting :
-		"node->right = parse_tokens(tokens, node->right);"
-		copying some heavier expression into the shell, like C code or stuff that have tons of newline
-	the output is "Uncatched Parsing Error :                       Expecting Operator token but none was provided: Success"
-	
-	- on catched error, the parsing seems broken
-		example prompting :
-		"a00))'a ' a'a  / \\ 1= _+ =-2=2-1"
-	outputs :
-		syntax error near unexpected token `)'
-	then entering other command 
-		$minishell: exit
-		msh: syntax error near unexpected token `exit'
-	eh
-
-	exec errors
-	-exec_utils.c still sucks
-	-cannot open file.sh passed as argument
-
-	idea :
-	-cd with dir display
-*/

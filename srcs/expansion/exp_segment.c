@@ -12,23 +12,8 @@
 
 #include "minishell.h"
 
-//return 1 on variable start
-//variable start defined as allowed variable char positionned after $ 
-int	is_var_start(const char *s, quote_t q)
-{
-	if (!s || *s != '$')
-		return (0);
-	if (q == QUOTE_SINGLE)
-		return (0);
-	if (*(s + 1) == '?')
-		return (1);
-	if (!is_var_char(*(s + 1)))
-		return (0);
-	return (1);
-}
-
 //from start of var to change in quote OR unallowed char
-int	scan_segment_len(const char *s, int start, quote_t *q)
+static int	scan_segment_len(const char *s, int start, t_quote *q)
 {
 	int	len;
 
@@ -45,12 +30,33 @@ int	scan_segment_len(const char *s, int start, quote_t *q)
 	return (len);
 }
 
-//extracts a single segment from position start in str s
-//segments are delimited by :
-//	-a variable start ($var)
-//	-change in quote context
-//returns the number of char processed in str s
-int	extract_segment(const char *s, int start, quote_t *q, t_segment **seg_out)
+//handles variable segments 
+static int	handle_variable_segment(const char *s, int start, char **text_out)
+{
+	int	len;
+
+	start++;
+	if (s[start] == '?')
+	{
+		*text_out = ft_strdup("?");
+		len = 1;
+	}
+	else
+	{
+		len = var_len(&s[start]);
+		*text_out = ft_substr(s, start, len);
+	}
+	if (!*text_out)
+		return (-1);
+	return len;
+}
+
+//extracts a single segment from s at position `start`
+//segments are delimited by:
+//	- a variable start ($var)
+//	- or a change in quote context
+//returns number of characters processed
+int	extract_segment(const char *s, int start, t_quote *q, t_segment **seg_out)
 {
 	int		len;
 	char	*text;
@@ -59,27 +65,18 @@ int	extract_segment(const char *s, int start, quote_t *q, t_segment **seg_out)
 	from_var = 0;
 	if (is_var_start(&s[start], *q))
 	{
-		start++;
-		if (s[start] == '?')
-		{
-			text = ft_strdup("?");
-			len = 1;
-		}
-		else
-		{
-			len = var_len(&s[start]);
-			text = ft_substr(s, start, len);
-		}
+		len = handle_variable_segment(s, start, &text);
+		if (len < 0)
+			return (-1);
 		from_var = 1;
 	}
-
 	else
 	{
 		len = scan_segment_len(s, start, q);
 		text = ft_substr(s, start, len);
+		if (!text)
+			return (-1);
 	}
-	if (!text)
-		return (-1);
 	*seg_out = create_new_segment(text, *q, from_var);
 	if (!*seg_out)
 		return (-1);
@@ -88,16 +85,17 @@ int	extract_segment(const char *s, int start, quote_t *q, t_segment **seg_out)
 	return (len);
 }
 
+
 //for each word :
 //	-loop on each char of word
 //	-skips quotes according to quote context (sq in dq cont and dq in sq cont)
 //	-extracts each segments, put it in seg array, go forward in str word
-static int	parse_loop(const char *str, t_segment **seg)
+static int	handle_parse_loop(const char *str, t_segment **seg)
 {
 	int		i;
 	int		j;
 	int		ret;
-	quote_t	q;
+	t_quote	q;
 
 	i = 0;
 	j = 0;
@@ -127,7 +125,7 @@ t_segment	**parse_segments(const char *str)
 	seg = malloc(sizeof(t_segment *) * max);
 	if (!seg)
 		return (printf("\nCONNARD\n"), NULL);
-	if (parse_loop(str, seg) == -1)
+	if (handle_parse_loop(str, seg) == -1)
 		return (free_segments(seg), NULL);
 	return (seg);
 }

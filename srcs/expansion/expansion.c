@@ -107,7 +107,7 @@ void	exp_wildcards(t_word **head)
 	while (current)
 	{
 		next = current->next;
-		if (current->seg && ft_strchr(current->text, '*')
+		if (current->seg && current->text && ft_strchr(current->text, '*')
 			&& is_wildcard_expandable(current->seg))
 		{
 			expanded = get_path(current->text);

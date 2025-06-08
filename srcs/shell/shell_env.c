@@ -44,7 +44,7 @@ char	**copy_env(char **env)
 }
 
 //increment SHLVL and overwrites it in ENV
-void	update_SHLVL(void)
+void	update_SHLVL()
 {
 	int		level;
 	char	*SHLVL;

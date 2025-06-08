@@ -12,6 +12,19 @@
 
 #include "minishell.h"
 
+t_segment	*create_new_segment(char *text, t_quote quote, int from_var)
+{
+	t_segment	*seg;
+
+	seg = malloc(sizeof(t_segment));
+	if (!seg)
+		return (NULL);
+	seg->text = text;
+	seg->quote = quote;
+	seg->from_var = from_var;
+	return (seg);
+}
+
 void	free_segments(t_segment	**seg)
 {
 	int	i;

@@ -41,36 +41,44 @@ void script_args_routine(t_minishell *msh_g, int argc, char **argv)
 	exit_shell(NULL, msh_g->last_exitcode);
 }
 
+
+static char	*read_and_prepare_line(size_t len)
+{
+	char	*line;
+	char	*input;
+
+	line = get_next_line(0);
+	while (line && *line == '\0')
+	{
+		free(line);
+		line = get_next_line(0);
+	}
+	if (!line)
+		return (NULL);
+	input = ft_strdup(line);
+	if (!input)
+		put_err("strdup");
+	if (len > 0 && input[len - 1] == '\n')
+		input[len - 1] = '\0';
+	free(line);
+	return (input);
+}
+
 //extract lines from stdin line by line untile !line (EOF reached)
 //for each line, execute as a regular single prompt
-void script_stdin_routine(t_minishell *msh_g)
+void	script_stdin_routine(t_minishell *msh_g)
 {
 	char	*line;
 	size_t	len;
 
 	msh_g->mode = SCRIPT_STDIN;
-	if (!msh_g->input)
-		len = 0;
-	else
-		len = ft_strlen(msh_g->input);
-	line = get_next_line(0);
+	len = msh_g->input ? ft_strlen(msh_g->input) : 0;
+	line = read_and_prepare_line(len);
 	while (line)
 	{
-		if (!line || *line == '\0')
-		{
-			free(line);
-			line = get_next_line(0);
-			continue;
-		}
-		msh_g->input = ft_strdup(line);
-		if (!msh_g->input)
-			put_err("strdup");
-		if (len > 0 && msh_g->input[len - 1] == '\n')
-			msh_g->input[len - 1] = '\0';
-		free(line);
-		line = NULL;
+		msh_g->input = line;
 		repl_once(msh_g);
-		line = get_next_line(0);
+		line = read_and_prepare_line(len);
 	}
 	exit_shell(NULL, msh_g->last_exitcode);
 }

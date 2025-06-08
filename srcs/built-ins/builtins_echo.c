@@ -43,9 +43,11 @@ void	echo_print(t_ast_node *node, int i)
 //	-echo -nnnn -coucou	outputs "-coucou" (wtf ??)
 int	builtin_echo(t_ast_node *node)
 {
-	int		i = 1;
-	int		newline = 1;
+	int		i;
+	int		newline;
 
+	i = 1;
+	newline = 1;
 	if (!node->exp_args[1])
 	{	
 		write(STDOUT_FILENO, "\n", 1);

@@ -16,7 +16,7 @@
 //if redirection failed, exit with adequate exit code
 //if command not found, exit with 127
 //if command can't be executed, exit with 126
-//if failed to create argv, exit with 1
+//if failed to create argv, exit with 1c
 void	exec_fork(t_ast_node *node)
 {
 	char	*path;
@@ -31,10 +31,14 @@ void	exec_fork(t_ast_node *node)
 	envp = g_getset(NULL)->var_env;
 	path = get_cmdpath(node->exp_args[0], envp);
 	if (!path)
-		return (ft_dprintf(STDERR_FILENO, "yes msh: %s: Command not found\n", 
+		return (ft_dprintf(STDERR_FILENO, "msh: %s: Command not found\n", 
 			node->exp_args[0]), clean_shell(), exit(EXITC_NOCMD));
+	if (access(path, X_OK) != 0)
+	return (ft_dprintf(STDERR_FILENO, "msh: %s: Permission denied\n",
+		path), clean_shell(), exit(126));
 	update_add_var(VAR_ENV, "_", node->exp_args[0]);
 	envp = g_getset(NULL)->var_env;
+	//printf("\n%s\n\n", path);
 	execve(path, node->exp_args, envp);
 	perror("execve failed");
 	clean_shell();
@@ -61,10 +65,6 @@ int	execute_command(t_ast_node *node)
 	exit_status = expand_node(node);
 	if (exit_status)
 		return (set_exitcode(2), 2);
-	// print_tab(node->exp_args);
-	// if (node->io_streams)
-	// 	printf("\n old %s new %s", node->io_streams->file, node->io_streams->exp_file);
-	//fflush(stdout);
 	if (!node->exp_args[0])
 		return (set_exitcode(0), 0);
 	type = is_builtin(node->exp_args[0]);
@@ -82,3 +82,9 @@ int	execute_command(t_ast_node *node)
 		update_underscore(node);
 	return (set_exitcode(exit_status), exit_status);
 }
+/* 	debug
+	print_tab(node->exp_args);
+	if (node->io_streams)
+		printf("\n old %s new %s", node->io_streams->file, node->io_streams->exp_file);
+	fflush(stdout);
+*/

@@ -29,9 +29,10 @@
 # include <sys/stat.h>
 
 # define SHELL_NAME "msh"
- 
+
 //# define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
-# define PROMPT_NAME "\033[33;1m$minishell: \033[0m"
+// # define PROMPT_NAME "\033[33;1m$minishell: \033[0m"
+# define PROMPT_NAME "\033[1;38;5;196mminishell$ \033[0m"
 # define PS2 "> "
 # define ERRMSG_SYNTAX ": syntax error near unexpected token `"
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
@@ -67,10 +68,11 @@ typedef enum e_msh_mode
 }	t_msh_mode;
 
 //struct used to back stdin, stderr and stdout when redirecting in parent proc
-typedef struct s_stdio {
-	int stdin_fd;
-	int stdout_fd;
-	int stderr_fd;
+typedef struct s_stdio
+{
+	int	stdin_fd;
+	int	stdout_fd;
+	int	stderr_fd;
 }	t_stdio;
 
 typedef struct s_minishell
@@ -140,7 +142,45 @@ void		exit_shell(bool exit_msg, int exit_code);
 void		print_tab(char **tab);
 void		print_redir_list(t_redir *redir);
 
-//Exec
+// === expansion ===
+int			expand_node(t_ast_node *node);
+//list functions
+t_word		*word_list_from_argv(char **argv);
+char		**word_list_to_argv(t_word *list);
+t_word		*insert_split_words(char **split, t_word *after);
+t_word		*create_new_word(char *text);
+void		remove_word(t_word *node);
+void		print_word_list(t_word *list);
+int			update_node_index(t_word *lst);
+void		free_word_list(t_word *list);
+int			count_non_null_words(t_word *list);
+//segment functions
+t_segment	*create_new_segment(char *text, t_quote quote, int from_var);
+int			extract_segment(const char *s, int i, t_quote *q, t_segment **seg);
+int			is_var_start(const char *s, t_quote q);
+int			update_quote(char c, t_quote *q);
+int			update_quote(char c, t_quote *q);
+int			is_var_start(const char *s, t_quote q);
+t_segment	*create_new_segment(char *text, t_quote quote, int from_var);
+void		skip_standalone_quotes(const char *str, int *i, t_quote *q);
+int			var_len(const char *s);
+void		expand_segments(t_segment **seg);
+char		*concat_segments(t_segment **seg);
+//var expansion functions
+char		*get_value(char *s);
+void		var_exp(t_word *list);
+void		free_segments(t_segment	**seg);
+void		print_segments(t_segment **seg);
+t_segment	**parse_segments(const char *str);
+void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
+int			contains_unquoted_space(t_segment *s);
+int			expand_redirs(t_ast_node *node);
+int			expand_vars(t_ast_node *node);
+//wildcards expansion functions
+char		**get_path(char *pcdr);
+int			is_wildcard_expandable(t_segment **seg);
+
+// === Exec ===
 int			execute_node(t_ast_node *node);
 char		*get_cmdpath(char *cmd, char **envp);
 char		**get_cmdargv(char *cmd, char **args);
@@ -152,8 +192,7 @@ char		**build_new_env(t_ast_node *node);
 void		set_foreground_flag(t_ast_node *node);
 void		set_exitcode(int exitcode);
 
-
-//built-ins
+// === Built-ins ===
 t_bi_type	is_builtin(const char *cmd);
 int			run_builtin(t_bi_type	builtin_type, t_ast_node *node);
 int			builtin_pwd(void);
@@ -163,11 +202,10 @@ int			builtin_echo(t_ast_node *node);
 int			builtin_cd(t_ast_node *node);
 int			builtin_export(t_ast_node *node);
 int			builtin_unset(t_ast_node *node);
-void 		restore_stdio_builtin(void);
-int 		redir_stdio_builtin(t_ast_node *node);
+void		restore_stdio_builtin(void);
+int			redir_stdio_builtin(t_ast_node *node);
 
-
-//env interface
+// === Env interface ===
 char		**write_remmove_env(char **env, char *var_name);
 char		**write_add_env(char **env, char *new_entry);
 char		*get_new_entry(char *var_name, char *value);
@@ -181,59 +219,15 @@ char		*get_var_value(int mode, char *var_name);
 char		*get_var_entry(int mode, char *var_name);
 int			var_pos(char **var_tab, const char *var_name);
 
-
-//shell, env and shell VAR
+// === shell, env and shell VAR ===
 char		**init_shell_var(void);
 char		**copy_env(char **env);
-void		udapte_shell_var();
+void		udapte_shell_var(void);
 void		update_var_exitcode(void);
 void		update_SHLVL(void);
 void		update_underscore(t_ast_node *node);
 void		script_args_routine(t_minishell *msh, int argc, char **argv);
 void		script_stdin_routine(t_minishell *msh);
 int			assign_shell_var(t_ast_node *node);
-
-
-// === new expansion ===
-int			expand_node(t_ast_node *node);
-//list functions
-t_word		*word_list_from_argv(char **argv);
-char		**word_list_to_argv(t_word *list);
-t_word		*insert_split_words(char **split, t_word *after);
-t_word		*create_new_word(char *text);
-void		remove_word(t_word *node);
-void		print_word_list(t_word *list);
-int			update_node_index(t_word *lst);
-void		free_word_list(t_word *list);
-int			count_non_null_words(t_word *list);
-
-//segment functions
-t_segment	*create_new_segment(char *text, quote_t quote, int from_var);
-int			extract_segment(const char *s, int start, quote_t *q, t_segment **seg_out);
-int			is_var_start(const char *s, quote_t q);
-int			update_quote(char c, quote_t *q);
-int			is_var_char(char c);
-int			update_quote(char c, quote_t *q);
-t_segment	*create_new_segment(char *text, quote_t quote, int from_var);
-void		skip_standalone_quotes(const char *str, int *i, quote_t *q);
-int			var_len(const char *s);
-void		expand_segments(t_segment **seg);
-char		*concat_segments(t_segment **seg);
-
-
-//var expansion functions
-char		*get_value(char *s);
-void		var_exp(t_word *list);
-void		free_segments(t_segment	**seg);
-void		print_segments(t_segment **seg);
-t_segment	**parse_segments(const char *str);
-void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
-int			contains_unquoted_space(t_segment *s);
-int			expand_redirs(t_ast_node *node);
-int			expand_vars(t_ast_node *node);
-
-//wildcards expansion functions
-char		**get_path(char *pcdr);
-int			is_wildcard_expandable(t_segment **seg);
 
 #endif

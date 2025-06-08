@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static const char	*quote_str(quote_t q)
+static const char	*quote_str(t_quote q)
 {
 	if (q == QUOTE_NONE)
 		return ("NONE");

@@ -12,17 +12,6 @@
 
 #include "minishell.h"
 
-void	free_tab(void **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
-	return ;
-}
-
 char	**get_envpaths(char **envp)
 {
 	int	i;
@@ -67,20 +56,31 @@ char	*get_newpath(char *path, char *cmd, int i)
 }
 
 //searches for executable in $PATH
-static char	*search_path_dirs(char *cmd, char **envp)
+static char **get_path_array(char **envp)
 {
-	int			i;
-	char		*path;
-	char		**envpaths;
-	struct stat	st;
+	char	**envpaths;
+	char	*path_value;
 
-	i = 0;
-	path = NULL;
-	if (!envp || *envp == NULL || *cmd == '\0')
-		return (NULL);
 	envpaths = get_envpaths(envp);
+	if (envpaths)
+		return (envpaths);
+	path_value = get_var_value(VAR_SHELL, "PATH");
+	if (path_value)
+		return (ft_split(path_value, ':'));
+	return (ft_split(".", ':'));
+}
+
+static char *search_path_dirs(char *cmd, char **envp)
+{
+	char		**envpaths;
+	char		*path;
+	struct stat	st;
+	int			i;
+
+	envpaths = get_path_array(envp);
 	if (!envpaths)
 		return (NULL);
+	i = 0;
 	while (envpaths[i])
 	{
 		path = get_newpath(envpaths[i], cmd, i);
@@ -90,7 +90,8 @@ static char	*search_path_dirs(char *cmd, char **envp)
 		free(path);
 		i++;
 	}
-	return (free_tab((void **)envpaths), NULL);
+	free_tab((void **)envpaths);
+	return (NULL);
 }
 
 //returns path to command

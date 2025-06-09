@@ -37,6 +37,7 @@ static int	is_redir_ambiguous(t_segment **seg)
 }
 
 //expands redirection token using segmentation logic, word-aware
+//parse seg from word, expand them, check if unquote space, concat
 int	redir_exp(t_redir *redir)
 {
 	t_segment	**seg;
@@ -60,6 +61,32 @@ int	redir_exp(t_redir *redir)
 	free_segments(seg);
 	return (redir->exp_file == NULL);
 }
+
+// //Looks for the DEL char previously inserted right before EOF
+// //If found, heredoc is expandable, if not, it isn't
+// //Only overwrites the DEL char once the content is re-expanded during execution,
+// //otherwise, exit codes in heredoc would remain litteral 
+// static bool    is_expandable(char *hdoc)
+// {
+//     bool    is_expandable;
+//     size_t    hdoc_siz;
+
+//     hdoc_siz = ft_strlen(hdoc);
+//     if (hdoc[hdoc_siz - 1] == EXPANDABLE_HEREDOC)
+//     {
+//         if (g_getset(NULL)->state == MSH_EXECUTING)
+//             hdoc[hdoc_siz - 1] = '\0';
+//         is_expandable = true;
+//     }
+//     else
+//         is_expandable = false;
+//     return (is_expandable);
+// }
+
+// int	heredoc_exp(t_redir)
+// {
+
+// }
 
 int	expand_redirs(t_ast_node *node)
 {

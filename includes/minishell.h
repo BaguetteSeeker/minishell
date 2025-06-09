@@ -144,6 +144,7 @@ void		signals_handler(int sig, siginfo_t *siginfo, void *context);
 void		exit_shell(bool exit_msg, int exit_code);
 void		print_tab(char **tab);
 void		print_redir_list(t_redir *redir);
+void		free_exp(t_ast_node *node);
 
 // === expansion ===
 int			expand_node(t_ast_node *node);

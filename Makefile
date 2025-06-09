@@ -6,7 +6,7 @@
 #    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/05/12 13:16:04 by epinaud          ###   ########.fr        #
+#    Updated: 2025/06/09 16:45:23 by epinaud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ SRCS =	minishell.c prompt.c cleanup_utils.c repl.c cleanup_utils2.c \
 		built-ins/builtins_misc.c \
 		shell/shell_env.c \
 		shell/shell_assign.c shell/shell_env_utils.c \
-		shell/shell_mode.c shell/shell_var.c shell/signals.c \
+		shell/shell_mode.c shell/shell_var.c signals.c \
 		shell/shell_variable_interface.c  \
 		debug/draw_ast.c debug/putlogs.c debug/exp_debugger.c
 

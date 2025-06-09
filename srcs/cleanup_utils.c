@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/30 23:09:52 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 11:32:32 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	free_token_value(t_token *token)
 
 //Recursively cleans the entire tree from bottom to top
 //Double ptrs are freed right away,
-//its subptrs pointing on already cleared token_lst
+//its subptrs have already been cleared within token_lst
 static void	clean_ast(t_ast_node *node)
 {
 	if (!node)
@@ -66,6 +66,7 @@ void	clean_routine(void)
 	t_minishell	*msh;
 
 	msh = g_getset(NULL);
+	msh->signal = 0;
 	if (msh->input)
 		free(msh->input);
 	if (msh->tokens)

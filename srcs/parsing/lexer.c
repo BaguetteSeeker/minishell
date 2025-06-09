@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 20:21:29 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 11:10:21 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static t_token	*check_completion(t_token *token, t_token **head)
 
 	if (token->type == DLESS)
 		handle_heredoc(token);
+	if (g_getset(NULL)->signal == SIGINT)
+		return (par_depth = 0, g_getset(NULL)->state = MSH_FAILLURE, NULL);
 	if (token->type == OPAR)
 		par_depth++;
 	else if (token->type == CPAR)
@@ -78,18 +80,16 @@ static t_token	*check_completion(t_token *token, t_token **head)
 		return (g_getset(NULL)->state = MSH_FAILLURE,
 			par_depth = 0, ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
 				SHELL_NAME, ERRMSG_SYNTAX, token->next->value), NULL);
-	if (token->next->type == T_NEWLINE && (par_depth > 0
-			|| token->type == OR_IF || token->type == AND_IF
-			|| token->type == PIPE))
+	if (token->next->type == T_NEWLINE && (par_depth > 0 || token->type == OR_IF
+			|| token->type == AND_IF || token->type == PIPE))
 	{
 		g_getset(NULL)->state = MSH_PROMPTING_COMPLETION;
-		lstdelone_tokens(token->next, free_token_value);
+		msh_lstdelone(token->next, free_token_value);
 		token->next = NULL;
 		input_completion = open_prompt(PS2, NO_HISTORY);
 		tokenize(&input_completion, head);
-		par_depth = 0;
 	}
-	return ((t_token *)lstlast_tokens(*head));
+	return (par_depth = 0, (t_token *)msh_lstlast(*head));
 }
 
 static t_token	*check_syntax(t_token *tok, t_token **head)
@@ -140,8 +140,8 @@ t_token	*tokenize(char **inpt_ptr, t_token **token_head)
 			*token = (t_token){chkalloc(ft_strdup("newline"), 0), 0, T_NEWLINE};
 		else
 			input += create_token(input, token);
-		prev_token = (t_token *)lstlast_tokens(*token_head);
-		lstadd_back_tokens(token_head, token);
+		prev_token = (t_token *)msh_lstlast(*token_head);
+		msh_lstaddback(token_head, token);
 		token = check_syntax(prev_token, token_head);
 		if (token == NULL || token->type == T_NEWLINE)
 			break ;

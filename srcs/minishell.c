@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/06/01 15:56:32 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 15:40:24 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,13 @@ void	exit_shell(bool output_msg, int exit_code)
 	exit((unsigned char)exit_code);
 }
 
-//Handles Minishell' routine
-void	prompt_routine(t_minishell *msh_g)
+static void	msh_set_canonical(void)
 {
-	msh_g->mode = INTERACTIVE;
-	while (1)
-	{
-		msh_g->state = MSH_PROMPTING;
-		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
-		repl_once(msh_g);
-	}
+	struct termios	term;
+
+	tcgetattr(STDIN_FILENO, &term);
+	term.c_lflag |= ICANON;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
 int	main(int argc, char *argv[], char *env[])
@@ -57,8 +54,8 @@ int	main(int argc, char *argv[], char *env[])
 
 	(void)argc;
 	(void)argv;
-	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
+	msh_set_canonical();
 	msh_g->var_env = copy_env(env);
 	msh_g->var_shell = init_shell_var();
 	update_shlvl();

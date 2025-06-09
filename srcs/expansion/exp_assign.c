@@ -14,8 +14,9 @@
 
 void	replace_rhs(char *entry, char *new_rhs)
 {
-	char	*eq = ft_strchr(entry, '=');
+	char	*eq;
 
+	eq = ft_strchr(entry, '=');
 	if (!eq)
 		return ;
 	eq[1] = '\0';
@@ -50,10 +51,10 @@ static int	expand_rhs(char **vars)
 //returns 1 if LHS is expandable
 static int	lhs_is_expandable(char *var)
 {
-	t_segment	**seg;
 	int			is_expandable;
-	char	 	*lhs;
-	char	 	*eq;
+	char		*eq;
+	char		*lhs;
+	t_segment	**seg;
 
 	eq = ft_strchr(var, '=');
 	if (!eq || eq == var)

@@ -52,7 +52,6 @@ int	builtin_env(void)
 	return (0);
 }
 
-
 //helper to validate and parse an optional signed integer
 //last line is casting code into an int
 //bitwise operator & effectively gives the result modulo 256
@@ -84,16 +83,16 @@ static int	parse_exit_code(const char *str, int *code_out)
 	return (0);
 }
 
-
 //exits the shell
 //	-exit (integer)		exits the shell with integer exit status
 //	-exit (non-integer)	exits the shell with exit code 2
 //	-exit arg arg		returns 1, doesnt exit the shell
 int	builtin_exit(t_ast_node *node)
 {
-	int	exit_code;
-	char **args = node->exp_args;
+	int		exit_code;
+	char	**args;
 
+	args = node->exp_args;
 	if (!args || !args[1])
 		exit_code = 0;
 	else if (*node->exp_args[1] == '\0' || parse_exit_code(args[1], &exit_code))

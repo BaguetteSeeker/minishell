@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 //variable name should start with a letter
 //variable names can only contain letter, digits and underscore
 int	is_valid_var_name(char *name)
@@ -33,7 +32,7 @@ int	is_valid_var_name(char *name)
 	return (1);
 }
 
-int assign_noval(char *name)
+int	assign_noval(char *name)
 {
 	if (is_valid_var_name(name))
 		update_add_var(VAR_SHELL, name, "");

@@ -74,7 +74,7 @@ int	match_pattern(const char *pattern, const char *str)
 }
 
 //file filtering handler (for norm purposes)
-static int	is_valid_match(const char *pattern, struct dirent *entry, int show_hidden)
+int	is_valid_match(const char *pattern, struct dirent *entry, int show_hidden)
 {
 	if (!entry)
 		return (0);
@@ -85,10 +85,12 @@ static int	is_valid_match(const char *pattern, struct dirent *entry, int show_hi
 	return (match_pattern(pattern, entry->d_name));
 }
 
-//scans current working directory, returns a list of filenames matching a given wildcard expression
-//	- uses opendir() and readdir() to iterate over directory entries.
-//	- matches entries against the provided pattern using is_valid_match().
-//returns NULL-terminated array of matching strings on match, NULL ptr if no match
+//scans current working directory
+//searching filenames matching a given wildcard expression
+//	-uses readdir() to iterate over directory entries.
+//	-matches entries against the provided pattern
+//returns NULL-terminated array of matching strings on match, 
+//NULL ptr if no match
 static char	**scan_directory(const char *pattern, int show_hidden)
 {
 	DIR				*dir;
@@ -109,13 +111,13 @@ static char	**scan_directory(const char *pattern, int show_hidden)
 		if (is_valid_match(pattern, entry, show_hidden))
 		{
 			paths = chkalloc(ft_realloc(paths, sizeof(char *) * (str_count + 2),
-					sizeof(char *) * (str_count)), "Expander : Malloc Failure");
-			paths[str_count] = chkalloc(ft_strdup(entry->d_name), "Expander : Malloc Failure");
+						sizeof(char *) * (str_count)), ERRMSG_MALLOC_FAIL);
+			paths[str_count] = chkalloc(ft_strdup(entry->d_name),
+					ERRMSG_MALLOC_FAIL);
 			paths[++str_count] = NULL;
 		}
 	}
-	closedir(dir);
-	return (paths);
+	return (closedir(dir), paths);
 }
 
 //returns the list of files in current directory matching wildcard expression

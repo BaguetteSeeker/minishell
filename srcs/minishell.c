@@ -61,13 +61,13 @@ int	main(int argc, char *argv[], char *env[])
 	msh_g = g_getset(&(t_minishell){0});
 	msh_g->var_env = copy_env(env);
 	msh_g->var_shell = init_shell_var();
-	update_SHLVL();
+	update_shlvl();
 	update_add_var(VAR_ENV, "_", argv[0]);
 	update_add_var(VAR_SHELL, "?", "0");
 	set_sigaction(&signals_handler);
 	if (argc > 1)
-        return (script_args_routine(msh_g, argc, argv), 1);
-    else if (!isatty(STDIN_FILENO))
+		return (script_args_routine(msh_g, argc, argv), 1);
+	else if (!isatty(STDIN_FILENO))
 		return (script_stdin_routine(msh_g), 1);
 	else
 		prompt_routine(msh_g);

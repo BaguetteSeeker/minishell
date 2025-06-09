@@ -48,7 +48,7 @@ static int	handle_variable_segment(const char *s, int start, char **text_out)
 	}
 	if (!*text_out)
 		return (-1);
-	return len;
+	return (len);
 }
 
 //extracts a single segment from s at position `start`
@@ -84,7 +84,6 @@ int	extract_segment(const char *s, int start, t_quote *q, t_segment **seg_out)
 		return (len + 1);
 	return (len);
 }
-
 
 //for each word :
 //	-loop on each char of word

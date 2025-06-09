@@ -16,7 +16,7 @@
 void	set_foreground_flag(t_ast_node *node)
 {
 	if (!node)
-		return;
+		return ;
 	node->is_foreground = 0;
 	set_foreground_flag(node->left);
 	set_foreground_flag(node->right);
@@ -77,9 +77,9 @@ int	command_no_command(t_ast_node *node)
 			return (set_exitcode(exit_code), exit_code);
 		restore_stdio_builtin();
 	}
-	else if (g_getset(NULL)->mode == INTERACTIVE 
+	else if (g_getset(NULL)->mode == INTERACTIVE
 		&& !node->io_streams && !node->vars)
-			return (ft_putendl_fd(ERRMSG_NOCMD, 2), set_exitcode(127), 127);
+		return (ft_putendl_fd(ERRMSG_NOCMD, 2), set_exitcode(127), 127);
 	return (set_exitcode(exit_code), exit_code);
 }
 
@@ -94,9 +94,9 @@ int	execute_node(t_ast_node *node)
 	node->is_foreground = 1;
 	if (!node)
 		return (1);
-	if (node->type == NODE_COMMAND && 
-		(!node->args || !node->args[0] || *node->args[0] == '\0'))
-			return (command_no_command(node));
+	if (node->type == NODE_COMMAND
+		&& (!node->args || !node->args[0] || *node->args[0] == '\0'))
+		return (command_no_command(node));
 	if (node->type == NODE_COMMAND)
 		return (execute_command(node));
 	if (node->type == NODE_OPERATOR)

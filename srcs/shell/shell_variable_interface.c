@@ -75,10 +75,10 @@ int	var_pos(char **var_tab, const char *var_name)
 	if (!var_tab)
 		return (-1);
 	while (var_tab[i])
-	{	
-		if (ft_strncmp(var_tab[i], var_name, len) == 0 
+	{
+		if (ft_strncmp(var_tab[i], var_name, len) == 0
 			&& var_tab[i][len] == '=')
-				return (i);
+			return (i);
 		i++;
 	}
 	return (-1);
@@ -87,7 +87,7 @@ int	var_pos(char **var_tab, const char *var_name)
 //returns a pointer to the variables entry if it exists in ENV
 char	*get_var_entry(int mode, char *var_name)
 {
-	int	i;
+	int		i;
 	char	**var_tab;
 
 	if (mode == VAR_ENV)
@@ -109,7 +109,7 @@ char	*get_var_value(int mode, char *var_name)
 
 	entry = get_var_entry(mode, var_name);
 	if (!entry)
-		return(NULL);
+		return (NULL);
 	value = ft_strchr(entry, '=') + 1;
 	return (value);
 }

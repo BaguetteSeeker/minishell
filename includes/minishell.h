@@ -227,7 +227,7 @@ char		**init_shell_var(void);
 char		**copy_env(char **env);
 void		udapte_shell_var(void);
 void		update_var_exitcode(void);
-void		update_SHLVL(void);
+void		update_shlvl(void);
 void		update_underscore(t_ast_node *node);
 void		script_args_routine(t_minishell *msh, int argc, char **argv);
 void		script_stdin_routine(t_minishell *msh);

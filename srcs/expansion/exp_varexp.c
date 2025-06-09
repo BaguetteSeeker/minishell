@@ -93,7 +93,6 @@ void	expand_segments(t_segment **seg)
 //said new word is marked for splitting or not in next stage of global exp
 void	var_exp(t_word *list)
 {
-	//t_segment	**seg;
 	char		*new;
 
 	while (list)

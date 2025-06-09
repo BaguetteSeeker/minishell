@@ -34,19 +34,15 @@ void	free_token_value(t_token *token)
 	}
 }
 
-static void free_exp(t_ast_node *node)
+void	free_exp(t_ast_node *node)
 {
-	t_redir *redir;
+	t_redir	*redir;
 
 	redir = node->io_streams;
 	if (node->exp_args)
 		free_tab((void **)node->exp_args);
-	// else
-	// 	printf("couldnt free exp-args\n");
 	if (node->exp_vars)
 		free_tab((void **)node->exp_vars);
-	// else
-	// 	printf("couldnt free exp-vars\n");
 	while (redir)
 	{
 		if (redir->exp_file)

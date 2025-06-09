@@ -39,7 +39,6 @@ int	should_word_split(t_segment **seg)
 	return (0);
 }
 
-
 //use ft_split, replace current node with first end of split
 //insert a new node with second end of split
 int	split_and_replace(t_word *cur)
@@ -75,7 +74,7 @@ void	word_split(t_word **head)
 	t_word	*next;
 
 	if (!head || !*head)
-		return;
+		return ;
 	cur = *head;
 	while (cur)
 	{
@@ -150,7 +149,6 @@ int	expand_node(t_ast_node *node)
 		if (!word_lst)
 			return (1);
 		// print_word_list(word_lst);
-
 		var_exp(word_lst);
 		// printf("after var exp :\n");	
 		// print_word_list(word_lst);
@@ -163,7 +161,6 @@ int	expand_node(t_ast_node *node)
 		// printf("\n=== EXP end ===\n");
 		node->exp_args = word_list_to_argv(word_lst);
 		// print_tab(node->exp_args);
-		
 	}
 	// printf("\nexp args :\n");
 	// print_tab(node->exp_args);
@@ -171,6 +168,7 @@ int	expand_node(t_ast_node *node)
 	// print_tab(node->exp_vars);
 	// printf("\n\n%p is NULL ???\n\n", node->io_streams);
 	// if (node->io_streams)
-		// printf("old file %s, new %s\n", node->io_streams->file, node->io_streams->exp_file);
+	//	printf("old file %s, new %s\n",
+	//	node->io_streams->file, node->io_streams->exp_file);
 	return (0);
 }

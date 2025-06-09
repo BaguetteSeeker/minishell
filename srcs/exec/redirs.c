@@ -17,7 +17,8 @@ int	redir_in(t_redir	*redir)
 {
 	int		fd;
 
-	if (access(redir->exp_file, F_OK) != 0 || access(redir->exp_file, R_OK) != 0)
+	if (access(redir->exp_file, F_OK) != 0
+		|| access(redir->exp_file, R_OK) != 0)
 		return (perror(redir->exp_file), 1);
 	fd = open(redir->exp_file, O_RDONLY);
 	if (fd < 0)
@@ -63,6 +64,7 @@ int	redir_append(t_redir	*redir)
 	close(fd);
 	return (0);
 }
+
 //explore the linked list of redirections
 //on failure, returns edequate exit code
 //if multiple redirection of same fd, last one prevales
@@ -77,13 +79,13 @@ int	redirections_handler(t_ast_node *node)
 	while (redir)
 	{
 		if (redir->type == REDIR_IN)
-			exit_code =redir_in(redir);
+			exit_code = redir_in(redir);
 		else if (redir->type == REDIR_OUT)
-			exit_code =redir_out(redir);
+			exit_code = redir_out(redir);
 		else if (redir->type == HEREDOC)
-			exit_code =heredoc(redir);
+			exit_code = heredoc(redir);
 		else if (redir->type == APPEND)
-			exit_code =redir_append(redir);
+			exit_code = redir_append(redir);
 		redir = redir->next;
 	}
 	return (exit_code);

@@ -84,16 +84,13 @@ static char	*search_path_dirs(char *cmd, char **envp)
 	while (envpaths[i])
 	{
 		path = get_newpath(envpaths[i], cmd, i);
-		if (access(path, F_OK) == 0 && stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
-		{
-			free_tab((void **)envpaths);
-			return (path);
-		}
+		if (access(path, F_OK) == 0 && stat(path, &st) == 0
+			&& !S_ISDIR(st.st_mode))
+			return (free_tab((void **)envpaths), path);
 		free(path);
 		i++;
 	}
-	free_tab((void **)envpaths);
-	return (NULL);
+	return (free_tab((void **)envpaths), NULL);
 }
 
 //returns path to command
@@ -101,7 +98,7 @@ static char	*search_path_dirs(char *cmd, char **envp)
 //	-if file found but not accessible
 char	*get_cmdpath(char *cmd, char **envp)
 {
-	struct stat st;
+	struct stat	st;
 
 	if (!cmd || *cmd == '\0')
 		return (NULL);
@@ -119,5 +116,5 @@ char	*get_cmdpath(char *cmd, char **envp)
 		}
 		return (cmd);
 	}
-	return search_path_dirs(cmd, envp);
+	return (search_path_dirs(cmd, envp));
 }

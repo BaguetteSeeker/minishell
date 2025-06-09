@@ -43,7 +43,6 @@ void	move_entry(char *entry)
 	char	*var_name;
 
 	equal_sign = ft_strchr(entry, '=');
-	
 	shell_entry = get_var_entry(VAR_SHELL, entry);
 	len = ft_strlen(entry);
 	if (equal_sign)

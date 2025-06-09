@@ -17,10 +17,12 @@
 static int	is_redir_ambiguous(t_segment **seg)
 {
 	int	i;
-	int	has_space = 0;
-	int	unquoted_count = 0;
+	int	has_space;
+	int	unquoted_count;
 
 	i = 0;
+	has_space = 0;
+	unquoted_count = 0;
 	while (seg[i])
 	{
 		if (seg[i]->quote == QUOTE_NONE)
@@ -33,7 +35,6 @@ static int	is_redir_ambiguous(t_segment **seg)
 	}
 	return (unquoted_count > 1 || has_space);
 }
-
 
 //expands redirection token using segmentation logic, word-aware
 int	redir_exp(t_redir *redir)
@@ -66,7 +67,6 @@ int	expand_redirs(t_ast_node *node)
 	int		ret;
 
 	redir = node->io_streams;
-	printf("expanding redir file=%s\n", redir->file);
 	while (redir)
 	{
 		ret = redir_exp(redir);
@@ -74,6 +74,5 @@ int	expand_redirs(t_ast_node *node)
 			break ;
 		redir = redir->next;
 	}
-	print_redir_list(redir);
 	return (ret);
 }

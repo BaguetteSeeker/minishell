@@ -70,7 +70,7 @@ char	**add_new_entry(char **env, char *new_entry)
 	char	**new_env;
 
 	i = 0;
-	while(env && env[i])
+	while (env && env[i])
 		i++;
 	new_env = malloc(sizeof(char *) * (i + 2));
 	if (!new_env)
@@ -85,15 +85,16 @@ char	**add_new_entry(char **env, char *new_entry)
 	new_env[i + 1] = NULL;
 	return (new_env);
 }
+
 //copy ENV until entry found, copy new_entry (with new value)
 //copy rest of ENV, returns new_env 
 char	**replace_new_entry(char **env, char *new_entry, int i)
 {
-	int j;
+	int		j;
 	char	**new_env;
 
 	j = 0;
-	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));	
+	new_env = malloc(sizeof(char *) * (ft_ptrlen((const void **)env) + 1));
 	if (!new_env)
 		return (NULL);
 	while (env[j])
@@ -107,4 +108,3 @@ char	**replace_new_entry(char **env, char *new_entry, int i)
 	new_env[j] = NULL;
 	return (new_env);
 }
-

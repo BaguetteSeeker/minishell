@@ -49,7 +49,7 @@ int	builtin_echo(t_ast_node *node)
 	i = 1;
 	newline = 1;
 	if (!node->exp_args[1])
-	{	
+	{
 		write(STDOUT_FILENO, "\n", 1);
 		return (0);
 	}

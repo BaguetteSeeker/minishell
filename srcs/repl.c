@@ -14,10 +14,10 @@
 
 //REPL stands for Read-Evaluation-Print Loop
 //this function describes one iteration of the REPL
-// !!! input must be set in respective mode loops !!!
-void repl_once(t_minishell *msh_g)
+//!!! input must be set in respective mode loops !!!
+void	repl_once(t_minishell *msh_g)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	if ((!msh_g->input || *msh_g->input == '\0'))
 		return (clean_routine());

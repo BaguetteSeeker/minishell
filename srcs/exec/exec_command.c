@@ -26,16 +26,16 @@ void	exec_fork(t_ast_node *node)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGPIPE, SIG_DFL);
 	redir_status = redirections_handler(node);
-	if (redir_status !=0)
+	if (redir_status != 0)
 		return (clean_shell(), exit(redir_status));
 	envp = g_getset(NULL)->var_env;
 	path = get_cmdpath(node->exp_args[0], envp);
 	if (!path)
-		return (ft_dprintf(STDERR_FILENO, "msh: %s: Command not found\n", 
-			node->exp_args[0]), clean_shell(), exit(EXITC_NOCMD));
+		return (ft_dprintf(STDERR_FILENO, "msh: %s: Command not found\n",
+				node->exp_args[0]), clean_shell(), exit(EXITC_NOCMD));
 	if (access(path, X_OK) != 0)
-	return (ft_dprintf(STDERR_FILENO, "msh: %s: Permission denied\n",
-		path), clean_shell(), exit(126));
+		return (ft_dprintf(STDERR_FILENO, "msh: %s: Permission denied\n",
+				path), clean_shell(), exit(126));
 	update_add_var(VAR_ENV, "_", node->exp_args[0]);
 	envp = g_getset(NULL)->var_env;
 	//printf("\n%s\n\n", path);
@@ -57,10 +57,10 @@ void	set_exitcode(int exitcode)
 //returns adequate exit code
 int	execute_command(t_ast_node *node)
 {
-	int		status;
-	int		exit_status;
-	pid_t	pid;
-	t_bi_type type;
+	int			status;
+	int			exit_status;
+	pid_t		pid;
+	t_bi_type	type;
 
 	exit_status = expand_node(node);
 	if (exit_status)
@@ -69,7 +69,7 @@ int	execute_command(t_ast_node *node)
 		return (set_exitcode(0), 0);
 	type = is_builtin(node->exp_args[0]);
 	if (type != -1)
-		return(run_builtin(type, node));
+		return (run_builtin(type, node));
 	pid = fork();
 	if (pid == 0)
 		exec_fork(node);
@@ -82,9 +82,12 @@ int	execute_command(t_ast_node *node)
 		update_underscore(node);
 	return (set_exitcode(exit_status), exit_status);
 }
+
 /* 	debug
 	print_tab(node->exp_args);
 	if (node->io_streams)
-		printf("\n old %s new %s", node->io_streams->file, node->io_streams->exp_file);
+		printf("\n old %s new %s", 
+		node->io_streams->file, 
+		node->io_streams->exp_file);
 	fflush(stdout);
 */

@@ -44,22 +44,22 @@ char	**copy_env(char **env)
 }
 
 //increment SHLVL and overwrites it in ENV
-void	update_SHLVL()
+void	update_shlvl(void)
 {
 	int		level;
-	char	*SHLVL;
-	char	*new_SHLVL;
+	char	*shlvl;
+	char	*new_shlvl;
 
-	SHLVL = get_var_value(VAR_ENV, "SHLVL");
-	if (!SHLVL)
+	shlvl = get_var_value(VAR_ENV, "SHLVL");
+	if (!shlvl)
 		return ;
-	level = ft_atoi(SHLVL) + 1;
+	level = ft_atoi(shlvl) + 1;
 	fflush(stdout);
-	new_SHLVL = ft_itoa(level);
-	if (!new_SHLVL)
+	new_shlvl = ft_itoa(level);
+	if (!new_shlvl)
 		put_err("strdup");
-	update_add_var(VAR_ENV, "SHLVL", new_SHLVL);
-	free(new_SHLVL);
+	update_add_var(VAR_ENV, "SHLVL", new_shlvl);
+	free(new_shlvl);
 }
 
 //returns last argument of given node
@@ -69,7 +69,7 @@ void	update_underscore(t_ast_node *node)
 	int		i;
 
 	if (!node || node->type != NODE_COMMAND)
-		return;
+		return ;
 	if (node->exp_args && node->exp_args[0])
 	{
 		i = ft_ptrlen((const void **)node->exp_args) - 1;
@@ -80,7 +80,7 @@ void	update_underscore(t_ast_node *node)
 	else
 	{
 		update_add_var(VAR_ENV, "_", "");
-		return;
+		return ;
 	}
 	if (!last_arg)
 		put_err("strdup");

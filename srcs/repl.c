@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/06/09 16:22:55 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 20:01:27 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ void	repl_once(t_minishell *msh_g)
 	tokens_tmp = msh_g->tokens;
 	msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
 	msh_g->state = MSH_EXECUTING;
+	msh_g->last_exitcode = execute_node(msh_g->cmd_table);
 	clean_routine();
 }

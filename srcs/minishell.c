@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/06/09 15:40:24 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 21:22:09 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	main(int argc, char *argv[], char *env[])
 {
 	t_minishell	*msh_g;
 
-	(void)argc;
 	(void)argv;
 	msh_g = g_getset(&(t_minishell){0});
 	msh_set_canonical();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_var.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/23 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/09 21:21:01 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	**init_shell_var(void)
 	if (!var_shell)
 		return (NULL);
 	var_shell[0] = ft_strdup("TEST=var_shell_test");
-	var_shell[1] = ft_strdup("PS1=minishell$ ");
+	var_shell[1] = ft_strdup("PS1=\033[1;38;5;196mminishell$ \033[0m");
 	var_shell[2] = ft_strdup("PS2=> ");
 	var_shell[3] = ft_strdup("?=0");
 	var_shell[4] = NULL;

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 11:11:04 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 15:56:01 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 20:50:25 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,15 @@ void	signals_handler(int sig)
 	if (sig == SIGINT)
 	{
 		ft_putendl_fd("", STDERR_FILENO);
-		if (msh_state == MSH_PROMPTING || msh_state == MSH_PROMPTING_COMPLETION)
+		if (msh_state == MSH_PROMPTING)
 		{
 			rl_on_new_line();
 			rl_replace_line("", 0);
 			rl_redisplay();
 			g_getset(NULL)->signal = SIGINT;
 		}
+		else if (msh_state == MSH_PROMPTING_COMPLETION)
+			g_getset(NULL)->signal = SIGINT;
 		else
 			exit_shell(NO_EXIT_MSG, 0);
 	}

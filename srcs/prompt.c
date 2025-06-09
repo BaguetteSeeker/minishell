@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:06:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 16:40:22 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 21:23:50 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*wait_line(int fd, char *prompt)
 	line = NULL;
 	while (1 && g_getset(NULL)->signal != SIGINT)
 	{
-		ft_putendl_fd(prompt, STDERR_FILENO);
+		ft_putstr_fd(prompt, STDERR_FILENO);
 		line = get_next_line(fd);
 		if (!line)
 			break ;
@@ -62,7 +62,8 @@ void	prompt_routine(t_minishell *msh_g)
 	while (1)
 	{
 		msh_g->state = MSH_PROMPTING;
-		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
+		msh_g->input = open_prompt(
+				get_var_value(VAR_SHELL, "PS1"), ADD_HISTORY);
 		repl_once(msh_g);
 	}
 }

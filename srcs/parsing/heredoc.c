@@ -6,11 +6,12 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 15:52:07 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 21:29:14 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 static void	put_heredoc_eof(char *clean_delimiter)
 {
 	if (g_getset(NULL)->signal == SIGINT)
@@ -26,7 +27,7 @@ static char	*new_heredoc(char *delimiter, char *doc, bool apd_newline)
 
 	while (1)
 	{
-		line = wait_line(STDIN_FILENO, PS2);
+		line = wait_line(STDIN_FILENO, get_var_value(VAR_SHELL, "PS2"));
 		if (!line)
 			return (put_heredoc_eof(delimiter), doc);
 		else if (ft_strcmp(line, delimiter))
@@ -74,6 +75,7 @@ void	handle_heredoc(t_token *token)
 	char	*delimiter_copy;
 
 	g_getset(NULL)->state = MSH_PROMPTING_COMPLETION;
+	g_getset(NULL)->signal = 0;
 	doc = ft_strdup("");
 	delimiter = token->next->value;
 	delimiter_copy = chkalloc(ft_strdup(delimiter), "HRDC: dup fail");

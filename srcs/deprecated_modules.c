@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 19:08:06 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/01 15:29:12 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 12:16:52 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@
 		prev->next = newlst;
 	else
 		g_getset(NULL)->tokens = newlst;
-	lstlast_tokens(newlst)->next = (t_list *)next;
+	msh_lstlast(newlst)->next = (t_list *)next;
 	return (next ? newlst->value : NULL);
 }
 
@@ -81,7 +81,7 @@ char	*get_path(char *pcdr)
 			path->value = ft_strdup(entry->d_name);
 			if (!path->value)
 				put_err("Expander: Malloc Faillure");
-			lstadd_back_tokens(&paths, path);
+			msh_lstaddback(&paths, path);
 		}
 	}
 } */
@@ -102,3 +102,56 @@ char	*get_path(char *pcdr)
 // 		*i += 2;
 // 	return (str);
 // }
+
+/* ——— Memory Modules used to mimic a garbage collector ——— */
+// # define NO_DUP 0
+// # define DUP_BUFF 1
+/* char	*new_mem(char *buff, char *errmsg, size_t dup_buff)
+{
+	char		*new_mem;
+	t_memory	*mem_node;
+
+	new_mem = NULL;
+	if (dup_buff)
+		new_mem = chkalloc(ft_strdup(buff), errmsg);
+	else
+		new_mem = buff;
+	mem_node = malloc(sizeof(t_memory));
+	if (!mem_node)
+	{
+		if (dup_buff)
+			free(new_mem);
+		put_err("t_memory : mem_node");
+	}
+	// *mem_node = (t_memory){0};
+	mem_node->mem = new_mem;
+	msh_lstaddback(&g_getset(NULL)->mem_lst, mem_node);
+	return (new_mem);
+}
+
+void	del_mem(char *buff)
+{
+	t_memory	*prev;
+	t_memory	*curr;
+	t_memory	*next;
+
+	prev = NULL;
+	curr = g_getset(NULL)->mem_lst;
+	// Find the node to remove and its previous node
+	while (curr && curr->mem != buff)
+	{
+		prev = curr;
+		curr = curr->next;
+	}
+	if (!curr)
+		ft_putendl_fd("del_mem: can't find provided buffer", STDERR_FILENO);
+	next = curr->next;
+	msh_lstdelone(curr, free_token_value);
+	// Reattach the list or do nothing
+	if (prev)
+		prev->next = next;
+	free(buff);
+	if (buff == curr->mem)
+		g_getset(NULL)->mem_lst = NULL;
+}
+ */

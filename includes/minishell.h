@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/01 15:15:51 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 12:14:41 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/ioctl.h>
+# include <termios.h>
 
 # define SHELL_NAME "msh"
 # define PROMPT_NAME "$minishell: "
@@ -33,6 +35,12 @@
 # define ERRMSG_MALLOC_FAIL "!!! MALLOC FAILLURE !!! :"
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
+
+typedef struct s_memory
+{
+	void			*mem;
+	struct s_memory	*next;
+}	t_memory;
 
 typedef enum s_msh_state
 {
@@ -47,13 +55,15 @@ typedef enum s_msh_state
 
 typedef struct s_minishell
 {
-	sig_atomic_t	state;
-	char			**var_env;
-	char			**var_shell;
-	char			*input;
-	t_token			*tokens;
-	t_ast_node		*cmd_table;
-	int				last_exitcode;
+	sig_atomic_t			state;
+	char					**var_env;
+	char					**var_shell;
+	char					*input;
+	t_token					*tokens;
+	t_ast_node				*cmd_table;
+	int						last_exitcode;
+	t_memory				*mem_lst;
+	volatile sig_atomic_t	signal;
 }	t_minishell;
 
 //Functions' Flags
@@ -84,6 +94,7 @@ typedef struct s_minishell
 t_minishell	*g_getset(void *g);
 void		prompt_routine(t_minishell *msh_g);
 char		*open_prompt(char *prompt, bool history);
+char		*wait_line(int fd, char *prompt);
 t_token		*tokenize(char **inpt_ptr, t_token **token_head);
 void		handle_heredoc(t_token *token);
 t_ast_node	*parse_tokens(t_token **tokens, t_ast_node *passed_node);
@@ -107,7 +118,10 @@ void		free_token_value(t_token *token);
 void		put_err(char *msg);
 void		print_ast(t_ast_node *node);
 void		*chkalloc(char *val, char *msg);
-void		set_sigaction(void (sighandle)(int, siginfo_t *, void *));
-void		signals_handler(int sig, siginfo_t *siginfo, void *context);
+void		set_sigaction(void (sighandle)(int));
+void		signals_handler(int sig);
 void		exit_shell(bool exit_msg);
+// char		*new_mem(char *buff, char *errmsg, size_t dup_buff);
+// void		del_mem(char *buff);
+// void		dfl_sigaction(void);
 #endif

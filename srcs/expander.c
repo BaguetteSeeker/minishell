@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:34:58 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/01 15:36:52 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 00:41:38 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,8 @@ char	*expand(char *buff, size_t flag, size_t *status)
 			if (flag == XPD_ASSIGN)
 				buff = root_wcrd_xpd(buff, &i, flag, status);
 			else
-				return (*status = XPD_STAT_WCRD, root_wcrd_xpd(buff, &i, flag, status));
+				return (*status = XPD_STAT_WCRD,
+					root_wcrd_xpd(buff, &i, flag, status));
 		}
 		else
 			i++;

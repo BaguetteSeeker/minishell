@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 19:34:16 by souaret           #+#    #+#             */
-/*   Updated: 2025/06/01 11:45:05 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 12:22:27 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,40 +39,13 @@ void	exit_shell(bool output_msg)
 	exit(EXIT_SUCCESS);
 }
 
-//Handles Minishell' routine
-void	prompt_routine(t_minishell *msh_g)
+static void	msh_set_canonical(void)
 {
-	t_token		*tokens_tmp;
+	struct termios	term;
 
-	while (1)
-	{
-		msh_g->state = MSH_PROMPTING;
-		msh_g->input = open_prompt(PROMPT_NAME, ADD_HISTORY);
-		if (ft_strncmp(msh_g->input, "exit", 4) == 0)
-			exit_shell(EXIT_MSG);
-		msh_g->state = MSH_TOKENIZING;
-		msh_g->tokens = tokenize(&msh_g->input, &msh_g->tokens);
-		if (msh_g->state == MSH_FAILLURE)
-		{
-			clean_routine();
-			continue ;
-		}
-		msh_g->state = MSH_EXPANDING;
-		// msh_lstiter(msh_g->tokens, &expand_token);
-		// msh_lstiter(msh_g->tokens, &lst_put);
-		msh_g->state = MSH_PARSING;
-		tokens_tmp = msh_g->tokens;
-		msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
-		msh_g->state = MSH_EXECUTING;
-		expand_node(msh_g->cmd_table);
-		if (msh_g->cmd_table->left)
-			expand_node(msh_g->cmd_table->left);
-		if (msh_g->cmd_table->right)
-			expand_node(msh_g->cmd_table->right);
-		print_ast(msh_g->cmd_table);
-		// msh_lstiter(msh_g->tokens, &lst_put);
-		clean_routine();
-	}
+	tcgetattr(STDIN_FILENO, &term);
+	term.c_lflag |= ICANON;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
 int	main(int argc, char *argv[], char *env[])
@@ -83,7 +56,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argv;
 	(void)env;
 	msh_g = g_getset(&(t_minishell){0});
-	// msh_g->var_env = env;
+	msh_set_canonical();
 	set_sigaction(&signals_handler);
 	prompt_routine(msh_g);
 	return (0);

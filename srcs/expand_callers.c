@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:53:00 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/01 15:44:32 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 13:40:04 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 //Looks for the DEL char previously inserted right before EOF
 //If found, heredoc is expandable, if not, it isn't
 //Only overwrites the DEL char once the content is re-expanded during execution,
-//otherwise, exit codes in heredoc would remain litteral 
 static bool	is_expandable(char *hdoc)
 {
 	bool	is_expandable;

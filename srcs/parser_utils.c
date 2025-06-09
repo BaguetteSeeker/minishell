@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/30 23:11:53 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/06 11:24:07 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ t_ast_node	*parse_command(t_token **tokens)
 			node->vars = parse_args(tokens, &node->vars, PARSE_SUBSQ_VARS);
 		if (in_array((*tokens)->type, redirs, REDIRS_TYPCOUNT)
 			&& (*tokens)->next->type == WORD)
-			lstadd_back_redirs(&node->io_streams, parse_redir(tokens));
+			msh_lstaddback(&node->io_streams, parse_redir(tokens));
 		else if ((*tokens)->type == WORD)
 			node->args = parse_args(tokens, &node->args, PARSE_SUBSQ_WORDS);
 		else

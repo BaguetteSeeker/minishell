@@ -96,7 +96,7 @@ int	builtin_exit(t_ast_node *node)
 
 	if (!args || !args[1])
 		exit_code = 0;
-	else if (parse_exit_code(args[1], &exit_code))
+	else if (*node->exp_args[1] == '\0' || parse_exit_code(args[1], &exit_code))
 	{
 		ft_putendl_fd("exit\nexit : numeric argument required", STDERR_FILENO);
 		restore_stdio_builtin();
@@ -110,5 +110,5 @@ int	builtin_exit(t_ast_node *node)
 	}
 	restore_stdio_builtin();
 	exit_shell("exit", exit_code);
-	return (0); // unreachable, but norm-friendly
+	return (0);
 }

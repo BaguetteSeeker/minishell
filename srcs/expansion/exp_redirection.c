@@ -12,42 +12,51 @@
 
 #include "minishell.h"
 
-//redirection is considered ambiguous if multiple words are defined in 
-static int	is_ambiguous(char **files)
+//redirection is considered ambiguous if multiple words are defined in
+//words (after splitting) delimited as unquoted spaces in segments
+static int	is_redir_ambiguous(t_segment **seg)
 {
-	if (!files || !files[0])
-		return (1);
-	if (files[1])
-		return (1);
-	return (0);
+	int	i;
+	int	has_space = 0;
+	int	unquoted_count = 0;
+
+	i = 0;
+	while (seg[i])
+	{
+		if (seg[i]->quote == QUOTE_NONE)
+		{
+			unquoted_count++;
+			if (contains_unquoted_space(seg[i]))
+				has_space = 1;
+		}
+		i++;
+	}
+	return (unquoted_count > 1 || has_space);
 }
 
+
+//expands redirection token using segmentation logic, word-aware
 int	redir_exp(t_redir *redir)
 {
 	t_segment	**seg;
 	char		*joined;
-	char		**files;
 
 	seg = parse_segments(redir->file);
 	if (!seg)
 		return (1);
 	expand_segments(seg);
-	joined = concat_segments(seg);
-	if (!joined)
-		return (free_segments(seg), 1);
-	files = ft_split(joined, ' ');
-	free(joined);
-	if (is_ambiguous(files))
+	if (is_redir_ambiguous(seg))
 	{
 		ft_dprintf(2, "msh: %s: ambiguous redirect\n", redir->file);
 		free_segments(seg);
-		free_tab((void **)files);
 		return (2);
 	}
-	redir->exp_file = ft_strdup(files[0]);
+	joined = concat_segments(seg);
+	if (!joined)
+		return (free_segments(seg), 1);
+	redir->exp_file = ft_strdup(joined);
+	free(joined);
 	free_segments(seg);
-	free_tab((void **)files);
-	fflush(stdout);
 	return (redir->exp_file == NULL);
 }
 
@@ -57,14 +66,14 @@ int	expand_redirs(t_ast_node *node)
 	int		ret;
 
 	redir = node->io_streams;
-	//printf(expanding redir file=%s\n", redir->file);
+	printf("expanding redir file=%s\n", redir->file);
 	while (redir)
 	{
 		ret = redir_exp(redir);
 		if (ret)
-			return (ret);
+			break ;
 		redir = redir->next;
 	}
-	// print_redir_list(redir);
-	return (0);
+	print_redir_list(redir);
+	return (ret);
 }

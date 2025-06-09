@@ -123,7 +123,6 @@ void	exp_wildcards(t_word **head)
 	}
 }
 
-
 //main expansion function
 //	-turn args into list of words
 //	-for each word, expands text using segmentation logic

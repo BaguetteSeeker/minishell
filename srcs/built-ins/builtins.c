@@ -41,7 +41,7 @@ int redir_stdio_builtin(t_ast_node *node)
 		return (-1);
 	redirs = redirections_handler(node);
 	if (redirs !=0)
-		return (restore_stdio_builtin(), clean_shell(), redirs);
+		return (restore_stdio_builtin(), redirs);
 	return (redirs);
 }
 

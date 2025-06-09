@@ -6,36 +6,15 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 22:27:43 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 20:21:29 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 15:52:07 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#define VALID_PROMPT 1
-#define INVLID_PROMPT 0
-
-char	*strip_quotes(char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (!ft_strchr("\"\'", str[i]))
-		{
-			str[j] = str[i];
-			j++;
-		}
-		i++;
-	}
-	str[j] = '\0';
-	return (str);
-}
-
 static void	put_heredoc_eof(char *clean_delimiter)
 {
+	if (g_getset(NULL)->signal == SIGINT)
+		return ;
 	ft_putstr_fd("msh: warning: heredoc delimited by EOF", STDERR_FILENO);
 	ft_dprintf(STDERR_FILENO, " (expected `%s')\n", clean_delimiter);
 }
@@ -47,7 +26,7 @@ static char	*new_heredoc(char *delimiter, char *doc, bool apd_newline)
 
 	while (1)
 	{
-		line = open_prompt(PS2, NO_HISTORY);
+		line = wait_line(STDIN_FILENO, PS2);
 		if (!line)
 			return (put_heredoc_eof(delimiter), doc);
 		else if (ft_strcmp(line, delimiter))
@@ -64,7 +43,7 @@ static char	*new_heredoc(char *delimiter, char *doc, bool apd_newline)
 			add_history(doc);
 		}
 		else
-			return (doc);
+			return (free(line), doc);
 	}
 }
 
@@ -98,7 +77,8 @@ void	handle_heredoc(t_token *token)
 	doc = ft_strdup("");
 	delimiter = token->next->value;
 	delimiter_copy = chkalloc(ft_strdup(delimiter), "HRDC: dup fail");
-	doc = new_heredoc(strip_quotes(delimiter_copy), doc, true);
+	doc = new_heredoc(strstripchr(delimiter_copy, QUOTES_SET,
+				ft_strlen(delimiter_copy)), doc, true);
 	free(delimiter_copy);
 	doc = stamp_xpd_proc(doc, delimiter);
 	token->next->value = doc;

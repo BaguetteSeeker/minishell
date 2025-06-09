@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 12:36:41 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/09 15:36:40 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void	print_tab(char **tab)
 
 	i = 0;
 	if (!tab)
-		printf("Tab NULL\n");
+		ft_printf("Tab NULL\n");
 	while (tab && tab[i])
 	{
-		printf("%d\t>%s<\n", i, tab[i]);
+		ft_printf("%d\t>%s<\n", i, tab[i]);
 		i++;
 	}
 }

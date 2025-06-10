@@ -49,12 +49,12 @@ SRCS =	minishell.c prompt.c cleanup_utils.c repl.c cleanup_utils2.c \
 		debug/draw_ast.c debug/putlogs.c debug/exp_debugger.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
-	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
+	$(CC) -c $(CFLAGS) $(ASAN) $(INCLUDES) $< -o $@
 
 all: ftbranch libft $(OBJ_DIR) $(EXE)
 
 $(EXE) :
-	$(CC) $(CFLAGS) $^ -o $@ $(LDLIBS)
+	$(CC) $(CFLAGS) $(ASAN) $^ -o $@ $(LDLIBS)
 # $(ASAN)
 
 minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

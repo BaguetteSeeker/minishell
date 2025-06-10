@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   putlogs.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 15:36:40 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 14:13:28 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,11 @@ void	print_redir_list(t_redir *redir)
 
 void	print_tab(char **tab)
 {
-	int	i;
-
-	i = 0;
 	if (!tab)
-		ft_printf("Tab NULL\n");
-	while (tab && tab[i])
-	{
-		ft_printf("%d\t>%s<\n", i, tab[i]);
-		i++;
-	}
+		return ;
+	while (*tab)
+		ft_putendl_fd(*tab++, STDOUT_FILENO);
+	return ;
 }
 
 void	lst_put(t_token *lst)

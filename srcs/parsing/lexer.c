@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 12:22:38 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 14:28:38 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static t_token	*check_completion(t_token *token, t_token **head)
 	if (par_depth < 0)
 		return (g_getset(NULL)->state = MSH_FAILLURE,
 			par_depth = 0, ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
-				SHELL_NAME, ERRMSG_SYNTAX, token->next->value), NULL);
+				SHELL_NAME, ERRMSG_SYNTAX, token->next->value), fflush(stderr), NULL);
 	if (token->next->type == T_NEWLINE && (par_depth > 0 || token->type == OR_IF
 			|| token->type == AND_IF || token->type == PIPE))
 		complete_prompt(token, head, &par_depth);
@@ -104,12 +104,12 @@ static t_token	*check_syntax(t_token *tok, t_token **head)
 			|| (tok->type == WORD && tok->next->type == OPAR))
 			return (g_getset(NULL)->state = MSH_FAILLURE,
 				ft_dprintf(STDERR_FILENO, "%s: %s%s\'\n", SHELL_NAME,
-					ERRMSG_SYNTAX, tok->next->value), NULL);
+					ERRMSG_SYNTAX, tok->next->value), fflush(stderr), NULL);
 		else if (in_array(tok->type, oper, nb_elems(oper, sizeof(oper)))
 			&& *head == tok)
 			return (g_getset(NULL)->state = MSH_FAILLURE,
 				ft_dprintf(STDERR_FILENO, "%s: %s%s\'\n", SHELL_NAME,
-					ERRMSG_SYNTAX, tok->value), NULL);
+					ERRMSG_SYNTAX, tok->value), fflush(stderr), NULL);
 		return (check_completion(tok, head));
 	}
 	return (*head);

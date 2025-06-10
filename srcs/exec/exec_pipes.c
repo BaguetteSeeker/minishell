@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 18:22:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/18 18:22:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 14:47:05 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	execute_pipe(t_ast_node *node)
 	pid_t	pid_right;
 	int		pipe_fd[2];
 	int		status;
+	int		exit_status;
 
 	set_foreground_flag(node);
 	if (pipe(pipe_fd) < 0)
@@ -67,5 +68,7 @@ int	execute_pipe(t_ast_node *node)
 	close(pipe_fd[1]);
 	waitpid(pid_left, NULL, 0);
 	waitpid(pid_right, &status, 0);
-	return (WEXITSTATUS(status));
+	exit_status = (WEXITSTATUS(status));
+	set_exitcode(exit_status);
+	return (exit_status);
 }

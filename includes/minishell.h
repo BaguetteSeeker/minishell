@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 12:27:24 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 15:32:20 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,8 @@ int			expand_redirs(t_ast_node *node);
 int			expand_vars(t_ast_node *node);
 int			heredoc_exp(t_redir *redir);
 char		**split_heredoc(const char *s);
+char		*join_lines(char **lines);
+bool		is_expandable(char *hdoc);
 //wildcards expansion functions
 char		**get_path(char *pcdr);
 int			is_wildcard_expandable(t_segment **seg);

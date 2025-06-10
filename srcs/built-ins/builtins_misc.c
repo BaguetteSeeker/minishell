@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_misc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/06/10 12:55:56 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 14:10:15 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	builtin_pwd(void)
 //to mimick bash, runs command in a child-process
 int	builtin_env(void)
 {
-	put_recurse_dynarr(g_getset(NULL)->var_env);
+	print_tab(g_getset(NULL)->var_env);
 	//debug
 	// printf("\n === VAR SHELL === \n");
 	// put_recurse_dynarr(g_getset(NULL)->var_shell);

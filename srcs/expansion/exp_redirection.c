@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exp_redirections.c                                 :+:      :+:    :+:   */
+/*   exp_redirection.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 14:59:40 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	is_redir_ambiguous(t_segment **seg)
 	unquoted_count = 0;
 	while (seg[i])
 	{
-		if (seg[i]->quote == QUOTE_NONE)
+		if (seg[i]->quote == QUOTE_NONE && seg[i]->text && *seg[i]->text != '\0')
 		{
 			unquoted_count++;
 			if (contains_unquoted_space(seg[i]))
@@ -46,7 +46,9 @@ int	redir_exp(t_redir *redir)
 	seg = parse_segments(redir->file);
 	if (!seg)
 		return (1);
+	print_segments(seg);
 	expand_segments(seg);
+	print_segments(seg);
 	if (is_redir_ambiguous(seg))
 	{
 		ft_dprintf(2, "msh: %s: ambiguous redirect\n", redir->file);

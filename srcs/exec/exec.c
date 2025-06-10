@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 18:22:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/18 18:22:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 14:47:11 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	execute_subshell(t_ast_node *node)
 {
 	pid_t	pid;
 	int		status;
+	int		exit_status;
 
 	set_foreground_flag(node);
 	pid = fork();
@@ -58,7 +59,9 @@ int	execute_subshell(t_ast_node *node)
 		exit(status);
 	}
 	waitpid(pid, &status, 0);
-	return (WEXITSTATUS(status));
+	exit_status = WEXITSTATUS(status);
+	set_exitcode(exit_status);
+	return (exit_status);
 }
 
 int	command_no_command(t_ast_node *node)

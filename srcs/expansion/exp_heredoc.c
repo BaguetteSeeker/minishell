@@ -6,31 +6,64 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 15:47:14 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//Looks for the DEL char previously inserted right before EOF
-//If found, heredoc is expandable, if not, it isn't
-//Only overwrites the DEL char once the content is re-expanded during execution,
-//otherwise, exit codes in heredoc would remain litteral 
-static bool	is_expandable(char *hdoc)
-{
-	bool	is_expandable;
-	size_t	hdoc_siz;
 
-	hdoc_siz = ft_strlen(hdoc);
-	if (hdoc[hdoc_siz - 1] == EXPANDABLE_HEREDOC)
+
+char	*new_seg_quote(char	*str, char qc)
+{
+	char	*new_str;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	new_str = malloc(sizeof(char) * (ft_strlen(str) + 3));
+	if (!new_str)
+		perror("malloc error");
+	new_str[i] = qc;
+	i++;
+	while (str[j] != '\0')
 	{
-		if (g_getset(NULL)->state == MSH_EXECUTING)
-			hdoc[hdoc_siz - 1] = '\0';
-		is_expandable = true;
+		new_str[i] = str[j];
+		i++;
+		j++;
 	}
-	else
-		is_expandable = false;
-	return (is_expandable);
+	new_str[i] = qc;
+	i++;
+	new_str[i] = '\0';
+	return (new_str);
+}
+
+void	addback_quote(t_segment **seg)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	str = NULL;
+	while (seg[i])
+	{
+		if (seg[i]->quote == QUOTE_NONE)
+		{
+			i++;
+			continue ;
+		}
+		if (seg[i]->quote == QUOTE_DOUBLE)
+			str = new_seg_quote(seg[i]->text, '\"');
+		else if (seg[i]->quote == QUOTE_SINGLE)
+			str = new_seg_quote(seg[i]->text, '\'');
+		if (str)
+		{
+			free(seg[i]->text);
+			seg[i]->text = str;
+		}
+		i++;
+	}
 }
 
 //uses the same logic as normal variable expansion
@@ -47,39 +80,12 @@ static char	*expand_line(const char *line)
 	if (!segments)
 		return (NULL);
 	expand_segments(segments);
+	addback_quote(segments);
 	expanded = concat_segments(segments);
 	free_segments(segments);
 	if (!expanded)
 		return (ft_strdup(""));
 	return (expanded);
-}
-
-//joins every lines in a new str
-static char	*join_lines(char **lines)
-{
-	char	*joined;
-	char	*tmp;
-	int		i;
-
-	if (!lines || !lines[0])
-		return (ft_strdup(""));
-	joined = ft_strjoin(lines[0], "\n");
-	if (!joined)
-		return (NULL);
-	i = 1;
-	while (lines[i])
-	{
-		tmp = ft_strjoin(joined, lines[i]);
-		free(joined);
-		if (!tmp)
-			return (NULL);
-		joined = ft_strjoin(tmp, "\n");
-		free(tmp);
-		if (!joined)
-			return (NULL);
-		i++;
-	}
-	return (joined);
 }
 
 //expands each line using segmentation logic (helper for norm)

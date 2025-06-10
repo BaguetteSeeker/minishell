@@ -26,7 +26,7 @@ int	builtin_cd(t_ast_node *node)
 	if (!getcwd(cwd, sizeof(cwd)))
 		return (perror("cd: "), 1);
 	if (chdir(target) != 0)
-		return (perror("cd: "), 1);
+		return (ft_dprintf(STDERR_FILENO, ERRMSG_CD, target), 1);
 	update_add_var(VAR_ENV, "OLDPWD", cwd);
 	if (!getcwd(cwd, sizeof(cwd)))
 		return (perror("cd: "), 1);

@@ -53,7 +53,9 @@ int	execute_subshell(t_ast_node *node)
 	pid = fork();
 	if (pid == 0)
 	{
-		exit(execute_node(node->left));
+		status = execute_node(node->left);
+		clean_shell();
+		exit(status);
 	}
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));

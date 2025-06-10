@@ -42,6 +42,7 @@
 			Expecting Operator token but none was provided"
 # define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
 # define ERRMSG_NOCMD "msh: : command not found\n"
+# define ERRMSG_CD "msh: cd: %s: No such file or directory\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126
 
@@ -86,8 +87,8 @@ typedef struct s_stdio
 typedef struct s_minishell
 {
 	sig_atomic_t			state;
-	t_msh_mode		mode;
-	t_stdio			stdio;
+	t_msh_mode			mode;
+	t_stdio				stdio;
 	char					**var_env;
 	char					**var_shell;
 	char					*input;

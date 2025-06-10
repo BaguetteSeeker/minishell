@@ -73,7 +73,7 @@ int	match_pattern(const char *pattern, const char *str)
 	return (!*pattern && !*str);
 }
 
-//file filtering handler (for norm purposes)
+//file filtering handler
 int	is_valid_match(const char *pattern, struct dirent *entry, int show_hidden)
 {
 	if (!entry)

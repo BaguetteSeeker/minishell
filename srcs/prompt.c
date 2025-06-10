@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:06:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 21:23:50 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 00:30:36 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	prompt_routine(t_minishell *msh_g)
 		msh_g->state = MSH_PROMPTING;
 		msh_g->input = open_prompt(
 				get_var_value(VAR_SHELL, "PS1"), ADD_HISTORY);
+		msh_g->signal = 0;
 		repl_once(msh_g);
 	}
 }

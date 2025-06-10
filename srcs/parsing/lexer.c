@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 11:10:21 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 12:22:38 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,13 @@ static size_t	create_token(char *input, t_token *token)
 static t_token	*check_completion(t_token *token, t_token **head)
 {
 	static int	par_depth = 0;
-	char		*input_completion;
 
 	if (token->type == DLESS)
+	{
 		handle_heredoc(token);
-	if (g_getset(NULL)->signal == SIGINT)
-		return (par_depth = 0, g_getset(NULL)->state = MSH_FAILLURE, NULL);
+		if (g_getset(NULL)->signal == SIGINT)
+			return (par_depth = 0, g_getset(NULL)->state = MSH_FAILLURE, NULL);
+	}
 	if (token->type == OPAR)
 		par_depth++;
 	else if (token->type == CPAR)
@@ -82,14 +83,8 @@ static t_token	*check_completion(t_token *token, t_token **head)
 				SHELL_NAME, ERRMSG_SYNTAX, token->next->value), NULL);
 	if (token->next->type == T_NEWLINE && (par_depth > 0 || token->type == OR_IF
 			|| token->type == AND_IF || token->type == PIPE))
-	{
-		g_getset(NULL)->state = MSH_PROMPTING_COMPLETION;
-		msh_lstdelone(token->next, free_token_value);
-		token->next = NULL;
-		input_completion = open_prompt(PS2, NO_HISTORY);
-		tokenize(&input_completion, head);
-	}
-	return (par_depth = 0, (t_token *)msh_lstlast(*head));
+		complete_prompt(token, head, &par_depth);
+	return ((t_token *)msh_lstlast(*head));
 }
 
 static t_token	*check_syntax(t_token *tok, t_token **head)

@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 15:38:02 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 12:19:58 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef enum e_msh_state
 {
 	MSH_PROMPTING,
 	MSH_PROMPTING_COMPLETION,
+	MSH_HEREDOC,
 	MSH_TOKENIZING,
 	MSH_EXPANDING,
 	MSH_PARSING,
@@ -86,8 +87,8 @@ typedef struct s_stdio
 typedef struct s_minishell
 {
 	sig_atomic_t			state;
-	t_msh_mode		mode;
-	t_stdio			stdio;
+	t_msh_mode				mode;
+	t_stdio					stdio;
 	char					**var_env;
 	char					**var_shell;
 	char					*input;
@@ -126,6 +127,7 @@ typedef struct s_minishell
 //Core Prototypes
 t_minishell	*g_getset(void *g);
 void		prompt_routine(t_minishell *msh_g);
+void		repl_once(t_minishell *msh_g);
 char		*open_prompt(char *prompt, bool history);
 char		*wait_line(int fd, char *prompt);
 t_token		*tokenize(char **inpt_ptr, t_token **token_head);
@@ -139,7 +141,7 @@ void		expand_token(t_token *tokens);
 char		*get_envvar(char *pcdr);
 size_t		varsiz(const char *var);
 size_t		pathsiz(const char *path);
-void		repl_once(t_minishell *msh_g);
+void		complete_prompt(t_token *end_tok, t_token **head, int *par_depth);
 
 //Helper Functions
 void		lst_put(t_token *lst);

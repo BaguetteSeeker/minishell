@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 15:54:25 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 12:19:24 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,21 @@ t_ast_node	*init_node(t_token **tokens)
 	node->is_foreground = 1;
 	*tokens = (*tokens)->next;
 	return (node);
+}
+
+//Lexer util stored here for lack of room in lexer.c
+void	complete_prompt(t_token *end_tok, t_token **head, int *par_depth)
+{
+	char	*input;
+
+	g_getset(NULL)->state = MSH_PROMPTING_COMPLETION;
+	msh_lstdelone(end_tok->next, free_token_value);
+	end_tok->next = NULL;
+	input = open_prompt(PS2, NO_HISTORY);
+	if (end_tok->type == OPAR)
+		(*par_depth)--;
+	tokenize(&input, head);
+	*par_depth = 0;
 }
 
 //Work off of the node' args 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_variable_interface.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 13:15:40 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	update_remove_var(int mode, char *var_name)
 	char	**new_var_tab;
 	char	**var_tab;
 
+	var_tab = NULL;
 	if (mode == VAR_ENV)
 		var_tab = g_getset(NULL)->var_env;
 	else if (mode == VAR_SHELL)
@@ -42,6 +43,7 @@ void	update_add_var(int mode, char *var_name, char *value)
 	char	**new_var_tab;
 	char	**var_tab;
 
+	var_tab = NULL;
 	if (mode == VAR_ENV)
 		var_tab = g_getset(NULL)->var_env;
 	else if (mode == VAR_SHELL)
@@ -90,6 +92,7 @@ char	*get_var_entry(int mode, char *var_name)
 	int		i;
 	char	**var_tab;
 
+	var_tab = NULL;
 	if (mode == VAR_ENV)
 		var_tab = g_getset(NULL)->var_env;
 	else if (mode == VAR_SHELL)

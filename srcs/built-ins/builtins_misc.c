@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_misc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 12:55:56 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	builtin_exit(t_ast_node *node)
 	int		exit_code;
 	char	**args;
 
+	exit_code = 0;
 	args = node->exp_args;
 	if (!args || !args[1])
 		exit_code = 0;

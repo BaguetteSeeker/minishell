@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_assign.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 12:54:58 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static int	lhs_is_expandable(char *var)
 	char		*lhs;
 	t_segment	**seg;
 
+	is_expandable = 0;
 	eq = ft_strchr(var, '=');
 	if (!eq || eq == var)
 		return (0);

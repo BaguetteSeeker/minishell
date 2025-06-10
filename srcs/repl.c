@@ -15,6 +15,10 @@
 //REPL stands for Read-Evaluation-Print Loop
 //this function describes one iteration of the REPL
 //!!! input must be set in respective mode loops !!!
+//debug functions :
+//	-msh_lstiter(msh_g->tokens, &expand_token);
+//	-print_ast(msh_g->cmd_table);
+//	-draw_ast(msh_g->cmd_table, "", 1);
 void	repl_once(t_minishell *msh_g)
 {
 	t_token	*tokens_tmp;

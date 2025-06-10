@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 12:19:58 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 12:27:24 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 			Expecting Operator token but none was provided"
 # define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
 # define ERRMSG_NOCMD "msh: : command not found\n"
+# define ERRMSG_CD "msh: cd: %s: No such file or directory\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126
 

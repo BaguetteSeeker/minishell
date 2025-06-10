@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 18:22:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/06/10 14:47:11 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:54:23 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	command_no_command(t_ast_node *node)
 	exit_code = expand_node(node);
 	if (exit_code)
 		return (set_exitcode(1), 1);
-	//print_tab(node->vars_exp);
 	if (node->vars != NULL)
 		exit_code = assign_shell_var(node);
 	if (node->io_streams != NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/05/12 23:26:07 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:58:53 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,12 @@ typedef struct s_segment
 	int		from_var;
 }	t_segment;
 
-//example were from_variable is useful
-//VAR=*
-//echo $VAR
-//file1 file2
-//echo "$VAR"
-//*
-//(only relevant for wildcard in minishell)
 typedef struct s_word
 {
-	char			*text;			// raw text (partial word)
-	int				index;			// index in list (for debugging)
-	int				should_split;	// indicate if var should split
-	int				from_variable;	// indicate if value was from variable
+	char			*text;
+	int				index;
+	int				should_split;
+	int				from_variable;
 	struct s_word	*previous;
 	struct s_word	*next;
 	t_segment		**seg;

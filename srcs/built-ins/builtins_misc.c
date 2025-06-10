@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/06/10 14:10:15 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:54:34 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,6 @@ int	builtin_pwd(void)
 int	builtin_env(void)
 {
 	print_tab(g_getset(NULL)->var_env);
-	//debug
-	// printf("\n === VAR SHELL === \n");
-	// put_recurse_dynarr(g_getset(NULL)->var_shell);
-	//to remove
 	return (0);
 }
 
@@ -71,7 +67,7 @@ static int	parse_exit_code(const char *str, int *code_out)
 		i++;
 	}
 	if (str[i] == '-' || str[i] == '+')
-		return (1); // invalid double sign
+		return (1);
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')

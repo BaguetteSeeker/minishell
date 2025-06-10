@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:25:30 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,9 @@ int	is_valid_match(const char *pattern, struct dirent *entry, int show_hidden)
 {
 	if (!entry)
 		return (0);
-	if ((!show_hidden && entry->d_name[0] == '.')
+	if (pattern && pattern[0] == '.')
+		return (match_pattern(pattern, entry->d_name));
+	else if ((!show_hidden && entry->d_name[0] == '.')
 		|| ft_strcmp(entry->d_name, ".") == 0
 		|| ft_strcmp(entry->d_name, "..") == 0)
 		return (0);
@@ -89,7 +91,7 @@ int	is_valid_match(const char *pattern, struct dirent *entry, int show_hidden)
 //searching filenames matching a given wildcard expression
 //	-uses readdir() to iterate over directory entries.
 //	-matches entries against the provided pattern
-//returns NULL-terminated array of matching strings on match, 
+//returns NULL-terminated array of matching strings on match,
 //NULL ptr if no match
 static char	**scan_directory(const char *pattern, int show_hidden)
 {

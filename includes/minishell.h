@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 18:31:31 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 15:32:20 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:42:11 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@
 # include <sys/stat.h>
 
 # define SHELL_NAME "msh"
-
-//# define PROMPT_NAME "\033[37;1m$minishell: \033[0m"
-// # define PROMPT_NAME "\033[33;1m$minishell: \033[0m"
 # define PROMPT_NAME "\033[1;38;5;196mminishell$ \033[0m"
 # define PS2 "> "
 # define ERRMSG_SYNTAX ": syntax error near unexpected token `"
@@ -42,6 +39,7 @@
 			Expecting Operator token but none was provided"
 # define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
 # define ERRMSG_NOCMD "msh: : command not found\n"
+# define ERRMSG_NOFILE "msh: %s : No such file or directory\n"
 # define ERRMSG_CD "msh: cd: %s: No such file or directory\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126

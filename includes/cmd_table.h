@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_table.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/05/29 13:31:05 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:45:57 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 
 typedef enum e_node_type
 {
-	NODE_COMMAND,	// Represents a command (e.g., "echo 1")
-	NODE_OPERATOR,	// Represents an operator (e.g., "&&")
-	NODE_PIPE,	// Represents one or more contiguous pipes ("cmd1|cmd2|cmd3...")
-	NODE_SUBSHELL,	// Represents a subshell (e.g., "(...)")
+	NODE_COMMAND,
+	NODE_OPERATOR,
+	NODE_PIPE,
+	NODE_SUBSHELL,
 }	t_node_type;
 
 //je mets ca la pour l'instant
@@ -54,15 +54,15 @@ typedef struct s_redir
 
 typedef struct s_ast_node
 {
-	t_node_type			type;	// Type of the node
-	int					is_foreground; // Flag
-	char				*value;	// Value of the node (command name, operator)
-	char				**args;	// cmd args, comes from lexer DO NOT FREE
-	char				**exp_args;	// cmd args post expansion
-	char				**vars;	// Temporary cmd vars OR shell vars
-	char				**exp_vars;	// same thing as exp_args
-	t_redir				*io_streams; // Linked List of redirections
-	struct s_ast_node	*left;	// Left child (operator' left node)
-	struct s_ast_node	*right;	// Right child (operator' right node)
+	t_node_type			type;
+	int					is_foreground;
+	char				*value;
+	char				**args;
+	char				**exp_args;
+	char				**vars;
+	char				**exp_vars;
+	t_redir				*io_streams;
+	struct s_ast_node	*left;
+	struct s_ast_node	*right;
 }	t_ast_node;
 #endif

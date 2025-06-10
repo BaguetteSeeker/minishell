@@ -6,13 +6,11 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/06/10 15:47:14 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:53:13 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 char	*new_seg_quote(char	*str, char qc)
 {

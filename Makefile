@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: epinaud <marvin@42.fr>                     +#+  +:+       +#+         #
+#    By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/25 16:30:14 by epinaud           #+#    #+#              #
-#    Updated: 2025/06/09 16:45:23 by epinaud          ###   ########.fr        #
+#    Updated: 2025/06/10 16:28:07 by anle-pag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,13 +49,12 @@ SRCS =	minishell.c prompt.c cleanup_utils.c repl.c cleanup_utils2.c \
 		debug/draw_ast.c debug/putlogs.c debug/exp_debugger.c
 
 $(OBJ_DIR)/%.o : srcs/%.c
-	$(CC) -c $(CFLAGS) $(ASAN) $(INCLUDES) $< -o $@
+	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 all: ftbranch libft $(OBJ_DIR) $(EXE)
 
 $(EXE) :
-	$(CC) $(CFLAGS) $(ASAN) $^ -o $@ $(LDLIBS)
-# $(ASAN)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDLIBS)
 
 minishell: $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 

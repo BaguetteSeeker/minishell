@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 18:22:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/18 18:22:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:53:31 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ int	redir_in(t_redir	*redir)
 
 	if (access(redir->exp_file, F_OK) != 0
 		|| access(redir->exp_file, R_OK) != 0)
-		return (perror(redir->exp_file), 1);
+		return (ft_dprintf(2, ERRMSG_NOFILE, redir->exp_file), 1);
 	fd = open(redir->exp_file, O_RDONLY);
 	if (fd < 0)
-		return (perror(redir->exp_file), 1);
+		return (ft_dprintf(2, ERRMSG_NOFILE, redir->exp_file), 1);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	return (0);
@@ -75,7 +75,6 @@ int	redirections_handler(t_ast_node *node)
 
 	exit_code = 0;
 	redir = node->io_streams;
-	// print_redir_list(redir);
 	while (redir)
 	{
 		if (redir->type == REDIR_IN)

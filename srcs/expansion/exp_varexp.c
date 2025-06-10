@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:48:00 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,7 @@ void	var_exp(t_word *list)
 		list->seg = parse_segments(list->text);
 		if (!list->seg)
 			return ;
-		// printf("\nbedore exp :");
-		// print_segments(list->seg);
 		expand_segments(list->seg);
-		// printf("after exp :");
-		// print_segments(list->seg);
 		new = concat_segments(list->seg);
 		if (!new)
 		{

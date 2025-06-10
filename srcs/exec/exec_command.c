@@ -6,7 +6,7 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 18:22:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/18 18:22:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:53:42 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	exec_fork(t_ast_node *node)
 				path), clean_shell(), exit(126));
 	update_add_var(VAR_ENV, "_", node->exp_args[0]);
 	envp = g_getset(NULL)->var_env;
-	//printf("\n%s\n\n", path);
 	execve(path, node->exp_args, envp);
 	perror("execve failed");
 	clean_shell();
@@ -82,12 +81,3 @@ int	execute_command(t_ast_node *node)
 		update_underscore(node);
 	return (set_exitcode(exit_status), exit_status);
 }
-
-/* 	debug
-	print_tab(node->exp_args);
-	if (node->io_streams)
-		printf("\n old %s new %s", 
-		node->io_streams->file, 
-		node->io_streams->exp_file);
-	fflush(stdout);
-*/

@@ -6,13 +6,13 @@
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:47:45 by anle-pag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//word is only splitable if there's at least on segment unquoted AND 
+//word is only splitable if there's at least on segment unquoted AND
 //contains a space (tough one)
 //example :
 //VAR1="oui non"
@@ -147,27 +147,10 @@ int	expand_node(t_ast_node *node)
 		word_lst = word_list_from_argv(node->args);
 		if (!word_lst)
 			return (1);
-		// print_word_list(word_lst);
 		var_exp(word_lst);
-		// printf("after var exp :\n");	
-		// print_word_list(word_lst);
 		word_split(&word_lst);
-		// printf("after split exp :\n");	
-		// print_word_list(word_lst);
 		exp_wildcards(&word_lst);
-		// printf("after wldcrd exp :\n");	
-		// print_word_list(word_lst);
-		// printf("\n=== EXP end ===\n");
 		node->exp_args = word_list_to_argv(word_lst);
-		// print_tab(node->exp_args);
 	}
-	// printf("\nexp args :\n");
-	// print_tab(node->exp_args);
-	// printf("\nexp vars :\n");
-	// print_tab(node->exp_vars);
-	// printf("\n\n%p is NULL ???\n\n", node->io_streams);
-	// if (node->io_streams)
-	//	printf("old file %s, new %s\n",
-	//	node->io_streams->file, node->io_streams->exp_file);
 	return (0);
 }

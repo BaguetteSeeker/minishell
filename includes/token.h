@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 22:04:36 by souaret           #+#    #+#             */
-/*   Updated: 2025/06/10 16:58:53 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:12:40 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ typedef enum quote
 	QUOTE_DOUBLE
 }	t_quote;
 
-//smaller struct used in an array to analyse each word
-//only used in exp_varexp.c and its helper
 typedef struct s_segment
 {
 	char	*text;

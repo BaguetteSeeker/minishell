@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 23:11:21 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 11:32:32 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:38:19 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	clean_ast(t_ast_node *node)
 		if (node->vars)
 			ft_free_dynarr(node->vars);
 		if (node->io_streams)
-			msh_lstclear(&node->io_streams, NULL);
+			MSH_LSTCLEAR(&node->io_streams, NULL);
 	}
 	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
 	{
@@ -70,7 +70,7 @@ void	clean_routine(void)
 	if (msh->input)
 		free(msh->input);
 	if (msh->tokens)
-		msh_lstclear(&msh->tokens, free_token_value);
+		MSH_LSTCLEAR(&msh->tokens, free_token_value);
 	if (msh->cmd_table)
 		clean_ast(msh->cmd_table);
 	msh->input = NULL;

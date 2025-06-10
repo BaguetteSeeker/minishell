@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:06:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 00:30:36 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:38:35 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ void	prompt_routine(t_minishell *msh_g)
 }
 /* Tests ->
 		msh_g->state = MSH_EXPANDING;
-		msh_lstiter(msh_g->tokens, &expand_token);
-		msh_lstiter(msh_g->tokens, &lst_put);
+		MSH_LSTITER(msh_g->tokens, &expand_token);
+		MSH_LSTITER(msh_g->tokens, &lst_put);
 
 				expand_node(msh_g->cmd_table);
 		if (msh_g->cmd_table->left)

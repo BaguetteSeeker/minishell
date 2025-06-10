@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 15:08:35 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 12:19:24 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:38:59 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	complete_prompt(t_token *end_tok, t_token **head, int *par_depth)
 	char	*input;
 
 	g_getset(NULL)->state = MSH_PROMPTING_COMPLETION;
-	msh_lstdelone(end_tok->next, free_token_value);
+	MSH_LSTDELONE(end_tok->next, free_token_value);
 	end_tok->next = NULL;
 	input = open_prompt(PS2, NO_HISTORY);
 	if (end_tok->type == OPAR)
@@ -119,7 +119,7 @@ t_ast_node	*parse_command(t_token **tokens)
 			node->vars = parse_args(tokens, &node->vars, PARSE_SUBSQ_VARS);
 		if (in_array((*tokens)->type, redirs, REDIRS_TYPCOUNT)
 			&& (*tokens)->next->type == WORD)
-			msh_lstaddback(&node->io_streams, parse_redir(tokens));
+			MSH_LSTADDBACK(&node->io_streams, parse_redir(tokens));
 		else if ((*tokens)->type == WORD)
 			node->args = parse_args(tokens, &node->args, PARSE_SUBSQ_WORDS);
 		else

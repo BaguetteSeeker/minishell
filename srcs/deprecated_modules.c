@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 19:08:06 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/09 12:16:52 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:39:09 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@
 		prev->next = newlst;
 	else
 		g_getset(NULL)->tokens = newlst;
-	msh_lstlast(newlst)->next = (t_list *)next;
+	MSH_LSTLAST(newlst)->next = (t_list *)next;
 	return (next ? newlst->value : NULL);
 }
 
@@ -81,7 +81,7 @@ char	*get_path(char *pcdr)
 			path->value = ft_strdup(entry->d_name);
 			if (!path->value)
 				put_err("Expander: Malloc Faillure");
-			msh_lstaddback(&paths, path);
+			MSH_LSTADDBACK(&paths, path);
 		}
 	}
 } */
@@ -125,7 +125,7 @@ char	*get_path(char *pcdr)
 	}
 	// *mem_node = (t_memory){0};
 	mem_node->mem = new_mem;
-	msh_lstaddback(&g_getset(NULL)->mem_lst, mem_node);
+	MSH_LSTADDBACK(&g_getset(NULL)->mem_lst, mem_node);
 	return (new_mem);
 }
 
@@ -146,7 +146,7 @@ void	del_mem(char *buff)
 	if (!curr)
 		ft_putendl_fd("del_mem: can't find provided buffer", STDERR_FILENO);
 	next = curr->next;
-	msh_lstdelone(curr, free_token_value);
+	MSH_LSTDELONE(curr, free_token_value);
 	// Reattach the list or do nothing
 	if (prev)
 		prev->next = next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:13:42 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 16:02:05 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:13:21 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,11 @@ static t_token	*check_completion(t_token *token, t_token **head)
 	if (par_depth < 0)
 		return (g_getset(NULL)->state = MSH_FAILLURE,
 			par_depth = 0, ft_dprintf(STDERR_FILENO, "%s %s%s\'\n",
-				SHELL_NAME, ERRMSG_SYNTAX, token->next->value), fflush(stderr), NULL);
+				SHELL_NAME, ERRMSG_SYNTAX, token->next->value), NULL);
 	if (token->next->type == T_NEWLINE && (par_depth > 0 || token->type == OR_IF
 			|| token->type == AND_IF || token->type == PIPE))
 		complete_prompt(token, head, &par_depth);
-	return ((t_token *)msh_lstlast(*head));
+	return ((t_token *)MSH_LSTLAST(*head));
 }
 
 static t_token	*check_syntax(t_token *tok, t_token **head)
@@ -135,8 +135,8 @@ t_token	*tokenize(char **inpt_ptr, t_token **token_head)
 			*token = (t_token){chkalloc(ft_strdup("newline"), 0), 0, T_NEWLINE};
 		else
 			input += create_token(input, token);
-		prev_token = (t_token *)msh_lstlast(*token_head);
-		msh_lstaddback(token_head, token);
+		prev_token = (t_token *)MSH_LSTLAST(*token_head);
+		MSH_LSTADDBACK(token_head, token);
 		token = check_syntax(prev_token, token_head);
 		if (token == NULL || token->type == T_NEWLINE)
 			break ;

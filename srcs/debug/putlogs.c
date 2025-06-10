@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   putlogs.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:24:38 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 14:13:28 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:12:59 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	print_ast(t_ast_node *node)
 		ft_putendl_fd("Printing args :", 1);
 		put_recurse_dynarr(node->args);
 		ft_putendl_fd("Printing redirs:", 1);
-		msh_lstiter((node->io_streams), lst_put);
+		MSH_LSTITER((node->io_streams), lst_put);
 	}
 	else if (node->type == NODE_OPERATOR || node->type == NODE_PIPE)
 	{

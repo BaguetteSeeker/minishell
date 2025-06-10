@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_table.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:28:11 by epinaud           #+#    #+#             */
-/*   Updated: 2025/06/10 16:45:57 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:12:14 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ typedef enum e_node_type
 	NODE_SUBSHELL,
 }	t_node_type;
 
-//je mets ca la pour l'instant
-//tu peux le bouger dans un "built-ins.h ou autre part stv
 typedef enum e_bi_type
 {
 	BUILTIN_NONE = -1,

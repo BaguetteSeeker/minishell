@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
+/*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/05/21 20:10:12 by anle-pag         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:10:39 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	update_shlvl(void)
 	if (!shlvl)
 		return ;
 	level = ft_atoi(shlvl) + 1;
-	fflush(stdout);
 	new_shlvl = ft_itoa(level);
 	if (!new_shlvl)
 		put_err("strdup");

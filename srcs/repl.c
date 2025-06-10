@@ -6,7 +6,7 @@
 /*   By: epinaud <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:10:12 by anle-pag          #+#    #+#             */
-/*   Updated: 2025/06/09 20:01:27 by epinaud          ###   ########.fr       */
+/*   Updated: 2025/06/10 16:38:35 by epinaud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 //this function describes one iteration of the REPL
 //!!! input must be set in respective mode loops !!!
 //debug functions :
-//	-msh_lstiter(msh_g->tokens, &expand_token);
+//	-MSH_LSTITER(msh_g->tokens, &expand_token);
 //	-print_ast(msh_g->cmd_table);
 //	-draw_ast(msh_g->cmd_table, "", 1);
 void	repl_once(t_minishell *msh_g)

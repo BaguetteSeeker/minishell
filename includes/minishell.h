@@ -194,6 +194,8 @@ void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
 int			contains_unquoted_space(t_segment *s);
 int			expand_redirs(t_ast_node *node);
 int			expand_vars(t_ast_node *node);
+int			heredoc_exp(t_redir *redir);
+char		**split_heredoc(const char *s);
 //wildcards expansion functions
 char		**get_path(char *pcdr);
 int			is_wildcard_expandable(t_segment **seg);

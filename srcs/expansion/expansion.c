@@ -127,7 +127,6 @@ void	exp_wildcards(t_word **head)
 //	-for each word, expands text using segmentation logic
 //	-if marked for splitting, split it into multiple argv
 //	-similar although simpler process for node->var (no word_splitting)
-//	=====	WIP	=====
 //	-expands redirections
 //	-wildcard globbing
 //https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html 2.6

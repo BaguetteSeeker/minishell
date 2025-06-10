@@ -56,7 +56,7 @@ char	*get_newpath(char *path, char *cmd, int i)
 }
 
 //searches for executable in $PATH
-static char **get_path_array(char **envp)
+static char	**get_path_array(char **envp)
 {
 	char	**envpaths;
 	char	*path_value;
@@ -70,7 +70,7 @@ static char **get_path_array(char **envp)
 	return (ft_split(".", ':'));
 }
 
-static char *search_path_dirs(char *cmd, char **envp)
+static char	*search_path_dirs(char *cmd, char **envp)
 {
 	char		**envpaths;
 	char		*path;

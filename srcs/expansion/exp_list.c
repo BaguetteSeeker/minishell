@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-//cool pointer logic
 //takes the node following the insertion point as argument
 //iteratively creates new nodes and swap the "after" with created node
 //effectively taking its place, previous node->next points to the new nodes
@@ -39,6 +38,7 @@ t_word	*insert_split_words(char **split, t_word *after)
 	return (prev);
 }
 
+//creates a new word node
 t_word	*create_new_word(char *text)
 {
 	t_word	*node;
@@ -87,7 +87,7 @@ t_word	*word_list_from_argv(char **argv)
 	return (head);
 }
 
-//again, factorization for norm compliance
+//word_list_to_argv() helper for norm
 static char	**fill_argv_array(char **argv, t_word *list)
 {
 	int	i;
@@ -97,7 +97,7 @@ static char	**fill_argv_array(char **argv, t_word *list)
 	{
 		if (list->text)
 		{
-			argv[i] = strdup(list->text); //leak
+			argv[i] = strdup(list->text);
 			if (!argv[i])
 			{
 				while (i > 0)
@@ -122,7 +122,7 @@ char	**word_list_to_argv(t_word *list)
 
 	tmp = list;
 	count = count_non_null_words(list);
-	argv = malloc(sizeof(char *) * (count + 1)); //DEFF lost (wtf)
+	argv = malloc(sizeof(char *) * (count + 1));
 	if (!argv)
 		return (free_word_list(list), NULL);
 	argv = fill_argv_array(argv, list);

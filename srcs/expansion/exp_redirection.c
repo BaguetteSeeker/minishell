@@ -62,32 +62,6 @@ int	redir_exp(t_redir *redir)
 	return (redir->exp_file == NULL);
 }
 
-// //Looks for the DEL char previously inserted right before EOF
-// //If found, heredoc is expandable, if not, it isn't
-// //Only overwrites the DEL char once the content is re-expanded during execution,
-// //otherwise, exit codes in heredoc would remain litteral 
-// static bool    is_expandable(char *hdoc)
-// {
-//     bool    is_expandable;
-//     size_t    hdoc_siz;
-
-//     hdoc_siz = ft_strlen(hdoc);
-//     if (hdoc[hdoc_siz - 1] == EXPANDABLE_HEREDOC)
-//     {
-//         if (g_getset(NULL)->state == MSH_EXECUTING)
-//             hdoc[hdoc_siz - 1] = '\0';
-//         is_expandable = true;
-//     }
-//     else
-//         is_expandable = false;
-//     return (is_expandable);
-// }
-
-// int	heredoc_exp(t_redir)
-// {
-
-// }
-
 int	expand_redirs(t_ast_node *node)
 {
 	t_redir	*redir;
@@ -96,7 +70,10 @@ int	expand_redirs(t_ast_node *node)
 	redir = node->io_streams;
 	while (redir)
 	{
-		ret = redir_exp(redir);
+		if (redir->type == HEREDOC)
+			ret = heredoc_exp(redir);
+		else
+			ret = redir_exp(redir);
 		if (ret)
 			break ;
 		redir = redir->next;

@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+//free each node in list
 void	free_word_list(t_word *list)
 {
 	t_word	*tmp;
@@ -30,7 +31,7 @@ void	free_word_list(t_word *list)
 	}
 }
 
-//updates the index
+//update the list's index
 int	update_node_index(t_word *lst)
 {
 	int	i;
@@ -47,6 +48,7 @@ int	update_node_index(t_word *lst)
 	return (i);
 }
 
+//removes a node from list, link previous node->next and next node->previous
 void	remove_word(t_word *node)
 {
 	if (!node)
@@ -72,6 +74,7 @@ void	remove_word(t_word *node)
 	free(node);
 }
 
+//helper for word_list_to_argv()
 int	count_non_null_words(t_word *list)
 {
 	int	count;

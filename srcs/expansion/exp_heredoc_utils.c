@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup_utils2.c                                   :+:      :+:    :+:   */
+/*   exp_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anle-pag <anle-pag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,33 +12,49 @@
 
 #include "minishell.h"
 
-void	free_tab(void **tab)
+static int	count_lines(const char *s)
 {
+	int	count;
 	int	i;
 
+	if (!s || !*s)
+		return (1);
+	count = 1;
 	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
-	return ;
+	while (s[i])
+	{
+		if (s[i] == '\n')
+			count++;
+		i++;
+	}
+	return (count);
 }
 
-void	free_exp(t_ast_node *node)
+//ft_split, modified to extract \n\n as a valid word '\0'
+char	**split_heredoc(const char *s)
 {
-	t_redir	*redir;
+	char	**slist;
+	int		start;
+	int		end;
+	int		i;
 
-	redir = node->io_streams;
-	if (node->exp_args)
-		free_tab((void **)node->exp_args);
-	if (node->exp_vars)
-		free_tab((void **)node->exp_vars);
-	while (redir)
+	slist = malloc(sizeof(char *) * (count_lines(s) + 1));
+	if (!slist)
+		return (NULL);
+	i = 0;
+	start = 0;
+	while (s[start])
 	{
-		if (redir->exp_file)
-		{
-			free(redir->exp_file);
-			redir->exp_file = NULL;
-		}
-		redir = redir->next;
+		end = start;
+		while (s[end] && s[end] != '\n')
+			end++;
+		slist[i] = ft_substr(s, start, end - start);
+		if (!slist[i++])
+			return (ft_free_dynarr(slist));
+		if (!s[end])
+			break ;
+		start = end + 1;
 	}
+	slist[i] = NULL;
+	return (slist);
 }

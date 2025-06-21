@@ -84,7 +84,7 @@ int	command_no_command(t_ast_node *node)
 	}
 	else if (g_getset(NULL)->mode == INTERACTIVE
 		&& !node->io_streams && !node->vars)
-		return (ft_putendl_fd(ERRMSG_NOCMD, 2), set_exitcode(127), 127);
+		return (ft_dprintf(STDERR_FILENO, ERRMSG_NOCMD, ""), set_exitcode(127), 127);
 	return (set_exitcode(exit_code), exit_code);
 }
 

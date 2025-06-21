@@ -38,8 +38,9 @@
 # define ERRMSG_MISSING_OPTOK "Uncatched Parsing Error : \
 			Expecting Operator token but none was provided"
 # define ERRMSG_EXPORT "msh: export: %s is not a valid identifier\n"
-# define ERRMSG_NOCMD "msh: : command not found\n"
+# define ERRMSG_NOCMD "msh: %s: command not found\n"
 # define ERRMSG_NOFILE "msh: %s : No such file or directory\n"
+# define ERRMSG_NOPERM "msh: %s Permission denied\n"
 # define ERRMSG_CD "msh: cd: %s: No such file or directory\n"
 # define EXITC_NOCMD 127
 # define EXITC_NOEXEC 126
@@ -100,7 +101,6 @@ typedef enum e_debug_flags {
 	DEBUG_EXP_ALL         = DEBUG_EXPANSION | DEBUG_EXP_SEGMENTS | DEBUG_EXP_SPLITTING,
 	DEBUG_ALL             = 0xFFFFFFFF
 }	t_debug_flags;
-
 
 typedef struct s_minishell
 {
@@ -168,14 +168,10 @@ void		clean_shell(void);
 void		clean_routine(void);
 void		free_token_value(t_token *token);
 void		put_err(char *msg);
-void		print_ast(t_ast_node *node);
-void		draw_ast(t_ast_node *node, const char *prefix, int is_left);
 void		*chkalloc(char *val, char *msg);
 void		set_sigaction(void (sighandle)(int));
 void		signals_handler(int sig);
 void		exit_shell(bool exit_msg, int exit_code);
-void		print_tab(char **tab);
-void		print_redir_list(t_redir *redir);
 void		free_exp(t_ast_node *node);
 // char		*new_mem(char *buff, char *errmsg, size_t dup_buff);
 // void		del_mem(char *buff);
@@ -189,7 +185,6 @@ char		**word_list_to_argv(t_word *list);
 t_word		*insert_split_words(char **split, t_word *after);
 t_word		*create_new_word(char *text);
 void		remove_word(t_word *node);
-void		print_word_list(t_word *list);
 int			update_node_index(t_word *lst);
 void		free_word_list(t_word *list);
 int			count_non_null_words(t_word *list);
@@ -209,7 +204,6 @@ char		*concat_segments(t_segment **seg);
 char		*get_value(char *s);
 void		var_exp(t_word *list);
 void		free_segments(t_segment	**seg);
-void		print_segments(t_segment **seg);
 t_segment	**parse_segments(const char *str);
 void		update_flags(t_segment *s, int *empty, int *from_var, int *q);
 int			contains_unquoted_space(t_segment *s);
@@ -274,4 +268,13 @@ void		script_file_routine(t_minishell *msh_g, const char *file);
 void		script_stdin_routine(t_minishell *msh);
 int			assign_shell_var(t_ast_node *node);
 
+// === debug ===
+int			is_debug_enabled(t_minishell *msh, t_debug_flags flag);
+void		parse_debug_flags(int *argc, char ***argv, t_minishell *msh);
+void		print_ast(t_ast_node *node);
+void		draw_ast(t_ast_node *node, const char *prefix, int is_left);
+void		print_tab(char **tab);
+void		print_redir_list(t_redir *redir);
+void		print_segments(t_segment **seg);
+void		print_word_list(t_word *list);
 #endif

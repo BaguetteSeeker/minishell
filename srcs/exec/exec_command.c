@@ -31,11 +31,11 @@ void	exec_fork(t_ast_node *node)
 	envp = g_getset(NULL)->var_env;
 	path = get_cmdpath(node->exp_args[0], envp);
 	if (!path)
-		return (ft_dprintf(STDERR_FILENO, "msh: %s: Command not found\n",
-				node->exp_args[0]), clean_shell(), exit(EXITC_NOCMD));
+		return (ft_dprintf(STDERR_FILENO, ERRMSG_NOCMD, node->exp_args[0]), 
+				exit_shell(NO_EXIT_MSG, EXITC_NOCMD));
 	if (access(path, X_OK) != 0)
-		return (ft_dprintf(STDERR_FILENO, "msh: %s: Permission denied\n",
-				path), clean_shell(), exit(126));
+		return (ft_dprintf(STDERR_FILENO, ERRMSG_NOPERM, path), 
+				exit_shell(NO_EXIT_MSG, EXITC_NOEXEC));
 	update_add_var(VAR_ENV, "_", node->exp_args[0]);
 	envp = g_getset(NULL)->var_env;
 	execve(path, node->exp_args, envp);

@@ -58,7 +58,7 @@ typedef struct s_ast_node
 	char				**args;
 	char				**exp_args;
 	char				**vars;
-	char				**exp_vars;
+	char				**var_names;
 	t_redir				*io_streams;
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;

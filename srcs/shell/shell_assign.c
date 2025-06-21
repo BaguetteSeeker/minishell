@@ -81,6 +81,7 @@ int	assign_shell_var(t_ast_node *node)
 
 	i = 0;
 	exit_code = 0;
+	printf("%s", node->vars[0]);
 	while (node->vars && node->vars[i])
 	{
 		is_env = get_var_entry(VAR_ENV, node->vars[i]);
@@ -96,10 +97,3 @@ int	assign_shell_var(t_ast_node *node)
 	g_getset(NULL)->last_exitcode = exit_code;
 	return (exit_code);
 }
-
-//here, we should eventually change vars into exp_vars
-//before that : 
-//	-the expand_vars function must be well tested
-//	-the command node without node->args (so assignement only) execution logic
-//	  must be better understood (and maybe rewritten bc its not great)
-//		in exec.c:62 command_no_command()

@@ -99,7 +99,10 @@ int	builtin_export(t_ast_node *node)
 	exit_code = 0;
 	args = node->exp_args;
 	if (!node->exp_args || !node->exp_args[0])
+	{
 		args = node->vars;
+		i = 0;
+	}	
 	while (args && args[i])
 	{
 		if (is_valid_var_name(args[i]))

@@ -30,8 +30,7 @@ void	free_exp(t_ast_node *node)
 	redir = node->io_streams;
 	if (node->exp_args)
 		free_tab((void **)node->exp_args);
-	if (node->exp_vars)
-		free_tab((void **)node->exp_vars);
+
 	while (redir)
 	{
 		if (redir->exp_file)

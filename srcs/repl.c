@@ -37,6 +37,8 @@ void	repl_once(t_minishell *msh_g)
 	msh_g->state = MSH_PARSING;
 	tokens_tmp = msh_g->tokens;
 	msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
+	print_ast(msh_g->cmd_table);
+	draw_ast(msh_g->cmd_table, "", 1);
 	msh_g->state = MSH_EXECUTING;
 	msh_g->last_exitcode = execute_node(msh_g->cmd_table);
 	clean_routine();

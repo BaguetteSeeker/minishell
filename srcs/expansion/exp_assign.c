@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+//helper for expand_rhs
+//replace in place since no word splitting in assignement
 void	replace_rhs(char *entry, char *new_rhs)
 {
 	char	*eq;
@@ -34,6 +36,7 @@ static int	expand_rhs(char **vars)
 	i = 0;
 	while (vars[i])
 	{
+
 		seg = parse_segments(ft_strchr(vars[i], '=') + 1);
 		if (!seg)
 			return (1);
@@ -48,66 +51,12 @@ static int	expand_rhs(char **vars)
 	return (0);
 }
 
-//returns 1 if LHS is expandable
-static int	lhs_is_expandable(char *var)
-{
-	int			is_expandable;
-	char		*eq;
-	char		*lhs;
-	t_segment	**seg;
-
-	is_expandable = 0;
-	eq = ft_strchr(var, '=');
-	if (!eq || eq == var)
-		return (0);
-	lhs = ft_substr(var, 0, eq - var);
-	if (!lhs)
-		return (0);
-	seg = parse_segments(lhs);
-	free(lhs);
-	if (!seg)
-		return (0);
-	if (seg[0] && seg[0]->from_var)
-		is_expandable = 1;
-	free_segments(seg);
-	return (is_expandable);
-}
-
-//puts formed "entry" into argv to be treated as a command
-static int	handle_expandable_lhs(char **vars, t_ast_node *node)
-{
-	int		i;
-
-	i = 0;
-	while (vars[i])
-	{
-		if (lhs_is_expandable(vars[i]))
-		{
-			node->exp_args = malloc(sizeof(char *) * 2);
-			if (!node->exp_args)
-				return (1);
-			node->exp_args[0] = ft_strdup(vars[i]);
-			node->exp_args[1] = NULL;
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
-
 //first expand every RHS that can be expanded
-//if none of the LHS is expandable
-// 	- return ;
-//if at least one of the LHS is expandable : 
-// 	- expand other side if expandable
-// 	- build new_argv with said assignement
 int	expand_vars(t_ast_node *node)
 {
 	if (!node->vars)
 		return (0);
 	if (expand_rhs(node->vars))
-		return (1);
-	if (handle_expandable_lhs(node->vars, node))
 		return (1);
 	return (0);
 }

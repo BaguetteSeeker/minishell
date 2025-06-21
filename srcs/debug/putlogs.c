@@ -12,13 +12,6 @@
 
 #include "minishell.h"
 
-bool	is_debug_enabled(t_minishell *msh, t_debug_flags flag)
-{
-	int	is_debug;
-
-	is_debug = msh->debug_flags & flag;
-	return (is_debug);
-}
 
 void	print_redir_list(t_redir *redir)
 {

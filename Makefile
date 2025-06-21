@@ -26,8 +26,7 @@ OBJ_DIR = .obj
 
 SRCS =	minishell.c prompt.c cleanup_utils.c repl.c cleanup_utils2.c \
 		parsing/parser.c \
-		parsing/heredoc.c\
-		parsing/lexer.c parsing/parser_utils.c \
+		parsing/heredoc.c parsing/lexer.c parsing/parser_utils.c \
 		expansion/expansion.c \
 		expansion/exp_list.c expansion/exp_list_utils.c \
 		expansion/exp_varexp.c expansion/exp_varexp_utils.c\
@@ -46,6 +45,7 @@ SRCS =	minishell.c prompt.c cleanup_utils.c repl.c cleanup_utils2.c \
 		shell/shell_assign.c shell/shell_env_utils.c \
 		shell/shell_mode.c shell/shell_var.c signals.c \
 		shell/shell_variable_interface.c  \
+		debug/debug.c \
 		debug/draw_ast.c debug/putlogs.c debug/exp_debugger.c
 
 $(OBJ_DIR)/%.o : srcs/%.c

@@ -67,6 +67,7 @@ int	main(int argc, char *argv[], char *env[])
 	update_add_var(VAR_ENV, "_", argv[0]);
 	update_add_var(VAR_SHELL, "?", "0");
 	set_sigaction(&signals_handler);
+	parse_debug_flags(&argc, &argv, msh_g);
 	if (argc > 1)
 	{
 		if (strcmp(argv[1], "-c") == 0 )

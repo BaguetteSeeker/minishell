@@ -45,7 +45,7 @@ void	script_string_routine(t_minishell *msh_g, int argc, char **argv)
 	input = join_args(argc, argv);
 	if (!(*input))
 	{
-		ft_putendl_fd("msh: : command not found", STDERR_FILENO);
+		ft_dprintf(STDERR_FILENO, ERRMSG_NOCMD, "");
 		clean_shell();
 		exit(127);
 	}
@@ -80,6 +80,17 @@ void script_file_routine(t_minishell *msh_g, const char *file)
 {
     int fd;
 	
+	if (access(file, F_OK) != 0
+		|| access(file, R_OK) != 0)
+	{
+		ft_dprintf(2, ERRMSG_NOFILE, file);
+		exit_shell(NO_EXIT_MSG, EXITC_NOCMD);
+	}
+	if (access(file, X_OK) != 0)
+	{
+		ft_dprintf(2, ERRMSG_NOFILE, file);
+		exit_shell(NO_EXIT_MSG, EXITC_NOEXEC);
+	}
 	fd = open(file, O_RDONLY);
     if (fd < 0)
     {

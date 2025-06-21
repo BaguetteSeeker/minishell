@@ -50,9 +50,9 @@ void	set_exitcode(int exitcode)
 	update_var_exitcode();
 }
 
-//forks and calls the execution routine
-//waits for process to exit
-//catches exit signal if any
+//expands, ignores signals in parents, forks
+//restores signal and calls the execution routine in child proc
+//waits for process to exit and restores shell signal handling behavior in parent proc
 //returns adequate exit code
 int	execute_command(t_ast_node *node)
 {
@@ -66,15 +66,26 @@ int	execute_command(t_ast_node *node)
 		return (set_exitcode(2), 2);
 	if (!node->exp_args[0])
 		return (set_exitcode(0), 0);
+	signal(SIGINT, SIG_IGN);
 	type = is_builtin(node->exp_args[0]);
 	if (type != -1)
 		return (run_builtin(type, node));
 	pid = fork();
 	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		exec_fork(node);
+	}
 	waitpid(pid, &status, 0);
+	signal(SIGINT, signals_handler);
 	if (WIFSIGNALED(status))
-		exit_status = 128 + WTERMSIG(status);
+	{
+		int sig = WTERMSIG(status);
+		if (sig == SIGINT || sig == SIGQUIT)
+			ft_putendl_fd("", STDERR_FILENO);
+		exit_status = 128 + sig;
+	}
 	else
 		exit_status = WEXITSTATUS(status);
 	if (node->is_foreground == 1)

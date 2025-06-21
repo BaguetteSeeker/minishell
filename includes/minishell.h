@@ -252,4 +252,5 @@ void		update_underscore(t_ast_node *node);
 void		script_args_routine(t_minishell *msh, int argc, char **argv);
 void		script_stdin_routine(t_minishell *msh);
 int			assign_shell_var(t_ast_node *node);
+
 #endif

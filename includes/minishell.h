@@ -83,6 +83,25 @@ typedef struct s_stdio
 	int	stderr_fd;
 }	t_stdio;
 
+//using bitwise operators to set 8 different debugging state
+//DEBUG_AST_ALL	= 00000010 | 00000100
+//				= 00000110  logical OR means means 1 and 2 set here
+typedef enum e_debug_flags {
+	DEBUG_NONE            = 0,
+	DEBUG_LEXER_INPUT     = 1 << 0,
+	DEBUG_AST_CONTENT     = 1 << 1,
+	DEBUG_AST_DRAW        = 1 << 2,
+	DEBUG_EXPANSION       = 1 << 3, // general expansion flag
+	DEBUG_EXP_SEGMENTS    = 1 << 4,
+	DEBUG_EXP_SPLITTING   = 1 << 5,
+	DEBUG_REDIR_LIST      = 1 << 6,
+	DEBUG_ENV_EXTENDED    = 1 << 7,
+	DEBUG_AST_ALL         = DEBUG_AST_CONTENT | DEBUG_AST_DRAW,
+	DEBUG_EXP_ALL         = DEBUG_EXPANSION | DEBUG_EXP_SEGMENTS | DEBUG_EXP_SPLITTING,
+	DEBUG_ALL             = 0xFFFFFFFF
+}	t_debug_flags;
+
+
 typedef struct s_minishell
 {
 	sig_atomic_t			state;
@@ -96,6 +115,7 @@ typedef struct s_minishell
 	int						last_exitcode;
 	t_memory				*mem_lst;
 	volatile sig_atomic_t	signal;
+	uint32_t				debug_flags;
 }	t_minishell;
 
 //Functions' Flags
@@ -249,7 +269,8 @@ void		udapte_shell_var(void);
 void		update_var_exitcode(void);
 void		update_shlvl(void);
 void		update_underscore(t_ast_node *node);
-void		script_args_routine(t_minishell *msh, int argc, char **argv);
+void		script_string_routine(t_minishell *msh, int argc, char **argv);
+void		script_file_routine(t_minishell *msh_g, const char *file);
 void		script_stdin_routine(t_minishell *msh);
 int			assign_shell_var(t_ast_node *node);
 

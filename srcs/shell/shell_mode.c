@@ -19,8 +19,8 @@ static char	*join_args(int argc, char **argv)
 	char	*input;
 	char	*tmp;
 
-	i = 2;
-	input = ft_strdup(argv[1]);
+	i = 3;
+	input = ft_strdup(argv[2]);
 	if (!input)
 		put_err("strdup");
 	while (i < argc)
@@ -37,7 +37,7 @@ static char	*join_args(int argc, char **argv)
 }
 
 //joins every argument as a single line to simulate single prompt
-void	script_args_routine(t_minishell *msh_g, int argc, char **argv)
+void	script_string_routine(t_minishell *msh_g, int argc, char **argv)
 {
 	char	*input;
 
@@ -74,6 +74,26 @@ static char	*read_and_prepare_line(size_t len)
 		input[len - 1] = '\0';
 	free(line);
 	return (input);
+}
+
+void script_file_routine(t_minishell *msh_g, const char *file)
+{
+    int fd;
+	
+	fd = open(file, O_RDONLY);
+    if (fd < 0)
+    {
+        perror("open");
+        exit(EXIT_FAILURE);
+    }
+    if (dup2(fd, STDIN_FILENO) < 0)
+    {
+        perror("dup2");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+    close(fd);
+    script_stdin_routine(msh_g);
 }
 
 //extract lines from stdin line by line untile !line (EOF reached)

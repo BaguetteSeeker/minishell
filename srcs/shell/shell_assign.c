@@ -81,7 +81,6 @@ int	assign_shell_var(t_ast_node *node)
 
 	i = 0;
 	exit_code = 0;
-	printf("%s", node->vars[0]);
 	while (node->vars && node->vars[i])
 	{
 		is_env = get_var_entry(VAR_ENV, node->vars[i]);

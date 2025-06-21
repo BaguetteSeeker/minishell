@@ -48,6 +48,12 @@ static void	msh_set_canonical(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
+void	usage_error(void)
+{
+	ft_dprintf(STDERR_FILENO, "msh: -c: option requires an argument\n");
+	exit_shell(NO_EXIT_MSG, 2);
+}
+
 int	main(int argc, char *argv[], char *env[])
 {
 	t_minishell	*msh_g;
@@ -62,7 +68,17 @@ int	main(int argc, char *argv[], char *env[])
 	update_add_var(VAR_SHELL, "?", "0");
 	set_sigaction(&signals_handler);
 	if (argc > 1)
-		return (script_args_routine(msh_g, argc, argv), 1);
+	{
+		if (strcmp(argv[1], "-c") == 0 )
+		{
+			if (argc == 2)
+				return (usage_error(), 1);
+			else
+				return (script_string_routine(msh_g, argc, argv), 1);
+		}
+		else
+			return (script_file_routine(msh_g, argv[1]), 1);
+	}
 	else if (!isatty(STDIN_FILENO))
 		return (script_stdin_routine(msh_g), 1);
 	else

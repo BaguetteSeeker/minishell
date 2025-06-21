@@ -64,6 +64,7 @@ int	execute_subshell(t_ast_node *node)
 	return (exit_status);
 }
 
+//if the command doesn't contain any execution, still perform everything else
 int	command_no_command(t_ast_node *node)
 {
 	int	exit_code;
@@ -90,7 +91,7 @@ int	command_no_command(t_ast_node *node)
 //traverses the tree recursively, executes node functions when found
 //finally executes command when found, and go back up in the tree
 //	-if interactive and empty command, treated as a program
-//	-if non-interactive, treated as an empty line
+//	-if non-interactive, treated as an empty line (see command_no_command)
 //	-if tree has var but no value, treated as a local variable declaration
 //		e.g. "var1=a var2=b"
 int	execute_node(t_ast_node *node)

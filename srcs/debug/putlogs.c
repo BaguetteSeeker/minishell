@@ -56,7 +56,7 @@ void	print_ast(t_ast_node *node)
 	}
 	else if (node->type == NODE_COMMAND)
 	{
-		ft_printf("Command: %s\n", node->value);
+		ft_printf("Command: %s\n", node->args[0]);
 		ft_putendl_fd("Printing vars :", 1);
 		put_recurse_dynarr(node->vars);
 		ft_putendl_fd("Printing args :", 1);

@@ -15,26 +15,28 @@
 static int	map_debug_flag(const char *name)
 {
 	if (ft_strcmp(name, "lexer") == 0)
-		return DEBUG_LEXER_INPUT;
+		return (DEBUG_LEXER_LST);
 	if (ft_strcmp(name, "ast") == 0)
-		return DEBUG_AST_ALL;
+		return (DEBUG_AST_ALL);
 	if (ft_strcmp(name, "ast-content") == 0)
-		return DEBUG_AST_CONTENT;
+		return (DEBUG_AST_CONTENT);
 	if (ft_strcmp(name, "ast-draw") == 0)
-		return DEBUG_AST_DRAW;
+		return (DEBUG_AST_DRAW);
 	if (ft_strcmp(name, "expansion") == 0)
-		return DEBUG_EXP_ALL;
+		return (DEBUG_EXP_ALL);
+	if (ft_strcmp(name, "expansion") == 0)
+		return (DEBUG_EXPANSION);
 	if (ft_strcmp(name, "exp-segments") == 0)
-		return DEBUG_EXP_SEGMENTS;
+		return (DEBUG_EXP_SEGMENTS);
 	if (ft_strcmp(name, "exp-splitting") == 0)
-		return DEBUG_EXP_SPLITTING;
+		return (DEBUG_EXP_SPLITTING);
 	if (ft_strcmp(name, "redir") == 0)
-		return DEBUG_REDIR_LIST;
+		return (DEBUG_REDIR_LIST);
 	if (ft_strcmp(name, "env") == 0)
-		return DEBUG_ENV_EXTENDED;
+		return (DEBUG_ENV);
 	if (ft_strcmp(name, "all") == 0)
-		return DEBUG_ALL;
-	return DEBUG_NONE;
+		return (DEBUG_ALL);
+	return (DEBUG_NONE);
 }
 
 void	print_debug(t_minishell *msh, int applied)
@@ -44,23 +46,23 @@ void	print_debug(t_minishell *msh, int applied)
 	else
 	{
 		ft_dprintf(STDERR_FILENO, "msh: debugging enabled for: ");
-		if (msh->debug_flags & DEBUG_LEXER_INPUT)
-			ft_dprintf(STDERR_FILENO, "lexer ");
+		if (msh->debug_flags & DEBUG_LEXER_LST)
+			ft_dprintf(STDERR_FILENO, "lexer, ");
 		if (msh->debug_flags & DEBUG_AST_CONTENT)
-			ft_dprintf(STDERR_FILENO, "ast-content ");
+			ft_dprintf(STDERR_FILENO, "ast-content, ");
 		if (msh->debug_flags & DEBUG_AST_DRAW)
-			ft_dprintf(STDERR_FILENO, "ast-draw ");
+			ft_dprintf(STDERR_FILENO, "ast-draw, ");
 		if (msh->debug_flags & DEBUG_EXPANSION)
-			ft_dprintf(STDERR_FILENO, "expansion ");
+			ft_dprintf(STDERR_FILENO, "expansion, ");
 		if (msh->debug_flags & DEBUG_EXP_SEGMENTS)
-			ft_dprintf(STDERR_FILENO, "exp-segments ");
+			ft_dprintf(STDERR_FILENO, "exp-segments, ");
 		if (msh->debug_flags & DEBUG_EXP_SPLITTING)
-			ft_dprintf(STDERR_FILENO, "exp-splitting ");
+			ft_dprintf(STDERR_FILENO, "exp-splitting, ");
 		if (msh->debug_flags & DEBUG_REDIR_LIST)
-			ft_dprintf(STDERR_FILENO, "redir ");
-		if (msh->debug_flags & DEBUG_ENV_EXTENDED)
-			ft_dprintf(STDERR_FILENO, "env ");
-		ft_dprintf(STDERR_FILENO, "\n");
+			ft_dprintf(STDERR_FILENO, "redir, ");
+		if (msh->debug_flags & DEBUG_ENV)
+			ft_dprintf(STDERR_FILENO, "env, ");
+		ft_dprintf(STDERR_FILENO, "\b\b\n");
 	}
 }
 //set the bit(s) corresponding to this debug flag, preserving already-set bits
@@ -124,10 +126,56 @@ void	parse_debug_flags(int *argc, char ***argv, t_minishell *msh)
 		print_debug(msh, applied);
 }
 
-int	is_debug_enabled(t_minishell *msh, t_debug_flags flag)
+int	is_debug_enabled(t_debug_flags flag)
 {
 	int	is_debug;
 
-	is_debug = msh->debug_flags & flag;
+	is_debug = g_getset(NULL)->debug_flags & flag;
 	return (is_debug);
+}
+
+static const char	*get_token_description(int type)
+{
+	if (type == WORD)
+		return "word";
+	else if (type == PIPE)
+		return "| (pipe)";
+	else if (type == AMPERSAND)
+		return "& (ampersand)";
+	else if (type == OR_IF)
+		return "|| (logical OR)";
+	else if (type == AND_IF)
+		return "&& (logical AND)";
+	else if (type == LESS)
+		return "< (input redirection)";
+	else if (type == GREAT)
+		return "> (output redirection)";
+	else if (type == DLESS)
+		return "<< (heredoc)";
+	else if (type == DGREAT)
+		return ">> (append redirection)";
+	else if (type == OPAR)
+		return "( (open parenthesis)";
+	else if (type == CPAR)
+		return ") (close parenthesis)";
+	else if (type == T_NEWLINE)
+		return "\\n (newline)";
+	else if (type == IO_NUMBER)
+		return "IO number";
+	else
+		return "unknown";
+}
+
+void	print_tokens(t_token *tok)
+{
+	printf("\n === lexer debug ===\n");
+	while (tok)
+	{
+		printf("token : \t%s \ttype : %ld (%s)\n",
+			tok->value,
+			tok->type,
+			get_token_description(tok->type));
+		tok = tok->next;
+	}
+	printf("\n");
 }

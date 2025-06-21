@@ -45,8 +45,11 @@ int	builtin_pwd(void)
 int	builtin_env(void)
 {
 	print_tab(g_getset(NULL)->var_env);
-	// printf("\n\tDEBUG :\n");
-	// print_tab(g_getset(NULL)->var_shell);
+	if (is_debug_enabled(DEBUG_ENV))
+	{
+		printf("\n\tDEBUG :\n");
+		print_tab(g_getset(NULL)->var_shell);
+	}
 	return (0);
 }
 

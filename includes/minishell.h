@@ -87,19 +87,20 @@ typedef struct s_stdio
 //using bitwise operators to set 8 different debugging state
 //DEBUG_AST_ALL	= 00000010 | 00000100
 //				= 00000110  logical OR means means 1 and 2 set here
-typedef enum e_debug_flags {
-	DEBUG_NONE            = 0,
-	DEBUG_LEXER_INPUT     = 1 << 0,
-	DEBUG_AST_CONTENT     = 1 << 1,
-	DEBUG_AST_DRAW        = 1 << 2,
-	DEBUG_EXPANSION       = 1 << 3, // general expansion flag
-	DEBUG_EXP_SEGMENTS    = 1 << 4,
-	DEBUG_EXP_SPLITTING   = 1 << 5,
-	DEBUG_REDIR_LIST      = 1 << 6,
-	DEBUG_ENV_EXTENDED    = 1 << 7,
-	DEBUG_AST_ALL         = DEBUG_AST_CONTENT | DEBUG_AST_DRAW,
-	DEBUG_EXP_ALL         = DEBUG_EXPANSION | DEBUG_EXP_SEGMENTS | DEBUG_EXP_SPLITTING,
-	DEBUG_ALL             = 0xFFFFFFFF
+typedef enum e_debug_flags
+{
+	DEBUG_NONE			= 0,
+	DEBUG_LEXER_LST	= 1 << 0,
+	DEBUG_AST_CONTENT	= 1 << 1,
+	DEBUG_AST_DRAW		= 1 << 2,
+	DEBUG_EXPANSION		= 1 << 3, // general expansion
+	DEBUG_EXP_SEGMENTS	= 1 << 4, // segmentation step
+	DEBUG_EXP_SPLITTING	= 1 << 5, // word-splitting step
+	DEBUG_REDIR_LIST	= 1 << 6, // calls print_redirs on redirs
+	DEBUG_ENV			= 1 << 7,
+	DEBUG_AST_ALL		= DEBUG_AST_CONTENT | DEBUG_AST_DRAW,
+	DEBUG_EXP_ALL		= DEBUG_EXPANSION | DEBUG_EXP_SEGMENTS | DEBUG_EXP_SPLITTING,
+	DEBUG_ALL			= 0xFFFFFFFF
 }	t_debug_flags;
 
 typedef struct s_minishell
@@ -269,12 +270,14 @@ void		script_stdin_routine(t_minishell *msh);
 int			assign_shell_var(t_ast_node *node);
 
 // === debug ===
-int			is_debug_enabled(t_minishell *msh, t_debug_flags flag);
+int			is_debug_enabled(t_debug_flags flag);
 void		parse_debug_flags(int *argc, char ***argv, t_minishell *msh);
 void		print_ast(t_ast_node *node);
 void		draw_ast(t_ast_node *node, const char *prefix, int is_left);
 void		print_tab(char **tab);
 void		print_redir_list(t_redir *redir);
 void		print_segments(t_segment **seg);
-void		print_word_list(t_word *list);
+void		print_words(t_word *list);
+void		print_tokens(t_token *tok);
+
 #endif

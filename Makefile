@@ -16,7 +16,7 @@ CC = cc
 
 ASAN = -fsanitize=address -g
 
-CFLAGS = -Wall -Wextra -Werror -g3 $(ASAN)
+CFLAGS = -Wall -Wextra -Werror -g3
 
 INCLUDES = -I. -Iincludes/ -Ilibft/includes
 

@@ -75,11 +75,11 @@ typedef struct s_segment
 typedef struct s_word
 {
 	char			*text;
+	struct s_word	*next;
 	int				index;
 	int				should_split;
 	int				from_variable;
 	struct s_word	*previous;
-	struct s_word	*next;
 	t_segment		**seg;
 }	t_word;
 

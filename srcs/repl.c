@@ -27,6 +27,8 @@ void	repl_once(t_minishell *msh_g)
 		return (clean_routine());
 	msh_g->state = MSH_TOKENIZING;
 	msh_g->tokens = tokenize(&msh_g->input, &msh_g->tokens);
+	if (is_debug_enabled(DEBUG_LEXER_LST))
+		print_tokens(msh_g->tokens);
 	if (msh_g->state == MSH_FAILLURE)
 	{
 		msh_g->last_exitcode = 2;
@@ -37,9 +39,9 @@ void	repl_once(t_minishell *msh_g)
 	msh_g->state = MSH_PARSING;
 	tokens_tmp = msh_g->tokens;
 	msh_g->cmd_table = parse_tokens(&tokens_tmp, NULL);
-	if (is_debug_enabled(msh_g, DEBUG_AST_CONTENT))
+	if (is_debug_enabled(DEBUG_AST_CONTENT))
 		print_ast(msh_g->cmd_table);
-	if (is_debug_enabled(msh_g, DEBUG_AST_DRAW))
+	if (is_debug_enabled(DEBUG_AST_DRAW))
 		draw_ast(msh_g->cmd_table, "", 1);
 	msh_g->state = MSH_EXECUTING;
 	msh_g->last_exitcode = execute_node(msh_g->cmd_table);

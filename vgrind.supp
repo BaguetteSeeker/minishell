@@ -1,0 +1,20 @@
+{
+   ignore_libreadline_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libreadline.so.*
+}
+
+{
+   ignore_command_leaks
+   Memcheck:Leak
+   ...
+   obj:/bin/*
+}
+
+{
+   ignore_command_leaks_volume_2
+   Memcheck:Leak
+   ...
+   obj:/usr/bin/*
+}

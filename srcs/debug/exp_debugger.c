@@ -23,7 +23,7 @@ static const char	*quote_str(t_quote q)
 	return ("INVALID");
 }
 
-void	print_word_list(t_word *list)
+void	print_words(t_word *list)
 {
 	printf("\n === expansion debug ===\n");
 	while (list)

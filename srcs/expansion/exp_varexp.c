@@ -100,6 +100,8 @@ void	var_exp(t_word *list)
 		list->seg = parse_segments(list->text);
 		if (!list->seg)
 			return ;
+		if (is_debug_enabled(DEBUG_EXP_SEGMENTS))
+			print_segments(list->seg);
 		expand_segments(list->seg);
 		new = concat_segments(list->seg);
 		if (!new)

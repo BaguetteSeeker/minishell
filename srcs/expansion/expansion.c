@@ -147,9 +147,15 @@ int	expand_node(t_ast_node *node)
 		word_lst = word_list_from_argv(node->args);
 		if (!word_lst)
 			return (1);
+		if (is_debug_enabled(DEBUG_EXPANSION))
+			print_words(word_lst);
 		var_exp(word_lst);
 		word_split(&word_lst);
+		if (is_debug_enabled(DEBUG_EXP_SPLITTING))
+			print_words(word_lst);
 		exp_wildcards(&word_lst);
+		if (is_debug_enabled(DEBUG_EXPANSION))
+			print_words(word_lst);
 		node->exp_args = word_list_to_argv(word_lst);
 	}
 	return (0);

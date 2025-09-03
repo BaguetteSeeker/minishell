@@ -107,8 +107,14 @@ void	parse_debug_flags(int *argc, char ***argv, t_minishell *msh)
 	while (i < *argc)
 	{
 		arg = (*argv)[i];
-		if (ft_strncmp(arg, "--debug=", 8) == 0)
+		if (ft_strncmp(arg, "--help", 6) == 0)
 		{
+			printf("help message");
+			return;
+		}
+		else if (ft_strncmp(arg, "--debug=", 8) == 0)
+		{
+			printf("FDAHIOHGARIOKURHFGAIOWRWHIOAP\n");
 			found = 1;
 			apply_debug_flags(arg + 8, msh, &applied);
 			while (i + 1 < *argc)
